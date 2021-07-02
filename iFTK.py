@@ -87,8 +87,8 @@ def DeleteFromDB(URL, current_index, name):
     window.log(f"Deleting {name} from database...")
     value = MessagedBox(
         "Delete",
-        ".\\../v3/icons/updated.png",
-        ".\\../v3/icons/Question.png",
+        "icons/updated.png",
+        "icons/Question.png",
        f"Are you sure you want to delete {name} from database?", 
        ok=False,
        yes=True,
@@ -397,8 +397,8 @@ class MainApp(QMainWindow):
         self.log(f"Downloading: {dev_name} - {buildid}\n{hash_value}\n")
 
         value = MessagedBox("Download Firmware", 
-                            ".\\../v3/icons/updated.png",
-                            ".\\../v3/icons/Question.png",
+                            "icons/updated.png",
+                            "icons/Question.png",
                             f"Start downloading firmware for {dev_name}?",
                             ok=False,
                             yes=True,
@@ -412,8 +412,8 @@ class MainApp(QMainWindow):
             if os.path.isfile(dest_folder):
                 self.log('Firmware already exists!')
                 value = MessagedBox("Error", 
-                                    ".\\../v3/icons/updated.png",
-                                    ".\\../v3/icons/Question.png",
+                                    "icons/updated.png",
+                                    "icons/Question.png",
                                     "Firmware already exists, do you want to delete it and continue?",
                                     ok=False,
                                     yes=True,
@@ -461,8 +461,8 @@ class MainApp(QMainWindow):
 
         value = MessagedBox(
                             "Update", 
-                            ".\\../v3/icons/updated.png", 
-                            ".\\../v3/icons/database.png", 
+                            "icons/updated.png", 
+                            "icons/database.png", 
                             "Check for database update?",
                             ok=False,
                             yes=True, 
@@ -531,8 +531,8 @@ class MainApp(QMainWindow):
         data = f"Name: {val[0]}\nIdentifier: {val[1]}\nBoardconfig: {val[2]}\nPlatform: {val[3]}\nCPID: {val[4]}\n"
 
         value = MessagedBox("Search results",
-                    ".\\../v3/icons/Search1.png",
-                    ".\\../v3/icons/Info.png",
+                    "icons/Search1.png",
+                    "icons/Info.png",
                     data, copy=True)
 
         if value == 0:
@@ -554,8 +554,8 @@ class MainApp(QMainWindow):
                 show_dbs = "\n".join([db for db in to_delete])
 
                 value = MessagedBox("Delete", 
-                            ".\\../v3/icons/updated.png",
-                            ".\\../v3/icons/Question.png",
+                            "icons/updated.png",
+                            "icons/Question.png",
                             f"Delete databases?\n\n{show_dbs}",
                             yes=True, 
                             no=True,
@@ -937,15 +937,15 @@ class MainApp(QMainWindow):
         # If databases are up to date
         if val == 'db':
             MessagedBox("Database Update", 
-                        ".\\../v3/icons/updated.png", 
-                        ".\\../v3/icons/Checkmark_1.png", 
+                        "icons/updated.png", 
+                        "icons/Checkmark_1.png", 
                         f"Already up to date.\nDB Version: {__dbversion__}")
             return
 
         # If iFirnware Toolkit is up to date
         MessagedBox("iFirmware Update", 
-                    ".\\../v3/icons/updated.png", 
-                    ".\\../v3/icons/Checkmark_1.png", 
+                    "icons/updated.png", 
+                    "icons/Checkmark_1.png", 
                     f"Already up to date.\nVersion: {__version__}")
 
     def hash_file(self, val):
@@ -963,8 +963,8 @@ class MainApp(QMainWindow):
     def update_available(self, val):
 
         MessagedBox("iFirmware Update",
-                    ".\\../v3/icons/updated.png",
-                    ".\\../v3/icons/Information.png",
+                    "icons/updated.png",
+                    "icons/Information.png",
                     f"A new version is available.\nCurrent: {__version__}\nNew: {val}")
 
     def send_to_log(self, val):
@@ -1002,8 +1002,8 @@ class MainApp(QMainWindow):
                     show_firmwares = "\n".join([file for file in files if file[-5:] == '.ipsw'])
 
                     value = MessagedBox("Delete", 
-                                ".\\../v3/icons/updated.png",
-                                ".\\../v3/icons/Question.png",
+                                "icons/updated.png",
+                                "icons/Question.png",
                                 f"Are you sure you want to delete the following firmwares?\n\n{show_firmwares}",
                                 ok=False,
                                 yes=True,
