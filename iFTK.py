@@ -96,9 +96,9 @@ def DeleteFromDB(URL, current_index, name):
 
     if value == 0:
         delete_from = dbs[current_index]
+
         try:
             if os.path.isfile(delete_from):
-                window.log(f"Deleted {name} from database")
                 conn = sqlite3.connect(delete_from)
                 cur = conn.cursor()
                 if current_index == 4:
@@ -106,10 +106,16 @@ def DeleteFromDB(URL, current_index, name):
                 else:
                     cur.execute(f"""DELETE FROM devices WHERE URL='{URL}'""")
                 conn.commit()
+                window.log(f"Deleted {name} from database")
         finally:
             window.reset_data()
-    else:
+
+    elif value == 1:
         window.log("Aborted by user.")
+    
+    else:
+        print(value)
+    
 
 def MessagedBox(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False):
     
@@ -187,21 +193,22 @@ class ShowOptionsUI(QWidget):
 
         # Choose a file button
         self.edit_btn.clicked.connect(lambda: self.open_dialog())
-        
+
         # Reset background color for the load button
         self.ok.setDisabled(True)
         self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
 
     def open_dialog(self):
-        
+
         # Pick a file
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
         if filename:
+
             # Show file name
             self.edit_line.setText(filename)
             try:
-                created = filename.split("-")[1]
+                created = filename.split("/")[-1].split("-")[1]
             except IndexError:
                 created = None
 
@@ -1118,17 +1125,17 @@ class MainApp(QMainWindow):
             menu = QMenu()
 
             copy = menu.addAction("Copy All")
-            copy.setIcon(QtGui.QIcon(".\\../v3/icons/Copy.png"))
+            copy.setIcon(QtGui.QIcon("icons/Copy.png"))
             
             copy_url = menu.addAction("Copy URL - 32Bit")
-            copy_url.setIcon(QtGui.QIcon(".\\../v3/icons/CopyURL.png"))                
+            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))                
 
             copy_url = menu.addAction("Copy URL - 64Bit")
-            copy_url.setIcon(QtGui.QIcon(".\\../v3/icons/CopyURL.png"))
+            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))
 
             menu.addSeparator()
             delete = menu.addAction("Delete All")
-            delete.setIcon(QtGui.QIcon(".\../v3/icons/Delete.png"))
+            delete.setIcon(QtGui.QIcon("icons/Delete.png"))
 
         else:
             name = item.text(1) # Name of current selected device
@@ -1141,20 +1148,20 @@ class MainApp(QMainWindow):
             # Context menu actions
             menu = QMenu()
             download = menu.addAction("Download")
-            download.setIcon(QtGui.QIcon(".\\../v3/icons/Download.png"))
+            download.setIcon(QtGui.QIcon("icons/Download.png"))
 
             copy = menu.addAction("Copy")
-            copy.setIcon(QtGui.QIcon(".\\../v3/icons/Copy.png"))
+            copy.setIcon(QtGui.QIcon("icons/Copy.png"))
 
             copy_hash = menu.addAction("Copy hash")
-            copy_hash.setIcon(QtGui.QIcon(".\\../v3/icons/CopyHash.png"))
+            copy_hash.setIcon(QtGui.QIcon("icons/CopyHash.png"))
 
             copy_url = menu.addAction("Copy URL")
-            copy_url.setIcon(QtGui.QIcon(".\\../v3/icons/CopyURL.png"))
+            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))
 
             menu.addSeparator()
             delete = menu.addAction("Delete")
-            delete.setIcon(QtGui.QIcon(".\../v3/icons/Delete.png"))
+            delete.setIcon(QtGui.QIcon("icons/Delete.png"))
 
         value = menu.exec_(self.getIndex.mapToGlobal(point))
 
