@@ -1,7 +1,7 @@
 # iFirmware-Toolkit v1.0-0121b
 Download and manage firmwares for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
-<img src=".\\resources/01.png" alt="logo" width="800" hieght="800"/>
+<img src=".\\resources/01.png" alt="logo" width="700" hieght="700"/>
 
 iFTK runs only on Windows. It's currently not fully compatible on other operating systems.
 
@@ -9,17 +9,14 @@ This project is using [IPSW](https://ipsw.me) API v4. The API part is handled by
 
 ## Installation
 
-- You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/)
-- Initialize `cmd.exe` or anything of your choice using Anaconda Prompt
-```
-conda init cmd.exe
-```
-- Navigate to the directory where you downloaded iFTK and type in the following
-```
+- You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/).
+- Initialize `cmd.exe` or anything of your choice using Anaconda Prompt - `conda init cmd.exe`
+- Navigate into the directory where you downloaded iFTK and type in the following:
+```batch
 conda activate base
 ```
-- Download requirements using pip
-```
+- Download all requirements using pip:
+```python
 pip install -r requirements.txt
 ```
 - Finally, run `python iFTK.py` 
