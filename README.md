@@ -9,14 +9,17 @@ This project is using [IPSW](https://ipsw.me) API v4. The API part is handled by
 
 ## Installation
 
-- You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/).
-- Initialize `cmd.exe` or anything of your choice using Anaconda Prompt - `conda init cmd.exe`
-- Navigate into the directory where you downloaded iFTK and type in the following:
-```batch
+- You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/)
+- Initialize `cmd.exe` or anything of your choice using Anaconda Prompt
+```
+conda init cmd.exe
+```
+- Navigate to the directory where you downloaded iFTK and type in the following
+```
 conda activate base
 ```
-- Download all requirements using pip:
-```python
+- Download requirements using pip
+```
 pip install -r requirements.txt
 ```
 - Finally, run `python iFTK.py` 
