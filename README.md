@@ -1,5 +1,5 @@
 # iFirmware-Toolkit v1.0-0121b
-Download and manage firmwares for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
+Download and manage any firmware for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
 <img src=".\\resources/01.png" alt="logo" width="700" hieght="700"/>
 
