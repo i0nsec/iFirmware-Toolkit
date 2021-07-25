@@ -447,7 +447,10 @@ class MainApp(QMainWindow):
                 self.disable_btns.hash_file.connect(self.hash_file)
 
         elif value == 1:
-            self.log(f"Skipping {dev_name}") 
+            self.log(f"Skipping {dev_name}")
+        
+        else:
+            pass
 
     def database_update(self):
 
