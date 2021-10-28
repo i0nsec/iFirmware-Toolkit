@@ -11,6 +11,7 @@ This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled
 
 - You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/).
 - Initialize `cmd.exe` or anything of your choice using Anaconda Prompt
+- Open Anaconda Prompt and type in the following:
 ```
 conda init cmd.exe
 ```
