@@ -1,6 +1,7 @@
 import requests
 import os, sys
 import hashlib
+import webbrowser
 import time
 import py7zr
 import sqlite3
@@ -17,7 +18,8 @@ from PyQt5.QtWidgets import (
             QFileDialog,
             QMessageBox,
             QTreeWidgetItem,
-            QMenu)
+            QMenu,
+            QGridLayout)
 
 # Downloader module
 import dm
@@ -117,7 +119,7 @@ def DeleteFromDB(URL, current_index, name):
         print(value)
     
 
-def MessagedBox(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False):
+def MessagedBox(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
     
     message = QMessageBox()
 
@@ -141,7 +143,36 @@ def MessagedBox(title, window_icon, icon, text, ok=True, copy=False, yes=False, 
         ok = message.addButton('Ok', message.ActionRole)
         ok.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         ok.setFont(font)
-        ok.setStyleSheet("QPushButton {background-color: #0C632A;border: none;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #084D20;}")
+        ok.setStyleSheet("""
+            QPushButton {
+                background-color: #0C632A;
+                border: none;
+                color: #fff; 
+                width: 50%;
+                padding: 8px
+                }
+
+            QPushButton:hover {
+                background-color: #084D20;
+            }""")
+
+    # Buttons 
+    if get:
+        get = message.addButton('Get', message.ActionRole)
+        get.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
+        get.setFont(font)
+        get.setStyleSheet("""
+            QPushButton {
+                background-color: #0C632A;
+                border: none;
+                color: #fff; 
+                width: 50%;
+                padding: 8px
+                }
+                
+            QPushButton:hover {
+                background-color: #084D20;
+            }""")
     
     if copy:
         copy = message.addButton('Copy', message.ActionRole)
@@ -965,10 +996,14 @@ class MainApp(QMainWindow):
 
     def update_available(self, val):
 
-        MessagedBox("iFirmware Update",
+        value = MessagedBox("iFirmware Update",
                     "icons/updated.png",
                     "icons/Information.png",
-                    f"A new version is available.\nCurrent: {__version__}\nNew: {val}")
+                    f"A new version is available.\nCurrent: {__version__}\nNew: {val}", get=True)
+        if value == 1:
+            url = "https://github.com/i0nsec/iFirmware-Toolkit/releases"
+            self.log(f"Opening your default browser to download the new version\n{url}")
+            webbrowser.open(url)
 
     def send_to_log(self, val):
         self.log(val)
@@ -1027,8 +1062,7 @@ class MainApp(QMainWindow):
             self.log("Destenaton folder does not exist.")
 
     def log(self, new_log):
-        # Live Log UI
-
+    
         if new_log is not None:
             self.logger.info(new_log)
 
@@ -1042,7 +1076,7 @@ class MainApp(QMainWindow):
                 font.setPointSize(10)
                 self.text_log.setFont(font)
                 self.text_log.setObjectName("text_log")
-                self.gridLayout_2.addWidget(self.text_log, 0, 0, 1, 2)
+                self.gridLayout_4.addWidget(self.text_log, 0, 0, 1, 2)
                 self.text_log.setText(log)
                 self.text_log.moveCursor(QtGui.QTextCursor.End)
 
@@ -1058,7 +1092,6 @@ class MainApp(QMainWindow):
         self.logger.addHandler(output)
 
     def reset_logger(self):
-        # clear_log() will flush out the logger and initialize a new one
         text_reset.setText('')
         self.logger.handlers[0].close()
         self.logger.removeHandler(self.logger.handlers[0])
@@ -1083,7 +1116,7 @@ class MainApp(QMainWindow):
         self.options.setEnabled(True)
 
     def assign_index(self, currentIndex):
-        # This method is used to determine the current tab being used
+        # Determine the current tab being used
         self.getIndex = currentIndex
 
         if currentIndex == 0:
@@ -1491,7 +1524,7 @@ if __name__ == '__main__':
 
     window.log(f'DB Version: {__dbversion__}\n=================\n')
 
-    # Display error messages if there is any. Will be used more often un future versions.
+    # Display error messages if there is any. Will be used more often in future versions
     if message_queue:
         for each in message_queue:
             window.log(f"{each}")
