@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import (
 # Downloader module
 import dm
 
-__version__ = 'v1.0-0121b'
+__version__ = 'v2.1-1028'
 __dbversion__ = 'Not available'
 
 # Get URL from config file
