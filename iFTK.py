@@ -29,13 +29,14 @@ __dbversion__ = 'Not available'
 
 # Get URL from config file
 Server = ''
-message_queue = [] # Used to display messages prior to launching iFTK. Will be used more in future versions
+message_queue = [] # Used to display messages prior to launching iFTK. Will be used more in future versions.
+
 # The default destenation where firmwares will be downloaded
 # Not changing this will make iTunes pick up a firmware easily
 dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
 text_reset = '' # Clear the Live Log
 download_urls = {}
-relevant_version = 14 # Specific firmware version to display
+relevant_version = 15 # Specific firmware version to display
 relevant_only = True # Always show relevant firmwares only
 no_update = False # Do not update QTreeWidget when checking for database update if there is no updates available
 hash_ipsw = False # Whether to hash after a download is finished 
@@ -43,40 +44,48 @@ signed_only = True # Show signed firmwares only
 force_continue = False # Force updating by checking for update again even  if SHA256 does not match
 # Check if all required databases exist
 dbs = [
-        'DBs\\ios_devices.db',
-        'DBs\\ipad_devices.db', 
-        'DBs\\ipod_devices.db',
-        'DBs\\macbook_devices.db',
-        'DBs\\iTunes.db',
-        'DBs\\other.db'
-        ]
+    'DBs\\ios_devices.db',
+    'DBs\\ipad_devices.db', 
+    'DBs\\ipod_devices.db',
+    'DBs\\macbook_devices.db',
+    'DBs\\iTunes.db',
+    'DBs\\other.db'
+]
 
-def CheckIntegrity(state):
+def check_integrity(state):
+    # Check box for checking integrity of firmware
+
     if state == 2:
         globals().update(hash_ipsw=True)
     else:
         globals().update(hash_ipsw=False)
 
-def CheckDBS():
+def check_databases():
+    # Check if all required databases exists
+
     for db in dbs:
         if not os.path.isfile(db):
-            MainApp._signed_only.setDisabled(True)
-            MainApp._show_relevant.setDisabled(True)
+            MainApp.signed_only.setDisabled(True)
+            MainApp.show_relevant.setDisabled(True)
         else:
-            MainApp._signed_only.setDisabled(False)
-            MainApp._show_relevant.setDisabled(False)
+            MainApp.signed_only.setDisabled(False)
+            MainApp.show_relevant.setDisabled(False)
 
-def SingedOnly(state):
+def show_singed_only(state):
+    # Show signed firmwares only 
+
     if state == 2:
         globals().update(signed_only=True)
         window.reset_data()
-        MainApp._show_relevant.setEnabled(True)
+        MainApp.show_relevant.setEnabled(True)
     else:
         globals().update(signed_only=False)
         window.reset_data()
-        MainApp._show_relevant.setDisabled(True)
+        MainApp.show_relevant.setDisabled(True)
 
-def ShowRelevant(state):
+def show_relevant(state):
+    # Show the lastest versions only 
+    
     if state == 2:
         globals().update(relevant_only=True)
         window.reset_data()
@@ -84,10 +93,11 @@ def ShowRelevant(state):
         globals().update(relevant_only=False)
         window.reset_data()
 
-def DeleteFromDB(URL, current_index, name):
-
+def delete_from_database(URL, current_index, name):
+    # Delete a firmware version from the selected database
+    
     window.log(f"Deleting {name} from database...")
-    value = MessagedBox(
+    value = messaged_box(
         "Delete",
         "icons/updated.png",
         "icons/Question.png",
@@ -118,8 +128,7 @@ def DeleteFromDB(URL, current_index, name):
     else:
         print(value)
     
-
-def MessagedBox(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
+def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
     
     message = QMessageBox()
 
@@ -212,7 +221,7 @@ class ShowOptionsUI(QWidget):
         self.stop()
 
     def stop(self):
-        MainApp._options.setEnabled(True)
+        MainApp.options.setEnabled(True)
 
     def _show(self):
         self.show()
@@ -280,10 +289,10 @@ class ShowOptionsUI(QWidget):
             self.close()
 
 class MainApp(QMainWindow):
-    _signed_only = None
-    _current_index = 0
-    _show_relevant = None
-    _options = None
+    signed_only = None
+    current_index = 0
+    show_relevant = None
+    options = None
 
     def __init__(self):
         super(MainApp, self).__init__()
@@ -315,26 +324,26 @@ class MainApp(QMainWindow):
         self.backup.clicked.connect(self.backup_databases)
 
         # Device search
-        self.device_search.textChanged.connect(lambda: self.dev_search(self.device_search.text(), MainApp._current_index))
+        self.device_search.textChanged.connect(lambda: self.dev_search(self.device_search.text(), MainApp.current_index))
 
         # Model number lookup
         self.search_btn.clicked.connect(lambda: self.dev_lookup(self.search.text()))
 
         """CheckBoxes"""
         # Check integrity checkbox
-        self.check_integrity.clicked.connect(lambda: CheckIntegrity(self.check_integrity.checkState()))
+        self.check_integrity.clicked.connect(lambda: check_integrity(self.check_integrity.checkState()))
         # Show signed firmwares only
-        self.show_signed.clicked.connect(lambda: SingedOnly(self.show_signed.checkState()))
-        MainApp._signed_only = self.show_signed
+        self.show_signed.clicked.connect(lambda: show_singed_only(self.show_signed.checkState()))
+        MainApp.signed_only = self.show_signed
         # Show relevant firmwares only. Only shows the devices that support that latest firmwares
-        MainApp._show_relevant = self.show_relevant
-        self.show_relevant.clicked.connect(lambda: ShowRelevant(self.show_relevant.checkState()))
+        MainApp.show_relevant = self.show_relevant
+        self.show_relevant.clicked.connect(lambda: show_relevant(self.show_relevant.checkState()))
         self.show_relevant.setChecked(True)
 
         # Config button
         self.op = ShowOptionsUI()
         self.options.clicked.connect(lambda: self.show_config())
-        MainApp._options = self.options
+        MainApp.options = self.options
         self.main_tab.setCurrentIndex(1)
 
         # Check for iFirmware updates button
@@ -344,7 +353,7 @@ class MainApp(QMainWindow):
         self.current_v.setText(__version__)
 
         # Main download button to download all signed firmwares for iPhones only
-        self.main_download.clicked.connect(lambda: self.DownloadAllSigned(MainApp._current_index))
+        self.main_download.clicked.connect(lambda: self.download_all_signed(MainApp.current_index))
 
         # Export log 
         self.export_log.clicked.connect(self.export_logs)
@@ -371,7 +380,7 @@ class MainApp(QMainWindow):
         self.options.setDisabled(True)
         self.op._show()
 
-    def DownloadAllSigned(self, current_tab):
+    def download_all_signed(self, current_tab):
 
         if current_tab != 0:
             self.log("Only iOS is supported for this feature.")
@@ -419,7 +428,7 @@ class MainApp(QMainWindow):
         else:
             self.log('No database was found.')
 
-    def DownloadOneFirmware(self, dev_name, url, hash_value, buildid):
+    def download_one_firmware(self, dev_name, url, hash_value, buildid):
 
         # If the default directory for iTunes does not exist, create it
         if not os.path.exists(dest):
@@ -427,7 +436,7 @@ class MainApp(QMainWindow):
 
         self.log(f"Downloading: {dev_name} - {buildid}\n{hash_value}\n")
 
-        value = MessagedBox("Download Firmware", 
+        value = messaged_box("Download Firmware", 
                             "icons/updated.png",
                             "icons/Question.png",
                             f"Start downloading firmware for {dev_name}?",
@@ -442,7 +451,7 @@ class MainApp(QMainWindow):
 
             if os.path.isfile(dest_folder):
                 self.log('Firmware already exists!')
-                value = MessagedBox("Error", 
+                value = messaged_box("Error", 
                                     "icons/updated.png",
                                     "icons/Question.png",
                                     "Firmware already exists, do you want to delete it and continue?",
@@ -493,7 +502,7 @@ class MainApp(QMainWindow):
 
         self.log("Checking for database update...")
 
-        value = MessagedBox(
+        value = messaged_box(
                             "Update", 
                             "icons/updated.png", 
                             "icons/database.png", 
@@ -540,7 +549,7 @@ class MainApp(QMainWindow):
         self.worker_lookup.show_in_ui.connect(self.show_in_ui)
 
     def hash_local_firmwares(self):
-        self.hash_firmware = HashingThreaded(current_tab=MainApp._current_index)
+        self.hash_firmware = HashingThreaded(current_tab=MainApp.current_index)
         self.hash_firmware.start()
         self.hash_firmware.send_to_log.connect(self.send_to_log)
         self.hash_firmware.progress_update.connect(self.update_progressbar)
@@ -564,7 +573,7 @@ class MainApp(QMainWindow):
 
         data = f"Name: {val[0]}\nIdentifier: {val[1]}\nBoardconfig: {val[2]}\nPlatform: {val[3]}\nCPID: {val[4]}\n"
 
-        value = MessagedBox("Search results",
+        value = messaged_box("Search results",
                     "icons/Search1.png",
                     "icons/Info.png",
                     data, copy=True)
@@ -587,7 +596,7 @@ class MainApp(QMainWindow):
                 self.log('Delete databases?')
                 show_dbs = "\n".join([db for db in to_delete])
 
-                value = MessagedBox("Delete", 
+                value = messaged_box("Delete", 
                             "icons/updated.png",
                             "icons/Question.png",
                             f"Delete databases?\n\n{show_dbs}",
@@ -656,7 +665,7 @@ class MainApp(QMainWindow):
         #==================================================
         self.main_tab.currentChanged.connect(lambda: self.assign_index(self.main_tab.currentIndex()))
         self.main_tab.setContextMenuPolicy(Qt.DefaultContextMenu)
-        self.main_tab.setCurrentIndex(MainApp._current_index)
+        self.main_tab.setCurrentIndex(MainApp.current_index)
 
         #==================================================
         #               iOS Tab 
@@ -955,7 +964,7 @@ class MainApp(QMainWindow):
                     parent.setText(0, f"{num}")
                     num += 1
 
-        CheckDBS()
+        check_databases()
 
     def reset_data(self):
         self.ios_tree.clear()
@@ -970,14 +979,14 @@ class MainApp(QMainWindow):
 
         # If databases are up to date
         if val == 'db':
-            MessagedBox("Database Update", 
+            messaged_box("Database Update", 
                         "icons/updated.png", 
                         "icons/Checkmark_1.png", 
                         f"Already up to date.\nDB Version: {__dbversion__}")
             return
 
         # If iFirnware Toolkit is up to date
-        MessagedBox("iFirmware Update", 
+        messaged_box("iFirmware Update", 
                     "icons/updated.png", 
                     "icons/Checkmark_1.png", 
                     f"Already up to date.\nVersion: {__version__}")
@@ -996,7 +1005,7 @@ class MainApp(QMainWindow):
 
     def update_available(self, val):
 
-        value = MessagedBox("iFirmware Update",
+        value = messaged_box("iFirmware Update",
                     "icons/updated.png",
                     "icons/Information.png",
                     f"A new version is available.\nCurrent: {__version__}\nNew: {val}", get=True)
@@ -1039,7 +1048,7 @@ class MainApp(QMainWindow):
 
                     show_firmwares = "\n".join([file for file in files if file[-5:] == '.ipsw'])
 
-                    value = MessagedBox("Delete", 
+                    value = messaged_box("Delete", 
                                 "icons/updated.png",
                                 "icons/Question.png",
                                 f"Are you sure you want to delete the following firmwares?\n\n{show_firmwares}",
@@ -1120,27 +1129,27 @@ class MainApp(QMainWindow):
         self.getIndex = currentIndex
 
         if currentIndex == 0:
-            MainApp._current_index = 0
+            MainApp.current_index = 0
             self.getIndex = self.ios_tree
 
         elif currentIndex == 1:
-            MainApp._current_index = 1
+            MainApp.current_index = 1
             self.getIndex = self.ipad_tree
 
         elif currentIndex == 2:
-            MainApp._current_index = 2
+            MainApp.current_index = 2
             self.getIndex = self.ipod_tree
 
         elif currentIndex == 3:
-            MainApp._current_index = 3
+            MainApp.current_index = 3
             self.getIndex = self.mac_tree
 
         elif currentIndex == 4:
-            MainApp._current_index = 4
+            MainApp.current_index = 4
             self.getIndex = self.itunes_tree
 
         elif currentIndex == 5:
-            MainApp._current_index = 5
+            MainApp.current_index = 5
             self.getIndex = self.other_tree
 
     def context_menu(self, point):
@@ -1152,7 +1161,7 @@ class MainApp(QMainWindow):
 
         item = self.getIndex.itemAt(point)
 
-        if MainApp._current_index == 4:
+        if MainApp.current_index == 4:
             name_all = item.text(1) # Name and version of selected device
             version_all = item.text(2) # Version number for current selected device 
             url32 = item.text(4) # URL for a 32Bit iTunes 
@@ -1221,13 +1230,13 @@ class MainApp(QMainWindow):
                 QApplication.clipboard().setText(url)
             
             elif value.text() == 'Download':
-                self.DownloadOneFirmware(name, url, hash_, build)
+                self.download_one_firmware(name, url, hash_, build)
             
             elif value.text() == 'Delete':
-                DeleteFromDB(url, MainApp._current_index, name)
+                delete_from_database(url, MainApp.current_index, name)
 
             elif value.text() == 'Delete All':
-                DeleteFromDB(url32, MainApp._current_index, name_all)
+                delete_from_database(url32, MainApp.current_index, name_all)
 
         except AttributeError:
             pass
@@ -1495,6 +1504,7 @@ if __name__ == '__main__':
     # Check if hosts file exists
     if not os.path.exists('.hosts'):
         message_queue.append("Hosts file does not exist.\nCheck out online documentation for more information")
+
     elif os.path.exists('.hosts'):
         with open('.hosts', 'r') as file:
             data = json.loads(file.read().rstrip())
