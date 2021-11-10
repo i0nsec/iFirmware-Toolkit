@@ -825,6 +825,12 @@ QToolTip {
             </item>
             <item row="0" column="0">
              <widget class="QGroupBox" name="database_">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>126</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>Segoe UI Semibold</family>
