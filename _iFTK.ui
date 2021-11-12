@@ -46,6 +46,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <stylestrategy>PreferDefault</stylestrategy>
@@ -669,6 +670,7 @@ QScrollBar::handle:horizontal {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -723,7 +725,7 @@ QScrollBar::handle:horizontal {
                  </property>
                  <property name="html">
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -737,6 +739,7 @@ p, li { white-space: pre-wrap; }
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -835,6 +838,7 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -856,6 +860,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -910,6 +915,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -964,6 +970,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1013,6 +1020,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1070,6 +1078,7 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1097,6 +1106,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>8</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1106,7 +1116,7 @@ QToolTip {
                   <string>Lookup a device using its model number (A1670)</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">border: 0.5px solid #cccccc;
+                  <string notr="true">
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -1133,6 +1143,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1187,6 +1198,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1235,6 +1247,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>true</kerning>
@@ -1244,7 +1257,7 @@ QToolTip {
                   <string>Search for a device. ex: iPhone 11, 17A844 or iPhone12,1</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">border: 0.5px solid #cccccc; 
+                  <string notr="true">
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -1271,6 +1284,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1283,7 +1297,7 @@ QToolTip {
                   <string>Location: Default iTunes directory</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">border: 0.5px solid #cccccc; 
+                  <string notr="true">
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
@@ -1312,6 +1326,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1345,6 +1360,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1374,6 +1390,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1412,6 +1429,7 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1433,6 +1451,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1487,6 +1506,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1535,6 +1555,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1584,6 +1605,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1645,6 +1667,7 @@ QToolTip {
          <property name="font">
           <font>
            <pointsize>9</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
            <strikeout>false</strikeout>
            <kerning>false</kerning>
@@ -1675,6 +1698,7 @@ QToolTip {
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
@@ -1705,6 +1729,7 @@ color: red;</string>
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>false</kerning>
@@ -1734,6 +1759,7 @@ color:#fff;</string>
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
