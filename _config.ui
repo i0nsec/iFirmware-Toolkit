@@ -7,12 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>871</width>
-    <height>506</height>
+    <height>586</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <family>Segoe UI Semibold</family>
     <pointsize>10</pointsize>
    </font>
   </property>
@@ -30,58 +29,15 @@ color:#fff;
 QToolTip { color: #fff; background-color: #000; border: none; }</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="3" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-    <widget class="QPushButton" name="ok">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>120</width>
-       <height>40</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>40</height>
-      </size>
-     </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="header">
      <property name="font">
       <font>
-       <family>Segoe UI Semibold</family>
        <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">    QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
-		margin-bottom: 15px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-     </property>
      <property name="text">
-      <string> Load</string>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/loading.png</normaloff>icons/loading.png</iconset>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
+      <string>Use a backup database instead of online version.</string>
      </property>
     </widget>
    </item>
@@ -101,26 +57,12 @@ QToolTip {
      </property>
      <property name="font">
       <font>
-       <family>Segoe UI Semibold</family>
        <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="header">
-     <property name="font">
-      <font>
-       <family>Segoe UI Semibold</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Use a backup database instead of online version.</string>
      </property>
     </widget>
    </item>
@@ -149,7 +91,6 @@ QToolTip {
         </property>
         <property name="font">
          <font>
-          <family>Segoe UI Semibold</family>
           <pointsize>10</pointsize>
          </font>
         </property>
@@ -157,10 +98,12 @@ QToolTip {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="styleSheet">
-         <string notr="true">    QPushButton {
+         <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -197,7 +140,6 @@ QToolTip {
         </property>
         <property name="font">
          <font>
-          <family>Segoe UI Semibold</family>
           <pointsize>10</pointsize>
          </font>
         </property>
@@ -205,7 +147,17 @@ QToolTip {
          <enum>Qt::NoContextMenu</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 0.5px solid #cccccc; 
+         <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+QLineEdit {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
+}
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -227,6 +179,61 @@ QToolTip {
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="3" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+    <widget class="QPushButton" name="ok">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+        background-color: #0C632A;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #084D20;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+     </property>
+     <property name="text">
+      <string> Load</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/loading.png</normaloff>icons/loading.png</iconset>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
   </layout>

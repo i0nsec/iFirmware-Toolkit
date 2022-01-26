@@ -139,7 +139,10 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
 
     # Main message and styling
     message.setText(text)
-    message.setStyleSheet("background-color:#212121; color: #fff; padding: 15px;")
+    message.setStyleSheet("""
+            background-color:#212121; 
+            color: #fff; 
+            padding: 15px;""")
 
     # Font for all
     font = QtGui.QFont()
@@ -155,7 +158,8 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
         ok.setStyleSheet("""
             QPushButton {
                 background-color: #0C632A;
-                border: none;
+                border: 2px solid #0C632A;
+    	        border-radius: 10px;
                 color: #fff; 
                 width: 50%;
                 padding: 8px
@@ -173,7 +177,8 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
         get.setStyleSheet("""
             QPushButton {
                 background-color: #0C632A;
-                border: none;
+                border: 2px solid #0C632A;
+    	        border-radius: 10px;
                 color: #fff; 
                 width: 50%;
                 padding: 8px
@@ -187,25 +192,61 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
         copy = message.addButton('Copy', message.ActionRole)
         copy.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         copy.setFont(font)
-        copy.setStyleSheet("QPushButton {background-color: #0C632A;border: none;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #084D20;}")
+        copy.setStyleSheet("""
+            QPushButton {
+                background-color: #0C632A;
+                border: 2px solid #0C632A;
+    	        border-radius: 10px;
+                color: #fff; 
+                width: 50%;
+                padding: 8px
+                }
+                
+            QPushButton:hover {
+                background-color: #084D20;
+            }""")
 
     if yes:
         yes = message.addButton('Yes', message.ActionRole)
         yes.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         yes.setFont(font)
-        yes.setStyleSheet("QPushButton {background-color: #0C632A;border: none;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #084D20;}")
+        yes.setStyleSheet("""
+            QPushButton {
+                background-color: #0C632A;
+                border: 2px solid #0C632A;
+    	        border-radius: 10px;
+                color: #fff; 
+                width: 50%;
+                padding: 8px
+                }
+                
+            QPushButton:hover {
+                background-color: #084D20;
+            }""")
 
     if no:
         no = message.addButton('No', message.ActionRole)
         no.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         no.setFont(font)
-        no.setStyleSheet("QPushButton {background-color: #0C632A;border: none;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #084D20;}")
+        no.setStyleSheet("""
+            QPushButton {
+                background-color: #0C632A;
+                border: 2px solid #0C632A;
+    	        border-radius: 10px;
+                color: #fff; 
+                width: 50%;
+                padding: 8px
+                }
+                
+            QPushButton:hover {
+                background-color: #084D20;
+            }""")
 
     if abort:
         abort = message.addButton('Abort', message.ActionRole)
         abort.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         abort.setFont(font)
-        abort.setStyleSheet("QPushButton {background-color: #9a1717;border: none;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #801313;}")
+        abort.setStyleSheet("QPushButton {background-color: #9a1717;border: 2px solid #0C632A;border-radius: 10px;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #801313;}")
 
     # Return value
     value = message.exec_()

@@ -249,6 +249,7 @@ QScrollBar::handle:horizontal {
     </property>
     <property name="font">
      <font>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -272,6 +273,7 @@ QScrollBar::handle:horizontal {
      <font>
       <family>Segoe UI Semibold</family>
       <pointsize>10</pointsize>
+      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -288,7 +290,7 @@ QScrollBar::handle:horizontal {
       <x>20</x>
       <y>280</y>
       <width>601</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -310,6 +312,7 @@ QScrollBar::handle:horizontal {
         <font>
          <family>Segoe UI Semibold</family>
          <pointsize>10</pointsize>
+         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -317,10 +320,12 @@ QScrollBar::handle:horizontal {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">    QPushButton {
+        <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -334,6 +339,9 @@ QToolTip {
        </property>
        <property name="text">
         <string>Start</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -355,6 +363,7 @@ QToolTip {
         <font>
          <family>Segoe UI Semibold</family>
          <pointsize>10</pointsize>
+         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -362,14 +371,21 @@ QToolTip {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">    QPushButton {
-        background-color: #7c1313;
+        <string notr="true">QPushButton {
+        background-color: #831721;
         border: none;
         color: #fff;
+ 		border: 2px solid #831721;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #6e1010;
+	background-color: #75141d;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
 }</string>
        </property>
        <property name="text">
@@ -397,6 +413,7 @@ QToolTip {
           <font>
            <family>Segoe UI Semibold</family>
            <pointsize>10</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -404,20 +421,25 @@ QToolTip {
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">    QPushButton {
-        background-color: #c3a315;
+          <string notr="true">QPushButton {
+        background-color: #a48912;
         border: none;
         color: #fff;
+		padding: 7px;
+		border: 2px solid #a48912;
+    	border-radius: 10px;
     }
 
- QPushButton:hover {
-	background-color: #b39614;
+QPushButton:hover {
+	background-color: #957d10;
 }
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
-}</string>
+}
+
+</string>
          </property>
          <property name="text">
           <string>Skip</string>

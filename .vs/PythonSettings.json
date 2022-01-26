@@ -1,0 +1,4 @@
+{
+  "Interpreter": "CondaEnv|CondaEnv|4flask",
+  "SuppressEnvironmentCreationPrompt": true
+}

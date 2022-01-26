@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1130</width>
-    <height>645</height>
+    <width>1282</width>
+    <height>801</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,31 +41,269 @@ QToolTip { color: #fff; background-color: #000; border: none; }
            </property>
            <layout class="QGridLayout" name="gridLayout_17">
             <item row="0" column="0">
-             <widget class="QTabWidget" name="main_tab">
+             <widget class="QToolBox" name="toolBox">
               <property name="font">
                <font>
                 <family>Segoe UI Semibold</family>
-                <pointsize>9</pointsize>
-                <bold>false</bold>
-                <strikeout>false</strikeout>
-                <stylestrategy>PreferDefault</stylestrategy>
-                <kerning>false</kerning>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="cursor">
                <cursorShape>ArrowCursor</cursorShape>
               </property>
-              <property name="contextMenuPolicy">
-               <enum>Qt::DefaultContextMenu</enum>
-              </property>
-              <property name="toolTip">
-               <string/>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
               </property>
               <property name="styleSheet">
-               <string notr="true">QTabWidget::pane {
+               <string notr="true">QToolBox::tab {
+    background: #0C632A;
+    border-radius: 5px;
+    color: darkgray;
+}
+
+QToolBox::tab:selected { /* italicize selected tabs */
+    font: italic;
+    color: white;
+}</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+              <property name="lineWidth">
+               <number>1</number>
+              </property>
+              <property name="midLineWidth">
+               <number>0</number>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <property name="tabSpacing">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="main_page">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>708</width>
+                 <height>611</height>
+                </rect>
+               </property>
+               <attribute name="icon">
+                <iconset>
+                 <normaloff>icons/pc.png</normaloff>icons/pc.png</iconset>
+               </attribute>
+               <attribute name="label">
+                <string>On this PC</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_9">
+                <item row="1" column="0" colspan="2">
+                 <widget class="QTreeWidget" name="pc_tree">
+                  <property name="styleSheet">
+                   <string notr="true">QHeaderView::section {
+    background-color: #292929;
+    color: white;
+    padding-left: 4px;
+    border: 1px solid #191919;
+}
+
+QTreeView::item {
+	padding: 10px;
+}
+
+QTreeView::item:hover {
+    background: #003451;
+}
+
+QTreeView::item:selected:active{
+    background: #003451;
+}
+
+
+
+ QScrollBar:vertical {
+    background: white;
+     width: 15px;
+ }
+ QScrollBar::handle:vertical {
+    background: #0C632A;
+ }
+
+
+
+QScrollBar:horizontal {
+    background: white;
+    height: 15px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #0C632A;
+}
+
+QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMenu::item:selected {background-color: #654321;}</string>
+                  </property>
+                  <column>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </column>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QPushButton" name="delete_all">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI Semibold</family>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+        background-color: #831721;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #831721;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #75141d;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Delete all</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QPushButton" name="scan_pc">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI Semibold</family>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+        background-color: #0C632A;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #084D20;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Scan PC</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="found_label">
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI Semibold</family>
+                    <pointsize>10</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Found: 50</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="total_label">
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI Semibold</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Total: 50GB</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="db_page">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>708</width>
+                 <height>611</height>
+                </rect>
+               </property>
+               <attribute name="icon">
+                <iconset>
+                 <normaloff>icons/database.png</normaloff>icons/database.png</iconset>
+               </attribute>
+               <attribute name="label">
+                <string>Database</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <item row="0" column="0">
+                 <widget class="QTabWidget" name="main_tab">
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI Semibold</family>
+                    <pointsize>9</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                    <strikeout>false</strikeout>
+                    <stylestrategy>PreferDefault</stylestrategy>
+                    <kerning>false</kerning>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>ArrowCursor</cursorShape>
+                  </property>
+                  <property name="contextMenuPolicy">
+                   <enum>Qt::DefaultContextMenu</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string/>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QTabWidget::pane {
   border: 1px solid lightgray;
   top:-1px; 
 } 
@@ -111,53 +349,53 @@ QMenu {
 QMenu::item::selected {
     background-color: rgb(30,30,30);
 }</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="currentIndex">
-               <number>5</number>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>50</height>
-               </size>
-              </property>
-              <property name="elideMode">
-               <enum>Qt::ElideRight</enum>
-              </property>
-              <property name="movable">
-               <bool>true</bool>
-              </property>
-              <widget class="QWidget" name="ios_tab">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/iPhone.png</normaloff>icons/iPhone.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>iOS</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_6">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="ios_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
                   </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
+                  <property name="inputMethodHints">
+                   <set>Qt::ImhNone</set>
                   </property>
-                  <property name="contextMenuPolicy">
-                   <enum>Qt::CustomContextMenu</enum>
+                  <property name="currentIndex">
+                   <number>0</number>
                   </property>
-                  <property name="toolTip">
-                   <string/>
+                  <property name="iconSize">
+                   <size>
+                    <width>40</width>
+                    <height>50</height>
+                   </size>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                  <property name="elideMode">
+                   <enum>Qt::ElideRight</enum>
+                  </property>
+                  <property name="movable">
+                   <bool>true</bool>
+                  </property>
+                  <widget class="QWidget" name="ios_tab">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/iPhone.png</normaloff>icons/iPhone.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>iOS</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_6">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="ios_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="contextMenuPolicy">
+                       <enum>Qt::CustomContextMenu</enum>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -198,83 +436,83 @@ QScrollBar::handle:horizontal {
 }
 
 QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMenu::item:selected {background-color: #654321;}</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="editTriggers">
-                   <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
-                  </property>
-                  <property name="tabKeyNavigation">
-                   <bool>true</bool>
-                  </property>
-                  <property name="selectionMode">
-                   <enum>QAbstractItemView::SingleSelection</enum>
-                  </property>
-                  <property name="horizontalScrollMode">
-                   <enum>QAbstractItemView::ScrollPerPixel</enum>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="uniformRowHeights">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="animated">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="headerHidden">
-                   <bool>false</bool>
-                  </property>
-                  <property name="columnCount">
-                   <number>1</number>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
-                  <column>
-                   <property name="text">
-                    <string>New Column</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="ipad_tab">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/iPad.png</normaloff>icons/iPad.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>iPad</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_7">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="ipad_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                      </property>
+                      <property name="tabKeyNavigation">
+                       <bool>true</bool>
+                      </property>
+                      <property name="selectionMode">
+                       <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="horizontalScrollMode">
+                       <enum>QAbstractItemView::ScrollPerPixel</enum>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="animated">
+                       <bool>true</bool>
+                      </property>
+                      <property name="allColumnsShowFocus">
+                       <bool>true</bool>
+                      </property>
+                      <property name="headerHidden">
+                       <bool>false</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>1</number>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string>New Column</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="ipad_tab">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/iPad.png</normaloff>icons/iPad.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>iPad</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_7">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="ipad_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -311,51 +549,56 @@ QScrollBar:horizontal {
 QScrollBar::handle:horizontal {
     background: #0C632A;
 }</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="ipod_tab">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/iPod.png</normaloff>icons/iPod.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>iPod</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_8">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="ipod_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="allColumnsShowFocus">
+                       <bool>true</bool>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string notr="true">1</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="ipod_tab">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/iPod.png</normaloff>icons/iPod.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>iPod</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_8">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="ipod_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -392,51 +635,56 @@ QScrollBar:horizontal {
 QScrollBar::handle:horizontal {
     background: #0C632A;
 }</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="mac_tab">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/MacBook.png</normaloff>icons/MacBook.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>Mac</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_18">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="mac_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="allColumnsShowFocus">
+                       <bool>true</bool>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string notr="true">1</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="mac_tab">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/MacBook.png</normaloff>icons/MacBook.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>Mac</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_18">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="mac_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -473,60 +721,60 @@ QScrollBar:horizontal {
 QScrollBar::handle:horizontal {
     background: #0C632A;
 }</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="rootIsDecorated">
-                   <bool>true</bool>
-                  </property>
-                  <property name="uniformRowHeights">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="columnCount">
-                   <number>0</number>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="itunes">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/iTunes.png</normaloff>icons/iTunes.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>iTunes</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_19">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="itunes_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="rootIsDecorated">
+                       <bool>true</bool>
+                      </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="allColumnsShowFocus">
+                       <bool>true</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>0</number>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="itunes">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/iTunes.png</normaloff>icons/iTunes.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>iTunes</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_19">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="itunes_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -563,63 +811,68 @@ QScrollBar:horizontal {
 QScrollBar::handle:horizontal {
     background: #0C632A;
 }</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="tabKeyNavigation">
-                   <bool>true</bool>
-                  </property>
-                  <property name="showDropIndicator" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="selectionMode">
-                   <enum>QAbstractItemView::SingleSelection</enum>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="uniformRowHeights">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="other_tab">
-               <attribute name="icon">
-                <iconset>
-                 <normaloff>icons/Other.png</normaloff>icons/Other.png</iconset>
-               </attribute>
-               <attribute name="title">
-                <string>Other</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_20">
-                <item row="0" column="0">
-                 <widget class="QTreeWidget" name="other_tree">
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI Semibold</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor" stdset="0">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="tabKeyNavigation">
+                       <bool>true</bool>
+                      </property>
+                      <property name="showDropIndicator" stdset="0">
+                       <bool>false</bool>
+                      </property>
+                      <property name="selectionMode">
+                       <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <property name="allColumnsShowFocus">
+                       <bool>true</bool>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string notr="true">1</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="other_tab">
+                   <attribute name="icon">
+                    <iconset>
+                     <normaloff>icons/Other.png</normaloff>icons/Other.png</iconset>
+                   </attribute>
+                   <attribute name="title">
+                    <string>Other</string>
+                   </attribute>
+                   <layout class="QGridLayout" name="gridLayout_20">
+                    <item row="0" column="0">
+                     <widget class="QTreeWidget" name="other_tree">
+                      <property name="font">
+                       <font>
+                        <family>Segoe UI Semibold</family>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="cursor" stdset="0">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QHeaderView::section {
     background-color: #292929;
     color: white;
     padding-left: 4px;
@@ -656,28 +909,37 @@ QScrollBar:horizontal {
 QScrollBar::handle:horizontal {
     background: #0C632A;
 }</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::VLine</enum>
-                  </property>
-                  <property name="lineWidth">
-                   <number>0</number>
-                  </property>
-                  <property name="editTriggers">
-                   <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-                  </property>
-                  <property name="indentation">
-                   <number>10</number>
-                  </property>
-                  <property name="uniformRowHeights">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="headerDefaultSectionSize">
-                   <number>120</number>
-                  </attribute>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::VLine</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+                      </property>
+                      <property name="indentation">
+                       <number>10</number>
+                      </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>true</bool>
+                      </property>
+                      <attribute name="headerDefaultSectionSize">
+                       <number>120</number>
+                      </attribute>
+                      <column>
+                       <property name="text">
+                        <string notr="true">1</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
                  </widget>
                 </item>
                </layout>
@@ -695,6 +957,20 @@ QScrollBar::handle:horizontal {
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
           <widget class="QFrame" name="frame_3">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    border: 2px solid gray;
+    border-radius: 5px;
+    margin-top: 5ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}</string>
+           </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
@@ -720,6 +996,7 @@ QScrollBar::handle:horizontal {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -774,7 +1051,7 @@ QScrollBar::handle:horizontal {
                  </property>
                  <property name="html">
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -788,6 +1065,7 @@ p, li { white-space: pre-wrap; }
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -800,11 +1078,13 @@ p, li { white-space: pre-wrap; }
                   <string>Clear live log</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
-		padding: 7px
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
+		padding: 7px;
     }
 
  QPushButton:hover {
@@ -850,7 +1130,9 @@ QToolTip {
         background-color: #a48912;
         border: none;
         color: #fff;
-		padding: 7px
+		padding: 7px;
+		border: 2px solid #a48912;
+    	border-radius: 10px;
     }
 
 QPushButton:hover {
@@ -860,7 +1142,9 @@ QPushButton:hover {
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
-}</string>
+}
+
+</string>
                  </property>
                  <property name="text">
                   <string> Export</string>
@@ -886,10 +1170,25 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+    border: 2px solid gray;
+    border-radius: 5px;
+    margin-top: 5ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}</string>
               </property>
               <property name="title">
                <string>Database </string>
@@ -907,6 +1206,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -919,21 +1219,17 @@ QToolTip {
                   <string>Backup databases</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
 	background-color: #084D20;
 }
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}
-
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -961,6 +1257,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -973,10 +1270,12 @@ QToolTip {
                   <string>Check for database update</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1015,6 +1314,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1027,16 +1327,17 @@ QToolTip {
                   <string>Delete databases</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
 	background-color: #084D20;
 }
-
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -1064,6 +1365,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1076,10 +1378,12 @@ QToolTip {
                   <string>App options (beta)</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1121,6 +1425,7 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1131,6 +1436,20 @@ QToolTip {
               </property>
               <property name="acceptDrops">
                <bool>true</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+    border: 2px solid gray;
+    border-radius: 5px;
+    margin-top: 5ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}</string>
               </property>
               <property name="title">
                <string>Other</string>
@@ -1148,6 +1467,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>8</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1157,11 +1477,16 @@ QToolTip {
                   <string>Lookup a device using its model number (A1670)</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">
-
-QToolTip { 
+                  <string notr="true">QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
+}
+
+QLineEdit {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
 }</string>
                  </property>
                  <property name="text">
@@ -1184,6 +1509,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1196,10 +1522,12 @@ QToolTip {
                   <string>Search</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1238,6 +1566,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1250,10 +1579,12 @@ QToolTip {
                   <string>Change directory where firmware is going to be downloaded</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1286,6 +1617,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>true</kerning>
@@ -1295,11 +1627,16 @@ QToolTip {
                   <string>Search for a device. ex: iPhone 11, 17A844 or iPhone12,1</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">
-
-QToolTip { 
+                  <string notr="true">QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
+}
+
+QLineEdit {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
 }</string>
                  </property>
                  <property name="placeholderText">
@@ -1322,6 +1659,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1334,10 +1672,16 @@ QToolTip {
                   <string>Location: Default iTunes directory</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">
-QToolTip { 
+                  <string notr="true">QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
+}
+
+QLineEdit {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
 }</string>
                  </property>
                  <property name="text">
@@ -1363,6 +1707,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1396,6 +1741,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1425,6 +1771,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1463,10 +1810,25 @@ QToolTip {
                <font>
                 <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
+                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+    border: 2px solid gray;
+    border-radius: 5px;
+    margin-top: 5ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}</string>
               </property>
               <property name="title">
                <string>iFirmware Tools</string>
@@ -1484,6 +1846,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1496,10 +1859,12 @@ QToolTip {
                   <string>Download all signed firmwares for the current tab</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1538,6 +1903,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1550,10 +1916,12 @@ QToolTip {
                   <string>Delete all firmwares in the current selected directory</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1586,6 +1954,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1598,16 +1967,17 @@ QToolTip {
                   <string>Open current directory</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
 	background-color: #084D20;
 }
-
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
@@ -1635,6 +2005,7 @@ QToolTip {
                   <font>
                    <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
+                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1647,10 +2018,12 @@ QToolTip {
                   <string>Hash all firmwares in current selected directory</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">    QPushButton {
+                  <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
@@ -1696,6 +2069,7 @@ QToolTip {
          <property name="font">
           <font>
            <pointsize>9</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
            <strikeout>false</strikeout>
            <kerning>false</kerning>
@@ -1726,21 +2100,34 @@ QToolTip {
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">border: none;
-background-color: rgb(52, 52, 52);
-color: red;</string>
+             <string notr="true">QProgressBar {
+    border: 2px solid grey;
+    border-radius: 5px;
+}
+
+QProgressBar::chunk {
+	
+	background-color: rgb(30, 88, 96);
+}</string>
             </property>
             <property name="value">
              <number>0</number>
             </property>
             <property name="textVisible">
              <bool>false</bool>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%p%</string>
             </property>
            </widget>
           </item>
@@ -1756,6 +2143,7 @@ color: red;</string>
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>false</kerning>
@@ -1763,7 +2151,10 @@ color: red;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(52, 52, 52);
-color:#fff;</string>
+color:#fff;
+border: 2px solid #191919;
+border-radius: 10px;
+</string>
             </property>
             <property name="text">
              <string>1.1-2020</string>
@@ -1785,6 +2176,7 @@ color:#fff;</string>
              <font>
               <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
@@ -1797,10 +2189,12 @@ color:#fff;</string>
              <string>Check for updates</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">    QPushButton {
+             <string notr="true">QPushButton {
         background-color: #0C632A;
         border: none;
         color: #fff;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
  QPushButton:hover {
