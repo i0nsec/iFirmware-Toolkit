@@ -406,8 +406,10 @@ class MainApp(QMainWindow):
 
         # Scan PC
         self.scan_pc.clicked.connect(self.scanpc)
-        self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
+        
+        # Context manager for This PC needs some more work
+        # self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
         
         # Delete all on this PC
         self.delete_all.clicked.connect(self.del_all)
@@ -694,6 +696,7 @@ class MainApp(QMainWindow):
 
         if value == 0:
             pass
+
         elif value == 1:
             self.log("Copied results!")
             QApplication.clipboard().setText(data)
