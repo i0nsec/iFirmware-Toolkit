@@ -1,4 +1,4 @@
 {
-  "Interpreter": "CondaEnv|CondaEnv|4flask",
-  "SuppressEnvironmentCreationPrompt": true
+  "SuppressEnvironmentCreationPrompt": true,
+  "Interpreter": "Global|VisualStudio|anaconda3"
 }

@@ -3,9 +3,11 @@ import os, sys
 import hashlib
 import webbrowser
 import time
+import pathlib
 import py7zr
 import sqlite3
 import json
+from getpass import getuser
 import logging
 from humanize import naturalsize
 from PyQt5 import QtGui, uic
@@ -95,7 +97,7 @@ def show_relevant(state):
 
 def delete_from_database(URL, current_index, name):
     # Delete a firmware version from the selected database
-    
+
     window.log(f"Deleting {name} from database...")
     value = messaged_box(
         "Delete",
@@ -334,11 +336,14 @@ class MainApp(QMainWindow):
     current_index = 0
     show_relevant = None
     options = None
+    this_pc = []
 
     def __init__(self):
         super(MainApp, self).__init__()
         uic.loadUi("_iFTK.ui", self)
         self.show()
+
+        self.show_in_current_folder()
 
         # Change default destenation button
         self.location.clicked.connect(self.change_dir)
@@ -360,7 +365,7 @@ class MainApp(QMainWindow):
 
         # Delete all databases
         self.db_delete.clicked.connect(self.delete_datebases)
-         
+
         # Backup databases 
         self.backup.clicked.connect(self.backup_databases)
 
@@ -398,6 +403,14 @@ class MainApp(QMainWindow):
 
         # Export log 
         self.export_log.clicked.connect(self.export_logs)
+
+        # Scan PC
+        self.scan_pc.clicked.connect(self.scanpc)
+        self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
+        
+        # Delete all on this PC
+        self.delete_all.clicked.connect(self.del_all)
 
     def export_logs(self):
         if not os.path.exists('.\\logs.txt'):
@@ -609,6 +622,66 @@ class MainApp(QMainWindow):
         self.up_thread.send_to_log.connect(self.send_to_log)
         self.up_thread.no_update.connect(self.no_update)
         self.up_thread.update_available.connect(self.update_available)
+
+    def scanpc(self):
+        self.this_pc_total = 0
+
+        self.scan = ScanPC()
+        self.scan.start()
+        self.scan.send_to_log.connect(self.send_to_log)
+        self.scan.finished.connect(self.update_this_pc)
+        self.scan.update_progress.connect(self.update_progressbar)
+
+    def update_this_pc(self):
+
+        for get_size in MainApp.this_pc:
+            self.this_pc_total += os.path.getsize(get_size)
+
+        self.found_label.setText(f"Found: {len(MainApp.this_pc)}")
+        self.total_label.setText(f"Total: {naturalsize(self.this_pc_total)}")
+
+        self.pc_tree.clear()
+        for other_files in MainApp.this_pc:
+            QTreeWidgetItem(self.pc_tree, 
+                            [str(other_files), naturalsize(os.path.getsize(os.path.join(dest, str(other_files))))])
+
+    def show_in_current_folder(self):
+        get_files = os.listdir(dest)
+
+        self.pc_tree.clear()
+        for files in get_files:
+            QTreeWidgetItem(self.pc_tree,
+                                [files, naturalsize(os.path.getsize(os.path.join(dest, files)))])
+
+    def del_all(self):
+        get_locals = os.listdir(dest)
+
+        if MainApp.this_pc or get_locals:
+            value = messaged_box(
+                            "Delete All", 
+                            "icons/Question.png", 
+                            "icons/Question.png", 
+                            f"Are you sure you want to delete all?\n{''.join([x for x in get_locals])}\n{''.join([str(x) for x in MainApp.this_pc])}",
+                            yes=True,
+                            no=True,
+                            ok=False)
+            if value == 0:
+                if get_locals:
+                    for file in get_locals:
+                        os.remove(os.path.join(dest, file))
+            
+                if MainApp.this_pc:
+                    for file in MainApp.this_pc:
+                        os.remove(file)
+                        
+                    self.scanpc()
+        else:
+            value = messaged_box(
+                                "Delete All",
+                                "icons/Info.png",
+                                "icons/Info.png",
+                                "Could not find any firmware to delete.",
+                                ok=True)
 
     def show_in_ui(self, val):
 
@@ -1281,6 +1354,43 @@ class MainApp(QMainWindow):
 
         except AttributeError:
             pass
+    
+    def context_menu_this_pc(self, point):
+
+        index = self.getIndex.indexAt(point)
+        if not index.isValid():
+            return
+
+        item1 = self.getIndex.itemAt(point)
+
+        firmware = item1.text(1) 
+        size = item1.text(2)
+
+        menu = QMenu()
+        copy = menu.addAction("Copy Full Path")
+        copy.setIcon(QtGui.QIcon("icons/Copy.png"))
+        menu.addSeparator()
+        delete = menu.addAction("Delete")
+        delete.setIcon(QtGui.QIcon("icons/Delete.png"))
+
+        value = menu.exec_(self.getIndex.mapToGlobal(point))
+
+        try:
+            if value.text() == "Copy Full Path":
+                QApplication.clipboard().setText(firmware)
+
+            if value.text() == "Delete":
+                value = messaged_box("Delete", 
+                            "icons/updated.png",
+                            "icons/Question.png",
+                            f"Delete {firmware}?",
+                            yes=True, 
+                            no=True,
+                            ok=False)
+                print(value)
+
+        except AttributeError:
+            pass
 
 class HashingThreaded(QThread):
 
@@ -1540,6 +1650,35 @@ class DeviceSearchThreaded(QThread):
             except sqlite3.OperationalError:
                 pass
 
+class ScanPC(QThread):
+    update_count = pyqtSignal(int)
+    send_to_log = pyqtSignal(str)
+    update_progress = pyqtSignal(int)
+    common_dirs = [dest,
+                    'C:\\',
+                   f'C:\\Users\\{getuser()}',
+                   f'C:\\Users\\{getuser()}\\Downloads',
+                   f'C:\\Users\\{getuser()}\\Desktop']
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        self.send_to_log.emit("Scan initiated")
+        MainApp.this_pc.clear()
+        
+        self.update_progress.emit(10)
+
+        for directory in self.common_dirs:
+            for path_to_file in pathlib.Path(directory).glob('*.ipsw'):
+                if path_to_file:
+                    MainApp.this_pc.append(path_to_file)
+                    self.update_progress.emit(1)
+        
+        self.update_progress.emit(100)
+        self.send_to_log.emit(f"Finished scanning")
+        self.send_to_log.emit(f"-----------------")
+                
 if __name__ == '__main__':
 
     # Check if hosts file exists
