@@ -1,5 +1,0 @@
-DB Version: 01202022
-=================
-
-Checking for update...
-Already up to date.

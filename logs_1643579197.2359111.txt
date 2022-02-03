@@ -1,7 +1,0 @@
-DB Version: 01292022
-=================
-
-Scan initiated
-Finished scanning
-Scan initiated
-Finished scanning
