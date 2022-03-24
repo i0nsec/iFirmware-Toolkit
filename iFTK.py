@@ -663,20 +663,24 @@ class MainApp(QMainWindow):
                             "Delete All", 
                             "icons/Question.png", 
                             "icons/Question.png", 
-                            f"Are you sure you want to delete all?\n{''.join([x for x in get_locals])}\n{''.join([str(x) for x in MainApp.this_pc])}",
+                            f"Are you sure you want to delete all?\n{' '.join([x for x in get_locals])}\n{' '.join([str(x) for x in MainApp.this_pc])}",
                             yes=True,
                             no=True,
                             ok=False)
             if value == 0:
-                if get_locals:
-                    for file in get_locals:
-                        os.remove(os.path.join(dest, file))
-            
-                if MainApp.this_pc:
-                    for file in MainApp.this_pc:
-                        os.remove(file)
+                try:
+                    if get_locals:
+                        for file in get_locals:
+                            os.remove(os.path.join(dest, file))
+                
+                    if MainApp.this_pc:
+                        for file in MainApp.this_pc:
+                            os.remove(file)
+
+                except FileNotFoundError:
+                    pass
                         
-                    self.scanpc()
+                self.scanpc()
         else:
             value = messaged_box(
                                 "Delete All",

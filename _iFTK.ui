@@ -205,7 +205,11 @@ QToolTip {
 }</string>
                   </property>
                   <property name="text">
-                   <string>Delete all</string>
+                   <string> Delete all</string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>icons/Error.png</normaloff>icons/Error.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -245,7 +249,11 @@ QToolTip {
 }</string>
                   </property>
                   <property name="text">
-                   <string>Scan PC</string>
+                   <string> Scan PC</string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>icons/Search1.png</normaloff>icons/Search1.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -1899,7 +1907,8 @@ QToolTip {
 }</string>
                  </property>
                  <property name="text">
-                  <string>Download</string>
+                  <string>Download
+    (beta)</string>
                  </property>
                  <property name="icon">
                   <iconset>
