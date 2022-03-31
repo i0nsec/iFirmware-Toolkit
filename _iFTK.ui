@@ -44,7 +44,6 @@ QToolTip { color: #fff; background-color: #000; border: none; }
              <widget class="QToolBox" name="toolBox">
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -76,7 +75,7 @@ QToolBox::tab:selected { /* italicize selected tabs */
                <number>0</number>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <property name="tabSpacing">
                <number>0</number>
@@ -86,8 +85,8 @@ QToolBox::tab:selected { /* italicize selected tabs */
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>708</width>
-                 <height>611</height>
+                 <width>715</width>
+                 <height>609</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -157,9 +156,7 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                     <string>Firmware</string>
                    </property>
                    <property name="font">
-                    <font>
-                     <family>Segoe UI Semibold</family>
-                    </font>
+                    <font/>
                    </property>
                   </column>
                   <column>
@@ -179,7 +176,6 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                   </property>
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>9</pointsize>
                    </font>
                   </property>
@@ -223,7 +219,6 @@ QToolTip {
                   </property>
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>9</pointsize>
                    </font>
                   </property>
@@ -261,9 +256,7 @@ QToolTip {
                  <widget class="QLabel" name="found_label">
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>10</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -276,7 +269,6 @@ QToolTip {
                  <widget class="QLabel" name="total_label">
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -292,8 +284,8 @@ QToolTip {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>708</width>
-                 <height>611</height>
+                 <width>715</width>
+                 <height>609</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -308,9 +300,7 @@ QToolTip {
                  <widget class="QTabWidget" name="main_tab">
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>9</pointsize>
-                    <weight>50</weight>
                     <bold>false</bold>
                     <strikeout>false</strikeout>
                     <stylestrategy>PreferDefault</stylestrategy>
@@ -381,7 +371,7 @@ QMenu::item::selected {
                    <set>Qt::ImhNone</set>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>5</number>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -408,7 +398,6 @@ QMenu::item::selected {
                      <widget class="QTreeWidget" name="ios_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -485,6 +474,9 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                       <property name="horizontalScrollMode">
                        <enum>QAbstractItemView::ScrollPerPixel</enum>
                       </property>
+                      <property name="autoExpandDelay">
+                       <number>0</number>
+                      </property>
                       <property name="indentation">
                        <number>10</number>
                       </property>
@@ -504,7 +496,7 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                        <bool>false</bool>
                       </property>
                       <property name="columnCount">
-                       <number>1</number>
+                       <number>0</number>
                       </property>
                       <attribute name="headerDefaultSectionSize">
                        <number>120</number>
@@ -512,11 +504,6 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                       <attribute name="headerShowSortIndicator" stdset="0">
                        <bool>false</bool>
                       </attribute>
-                      <column>
-                       <property name="text">
-                        <string>New Column</string>
-                       </property>
-                      </column>
                      </widget>
                     </item>
                    </layout>
@@ -534,7 +521,6 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                      <widget class="QTreeWidget" name="ipad_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -590,7 +576,7 @@ QScrollBar::handle:horizontal {
                        <number>10</number>
                       </property>
                       <property name="sortingEnabled">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
@@ -620,7 +606,6 @@ QScrollBar::handle:horizontal {
                      <widget class="QTreeWidget" name="ipod_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -675,9 +660,6 @@ QScrollBar::handle:horizontal {
                       <property name="indentation">
                        <number>10</number>
                       </property>
-                      <property name="sortingEnabled">
-                       <bool>true</bool>
-                      </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
                       </property>
@@ -706,7 +688,6 @@ QScrollBar::handle:horizontal {
                      <widget class="QTreeWidget" name="mac_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -768,7 +749,7 @@ QScrollBar::handle:horizontal {
                        <bool>true</bool>
                       </property>
                       <property name="sortingEnabled">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
@@ -796,7 +777,6 @@ QScrollBar::handle:horizontal {
                      <widget class="QTreeWidget" name="itunes_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -863,9 +843,6 @@ QScrollBar::handle:horizontal {
                       <property name="uniformRowHeights">
                        <bool>true</bool>
                       </property>
-                      <property name="sortingEnabled">
-                       <bool>true</bool>
-                      </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
                       </property>
@@ -894,7 +871,6 @@ QScrollBar::handle:horizontal {
                      <widget class="QTreeWidget" name="other_tree">
                       <property name="font">
                        <font>
-                        <family>Segoe UI Semibold</family>
                         <pointsize>10</pointsize>
                        </font>
                       </property>
@@ -956,7 +932,7 @@ QScrollBar::handle:horizontal {
                        <bool>true</bool>
                       </property>
                       <property name="sortingEnabled">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                       <attribute name="headerDefaultSectionSize">
                        <number>120</number>
@@ -1024,9 +1000,7 @@ QGroupBox::title {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1066,7 +1040,6 @@ QScrollBar::handle:horizontal {
                 <widget class="QTextBrowser" name="text_log">
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -1081,11 +1054,11 @@ QScrollBar::handle:horizontal {
                  </property>
                  <property name="html">
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -1093,9 +1066,7 @@ p, li { white-space: pre-wrap; }
                 <widget class="QPushButton" name="clear_log">
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1198,9 +1169,7 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1234,9 +1203,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1285,9 +1252,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1342,9 +1307,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1393,9 +1356,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1453,9 +1414,7 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1495,9 +1454,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>8</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1537,9 +1494,7 @@ QLineEdit {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1594,9 +1549,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1645,9 +1598,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>true</kerning>
@@ -1687,9 +1638,7 @@ QLineEdit {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1735,9 +1684,7 @@ QLineEdit {
                 <widget class="QCheckBox" name="show_signed">
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1769,9 +1716,7 @@ QToolTip {
                 <widget class="QCheckBox" name="show_relevant">
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1799,9 +1744,7 @@ QToolTip {
                 <widget class="QCheckBox" name="check_integrity">
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1838,9 +1781,7 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <weight>50</weight>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -1874,9 +1815,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1908,7 +1847,7 @@ QToolTip {
                  </property>
                  <property name="text">
                   <string>Download
-    (beta)</string>
+   (beta)</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -1932,9 +1871,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -1983,9 +1920,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -2034,9 +1969,7 @@ QToolTip {
                  </property>
                  <property name="font">
                   <font>
-                   <family>Segoe UI Semibold</family>
                    <pointsize>9</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -2100,7 +2033,6 @@ QToolTip {
          <property name="font">
           <font>
            <pointsize>9</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
            <strikeout>false</strikeout>
            <kerning>false</kerning>
@@ -2129,9 +2061,7 @@ QToolTip {
             </property>
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
@@ -2172,9 +2102,7 @@ QProgressBar::chunk {
             </property>
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>false</kerning>
@@ -2205,9 +2133,7 @@ border-radius: 10px;
             </property>
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>9</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
