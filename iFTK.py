@@ -7,8 +7,8 @@ import pathlib
 import py7zr
 import sqlite3
 import json
-from getpass import getuser
 import logging
+from getpass import getuser
 from humanize import naturalsize
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import pyqtSignal, Qt, QThread
@@ -23,28 +23,30 @@ from PyQt5.QtWidgets import (
             QMenu,
             QGridLayout)
 
-# Downloader module
+# dm.py - main downloader
+# Still in beta and may crash occasionally
 import dm
 
-__version__ = 'v2.1-1028'
-__dbversion__ = 'Not available'
+__version__ = 'v2.4-0227' # Application version
+__dbversion__ = 'Not available' # Database version - will be updated when a new database is retrieved
 
-# Get URL from config file
+# Main API to get all updates: Application, databases
 Server = ''
 message_queue = [] # Used to display messages prior to launching iFTK. Will be used more in future versions.
 
-# The default destenation where firmwares will be downloaded
+# The default destination where IPSWs will be downloaded
 # Not changing this will make iTunes pick up a firmware easily
 dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
 text_reset = '' # Clear the Live Log
-download_urls = {}
+download_urls = {} # Used to pass URLs to the downloader
 relevant_version = 15 # Specific firmware version to display
 relevant_only = True # Always show relevant firmwares only
-no_update = False # Do not update QTreeWidget when checking for database update if there is no updates available
+no_update = False # Do not update QTreeWidget, when checking for database update, if there is no updates available
 hash_ipsw = False # Whether to hash after a download is finished 
 signed_only = True # Show signed firmwares only
 force_continue = False # Force updating by checking for update again even  if SHA256 does not match
-# Check if all required databases exist
+# Default location for database files
+# Used to check if all required databases exist
 dbs = [
     'DBs\\ios_devices.db',
     'DBs\\ipad_devices.db', 
@@ -55,7 +57,7 @@ dbs = [
 ]
 
 def check_integrity(state):
-    # Check box for checking integrity of firmware
+    # CheckBox for hashing a firmware
 
     if state == 2:
         globals().update(hash_ipsw=True)
@@ -67,26 +69,26 @@ def check_databases():
 
     for db in dbs:
         if not os.path.isfile(db):
-            MainApp.signed_only.setDisabled(True)
-            MainApp.show_relevant.setDisabled(True)
+            MainApp.SIGNED_ONLY.setDisabled(True)
+            MainApp.SHOW_RELEVANT.setDisabled(True)
         else:
-            MainApp.signed_only.setDisabled(False)
-            MainApp.show_relevant.setDisabled(False)
+            MainApp.SIGNED_ONLY.setDisabled(False)
+            MainApp.SHOW_RELEVANT.setDisabled(False)
 
 def show_singed_only(state):
-    # Show signed firmwares only 
+    # Show signed only 
 
     if state == 2:
         globals().update(signed_only=True)
         window.reset_data()
-        MainApp.show_relevant.setEnabled(True)
+        MainApp.SHOW_RELEVANT.setEnabled(True)
     else:
         globals().update(signed_only=False)
         window.reset_data()
-        MainApp.show_relevant.setDisabled(True)
+        MainApp.SHOW_RELEVANT.setDisabled(True)
 
 def show_relevant(state):
-    # Show the lastest versions only 
+    # Show the most relevant versions only
     
     if state == 2:
         globals().update(relevant_only=True)
@@ -99,6 +101,8 @@ def delete_from_database(URL, current_index, name):
     # Delete a firmware version from the selected database
 
     window.log(f"Deleting {name} from database...")
+
+    # Display a message to the user making sure before deleting the firmware
     value = messaged_box(
         "Delete",
         "icons/updated.png",
@@ -115,11 +119,14 @@ def delete_from_database(URL, current_index, name):
             if os.path.isfile(delete_from):
                 conn = sqlite3.connect(delete_from)
                 cur = conn.cursor()
+
                 if current_index == 4:
                     cur.execute(f"""DELETE FROM devices WHERE URL32='{URL}'""")
                 else:
                     cur.execute(f"""DELETE FROM devices WHERE URL='{URL}'""")
+
                 conn.commit()
+                conn.close()
                 window.log(f"Deleted {name} from database")
         finally:
             window.reset_data()
@@ -127,10 +134,8 @@ def delete_from_database(URL, current_index, name):
     elif value == 1:
         window.log("Aborted by user.")
     
-    else:
-        print(value)
-    
 def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
+    # This function will be used to create a custom message for the user 
     
     message = QMessageBox()
 
@@ -152,7 +157,7 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
     font.setFamily("Segoe UI Semibold")
     message.setFont(font)
 
-    # Buttons 
+    # All available buttons
     if ok:
         ok = message.addButton('Ok', message.ActionRole)
         ok.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
@@ -171,7 +176,6 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
                 background-color: #084D20;
             }""")
 
-    # Buttons 
     if get:
         get = message.addButton('Get', message.ActionRole)
         get.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
@@ -251,11 +255,13 @@ def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False,
         abort.setStyleSheet("QPushButton {background-color: #9a1717;border: 2px solid #0C632A;border-radius: 10px;color: #fff; width: 50%;padding: 8px}  QPushButton:hover {background-color: #801313;}")
 
     # Return value
-    value = message.exec_()
-    return value
+    return message.exec_()
 
 class ShowOptionsUI(QWidget):
-    
+    """
+        Show options menu to restore a database backup
+    """
+
     def __init__(self):
         super(ShowOptionsUI, self).__init__()
         uic.loadUi("_config.ui", self)
@@ -264,7 +270,7 @@ class ShowOptionsUI(QWidget):
         self.stop()
 
     def stop(self):
-        MainApp.options.setEnabled(True)
+        MainApp.OPTIONS.setEnabled(True)
 
     def _show(self):
         self.show()
@@ -332,11 +338,11 @@ class ShowOptionsUI(QWidget):
             self.close()
 
 class MainApp(QMainWindow):
-    signed_only = None
-    current_index = 0
-    show_relevant = None
-    options = None
-    this_pc = []
+    SIGNED_ONLY = None
+    CURRENT_INDEX = 0
+    SHOW_RELEVANT = None
+    OPTIONS = None
+    THIS_PC = []
 
     def __init__(self):
         super(MainApp, self).__init__()
@@ -345,16 +351,16 @@ class MainApp(QMainWindow):
 
         self.show_in_current_folder()
 
-        # Change default destenation button
+        # Change default destination button
         self.location.clicked.connect(self.change_dir)
 
         # Open default destination button
         self.open_location.clicked.connect(lambda: self.open_folder())
 
-        # Delete all firmwares 
+        # Delete all IPSWs in the current destination folder
         self.ipsw_delete.clicked.connect(self.delete_firmwares)
 
-        # Verify local firmwares
+        # Hash IPSWs in the current destination folder
         self.verify.clicked.connect(self.hash_local_firmwares)
 
         # Clear logs button
@@ -366,55 +372,67 @@ class MainApp(QMainWindow):
         # Delete all databases
         self.db_delete.clicked.connect(self.delete_datebases)
 
-        # Backup databases 
+        # Backup databases
+        # A backup database can be used to restore access
         self.backup.clicked.connect(self.backup_databases)
 
-        # Device search
-        self.device_search.textChanged.connect(lambda: self.dev_search(self.device_search.text(), MainApp.current_index))
+        # Search for a device in a database
+        # ex: iPhone 12, A1287, etc
+        self.device_search.textChanged.connect(lambda: self.device_lookup(self.device_search.text(), MainApp.CURRENT_INDEX))
 
-        # Model number lookup
+        # Device model number lookup
         self.search_btn.clicked.connect(lambda: self.dev_lookup(self.search.text()))
 
-        """CheckBoxes"""
-        # Check integrity checkbox
+        # CheckBoxes:
+        # Hash IPSW after the download has finished
         self.check_integrity.clicked.connect(lambda: check_integrity(self.check_integrity.checkState()))
-        # Show signed firmwares only
+        # Show signed IPSWs only
         self.show_signed.clicked.connect(lambda: show_singed_only(self.show_signed.checkState()))
-        MainApp.signed_only = self.show_signed
-        # Show relevant firmwares only. Only shows the devices that support that latest firmwares
-        MainApp.show_relevant = self.show_relevant
+        MainApp.SIGNED_ONLY = self.show_signed
+        # Show most relevant IPSWs versions only
+        MainApp.SHOW_RELEVANT = self.show_relevant
         self.show_relevant.clicked.connect(lambda: show_relevant(self.show_relevant.checkState()))
         self.show_relevant.setChecked(True)
 
-        # Config button
+        # Show options menu
         self.op = ShowOptionsUI()
         self.options.clicked.connect(lambda: self.show_config())
-        MainApp.options = self.options
+        MainApp.OPTIONS = self.options
         self.main_tab.setCurrentIndex(1)
 
-        # Check for iFirmware updates button
+        # Check for iFTK update button
         self.get_update.clicked.connect(self.update_btn_clicked)
 
-        # Show current iFirmware version
+        # Set current iFTK version
         self.current_v.setText(__version__)
 
-        # Main download button to download all signed firmwares for iPhones only
-        self.main_download.clicked.connect(lambda: self.download_all_signed(MainApp.current_index))
+        # Main download button
+        # Download all signed IPSWs - for iPhone only
+        self.main_download.clicked.connect(lambda: self.download_all_signed(MainApp.CURRENT_INDEX))
 
-        # Export log 
+        # Export logs to a file
         self.export_log.clicked.connect(self.export_logs)
 
-        # Scan PC
+        # Scan PC for IPSWs
+        # Will check in the these places only:
+        #   - var=dest (iTunes default destination),
+        #   - C:\\,
+        #   - C:\\Users\\[USER],
+        #   - C:\\Users\\[USER]\\Downloads',
+        #   - C:\\Users\\[USER]\\Desktop'
         self.scan_pc.clicked.connect(self.scanpc)
         
         # Context manager for This PC needs some more work
         # self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
         # self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
         
-        # Delete all on this PC
-        self.delete_all.clicked.connect(self.del_all)
+        # Delete all IPSWs when button is clicked
+        # Will only work when a scan has finished
+        self.delete_all.clicked.connect(self.delete_all_ipsws)
 
     def export_logs(self):
+        # Export logs to a file and append time.time() to the end
+
         if not os.path.exists('.\\logs.txt'):
             return
 
@@ -424,19 +442,26 @@ class MainApp(QMainWindow):
             with open(_name, 'w') as _file:
                 _file.write(file.read())
 
-            self.log(f"Exported logs to {_name}")
+        self.log(f"Exported logs to {_name}")
 
     def open_folder(self):
+        # Open default destination
+
         try:
             os.startfile(dest)
         except FileNotFoundError:
             self.log("Directory does not exist.\niTunes is not installed, or it has not been initialized or used.")
 
     def show_config(self):
+        # Show options menu
+
         self.options.setDisabled(True)
         self.op._show()
 
     def download_all_signed(self, current_tab):
+        # This function downloads only signed IPSWs. And it only works for iPhone at the moment
+        #
+        # Needs lots of work because it crashes occasionally. A new UI is in work to replace the current one
 
         if current_tab != 0:
             self.log("Only iOS is supported for this feature.")
@@ -485,7 +510,8 @@ class MainApp(QMainWindow):
             self.log('No database was found.')
 
     def download_one_firmware(self, dev_name, url, hash_value, buildid):
-
+        # Single firmware download. Only triggered from context menu 
+        
         # If the default directory for iTunes does not exist, create it
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -544,14 +570,11 @@ class MainApp(QMainWindow):
 
         elif value == 1:
             self.log(f"Skipping {dev_name}")
-        
-        else:
-            pass
 
     def database_update(self):
+        # Connect to server and check for database update
 
-        # If hosts file does not exist, do not continue
-        # Hosts file contains server information to connect to the server
+        # Exit if hosts file does not exist
         if not Server:
             self.log("No hosts file found.")
             return
@@ -570,25 +593,21 @@ class MainApp(QMainWindow):
         if value == 0:
             self.db_thread = DatabaseUpdateThreaded()
             self.db_thread.start()
-            # If no updates, show this window
             self.db_thread.no_update.connect(self.no_update)
-            # Log all messages to live log
             self.db_thread.send_to_log.connect(self.send_to_log)
-            # Update progress bar
             self.db_thread.progress_update.connect(self.update_progressbar)
-
             self.db_thread.refrush_ui.connect(self.reset_data)
 
         else:
             self.log('Aborted by user.')
 
-    def dev_search(self, query, current_tab):
+    def device_lookup(self, query, current_tab):
+        # Lookup a device in the database
 
         self.worker_search = DeviceSearchThreaded(query=query, current_tab=current_tab)
         self.worker_search.start()
-        # Log all messages
         self.worker_search.send_to_log.connect(self.send_to_log)
-        # Reset live log when displaying results
+        # Reset live log when displaying new results
         self.reset_logger()
 
     def dev_lookup(self, model):
@@ -605,7 +624,7 @@ class MainApp(QMainWindow):
         self.worker_lookup.show_in_ui.connect(self.show_in_ui)
 
     def hash_local_firmwares(self):
-        self.hash_firmware = HashingThreaded(current_tab=MainApp.current_index)
+        self.hash_firmware = HashingThreaded(current_tab=MainApp.CURRENT_INDEX)
         self.hash_firmware.start()
         self.hash_firmware.send_to_log.connect(self.send_to_log)
         self.hash_firmware.progress_update.connect(self.update_progressbar)
@@ -626,8 +645,9 @@ class MainApp(QMainWindow):
         self.up_thread.update_available.connect(self.update_available)
 
     def scanpc(self):
-        self.this_pc_total = 0
+        # Scan PC for available IPSWs and display them in This PC tab
 
+        self.this_pc_total = 0
         self.scan = ScanPC()
         self.scan.start()
         self.scan.send_to_log.connect(self.send_to_log)
@@ -635,19 +655,22 @@ class MainApp(QMainWindow):
         self.scan.update_progress.connect(self.update_progressbar)
 
     def update_this_pc(self):
+        # Update info the This PC tab
 
-        for get_size in MainApp.this_pc:
+        for get_size in MainApp.THIS_PC:
             self.this_pc_total += os.path.getsize(get_size)
 
-        self.found_label.setText(f"Found: {len(MainApp.this_pc)}")
+        self.found_label.setText(f"Found: {len(MainApp.THIS_PC)}")
         self.total_label.setText(f"Total: {naturalsize(self.this_pc_total)}")
 
         self.pc_tree.clear()
-        for other_files in MainApp.this_pc:
+        for other_files in MainApp.THIS_PC:
             QTreeWidgetItem(self.pc_tree, 
                             [str(other_files), naturalsize(os.path.getsize(os.path.join(dest, str(other_files))))])
 
     def show_in_current_folder(self):
+        # Display IPSWs in the current destination folder when iFTK launches
+
         get_files = os.listdir(dest)
 
         self.pc_tree.clear()
@@ -655,15 +678,16 @@ class MainApp(QMainWindow):
             QTreeWidgetItem(self.pc_tree,
                                 [files, naturalsize(os.path.getsize(os.path.join(dest, files)))])
 
-    def del_all(self):
-        get_locals = os.listdir(dest)
+    def delete_all_ipsws(self):
+        # Delete all downloaded IPSWs found by Scan PC method
 
-        if MainApp.this_pc or get_locals:
+        get_locals = os.listdir(dest)
+        if MainApp.THIS_PC or get_locals:
             value = messaged_box(
                             "Delete All", 
                             "icons/Question.png", 
                             "icons/Question.png", 
-                            f"Are you sure you want to delete all?\n{' '.join([x for x in get_locals])}\n{' '.join([str(x) for x in MainApp.this_pc])}",
+                            f"Are you sure you want to delete all?\n{' '.join([x for x in get_locals])}\n{' '.join([str(x) for x in MainApp.THIS_PC])}",
                             yes=True,
                             no=True,
                             ok=False)
@@ -673,8 +697,8 @@ class MainApp(QMainWindow):
                         for file in get_locals:
                             os.remove(os.path.join(dest, file))
                 
-                    if MainApp.this_pc:
-                        for file in MainApp.this_pc:
+                    if MainApp.THIS_PC:
+                        for file in MainApp.THIS_PC:
                             os.remove(file)
 
                 except FileNotFoundError:
@@ -690,9 +714,9 @@ class MainApp(QMainWindow):
                                 ok=True)
 
     def show_in_ui(self, val):
+        # Show device model number information as message window
 
         data = f"Name: {val[0]}\nIdentifier: {val[1]}\nBoardconfig: {val[2]}\nPlatform: {val[3]}\nCPID: {val[4]}\n"
-
         value = messaged_box("Search results",
                     "icons/Search1.png",
                     "icons/Info.png",
@@ -706,6 +730,7 @@ class MainApp(QMainWindow):
             QApplication.clipboard().setText(data)
 
     def delete_datebases(self):
+        # Delete all databases
 
         to_delete = [db for db in dbs if os.path.isfile(db)]
         try:
@@ -749,6 +774,7 @@ class MainApp(QMainWindow):
             self.pbar.setValue(100)
 
     def backup_databases(self):
+        # backup all databases to a zip file
 
         to_backup = [db for db in dbs if os.path.isfile(db)]
         try:
@@ -777,7 +803,9 @@ class MainApp(QMainWindow):
             self.pbar.setValue(100)
 
     def load_data(self):
+        # Main method for displaying the IPSWs informatio
 
+        # Do not update QTreeWidget, when checking for database update, if there is no updates available
         if no_update:
             return
 
@@ -786,7 +814,7 @@ class MainApp(QMainWindow):
         #==================================================
         self.main_tab.currentChanged.connect(lambda: self.assign_index(self.main_tab.currentIndex()))
         self.main_tab.setContextMenuPolicy(Qt.DefaultContextMenu)
-        self.main_tab.setCurrentIndex(MainApp.current_index)
+        self.main_tab.setCurrentIndex(MainApp.CURRENT_INDEX)
 
         #==================================================
         #               iOS Tab 
@@ -1088,6 +1116,8 @@ class MainApp(QMainWindow):
         check_databases()
 
     def reset_data(self):
+        # This method will be called to reset the Database tab when refrushing or updating the UI
+
         self.ios_tree.clear()
         self.ipad_tree.clear()
         self.ipod_tree.clear()
@@ -1113,6 +1143,8 @@ class MainApp(QMainWindow):
                     f"Already up to date.\nVersion: {__version__}")
 
     def hash_file(self, val):
+        # Hash firmware once it's finished downloading
+
         if val[2]:
             sha1 = hashlib.sha1()
             with open(val[0], 'rb') as file:
@@ -1125,6 +1157,7 @@ class MainApp(QMainWindow):
                 self.log(f"SHA1 mismatched: {val[1]}")
 
     def update_available(self, val):
+        # When updates are available
 
         value = messaged_box("iFirmware Update",
                     "icons/updated.png",
@@ -1136,13 +1169,15 @@ class MainApp(QMainWindow):
             webbrowser.open(url)
 
     def send_to_log(self, val):
+        # Capture signals for logging and send them to logs
         self.log(val)
 
     def update_progressbar(self, val):
         self.pbar.setValue(val)
 
     def change_dir(self):
-    
+        # Change the default directory
+
         global dest
         new_dest = str(QFileDialog.getExistingDirectory(None, "Select Directory"))
         if not new_dest:
@@ -1153,11 +1188,14 @@ class MainApp(QMainWindow):
         self.location_value.setText(dest)
 
     def delete_firmwares(self):
+
         if os.path.isdir(dest):
             self.log("Delete firmwares?")
             files = os.listdir(dest)
+
             if files:
                 to_delete = []
+
                 for file in files:
                     if file[-5:] == '.ipsw':
                         to_delete.append(os.path.join(dest, file))
@@ -1167,12 +1205,12 @@ class MainApp(QMainWindow):
                     for ipsw in to_delete:
                         self.log(f"Found {ipsw}")
 
-                    show_firmwares = "\n".join([file for file in files if file[-5:] == '.ipsw'])
+                    show_ipsws = "\n".join([file for file in files if file[-5:] == '.ipsw'])
 
                     value = messaged_box("Delete", 
                                 "icons/updated.png",
                                 "icons/Question.png",
-                                f"Are you sure you want to delete the following firmwares?\n\n{show_firmwares}",
+                                f"Are you sure you want to delete the following IPSWs?\n\n{show_ipsws}",
                                 ok=False,
                                 yes=True,
                                 no=True)
@@ -1186,13 +1224,14 @@ class MainApp(QMainWindow):
                     else:
                         self.log("Aborted by user.")
             else:
-                self.log('There are no firmwares to delete.')
+                self.log('There are no IPSWs to delete.')
 
         else:
-            self.log("Destenaton folder does not exist.")
+            self.log("Destination folder does not exist.")
 
     def log(self, new_log):
-    
+        # Main logger for all log messages
+
         if new_log is not None:
             self.logger.info(new_log)
 
@@ -1213,6 +1252,7 @@ class MainApp(QMainWindow):
     def init_logger(self):
         # Reset the log file before initializing a new logger
         # clear_log() uses this method to flush the log file
+
         if os.path.isfile('logs.txt'):
             with open('logs.txt', 'w') as file:
                 pass
@@ -1247,30 +1287,31 @@ class MainApp(QMainWindow):
 
     def assign_index(self, currentIndex):
         # Determine the current tab being used
+
         self.getIndex = currentIndex
 
         if currentIndex == 0:
-            MainApp.current_index = 0
+            MainApp.CURRENT_INDEX = 0
             self.getIndex = self.ios_tree
 
         elif currentIndex == 1:
-            MainApp.current_index = 1
+            MainApp.CURRENT_INDEX = 1
             self.getIndex = self.ipad_tree
 
         elif currentIndex == 2:
-            MainApp.current_index = 2
+            MainApp.CURRENT_INDEX = 2
             self.getIndex = self.ipod_tree
 
         elif currentIndex == 3:
-            MainApp.current_index = 3
+            MainApp.CURRENT_INDEX = 3
             self.getIndex = self.mac_tree
 
         elif currentIndex == 4:
-            MainApp.current_index = 4
+            MainApp.CURRENT_INDEX = 4
             self.getIndex = self.itunes_tree
 
         elif currentIndex == 5:
-            MainApp.current_index = 5
+            MainApp.CURRENT_INDEX = 5
             self.getIndex = self.other_tree
 
     def context_menu(self, point):
@@ -1282,7 +1323,7 @@ class MainApp(QMainWindow):
 
         item = self.getIndex.itemAt(point)
 
-        if MainApp.current_index == 4:
+        if MainApp.CURRENT_INDEX == 4:
             name_all = item.text(1) # Name and version of selected device
             version_all = item.text(2) # Version number for current selected device 
             url32 = item.text(4) # URL for a 32Bit iTunes 
@@ -1354,50 +1395,51 @@ class MainApp(QMainWindow):
                 self.download_one_firmware(name, url, hash_, build)
             
             elif value.text() == 'Delete':
-                delete_from_database(url, MainApp.current_index, name)
+                delete_from_database(url, MainApp.CURRENT_INDEX, name)
 
             elif value.text() == 'Delete All':
-                delete_from_database(url32, MainApp.current_index, name_all)
+                delete_from_database(url32, MainApp.CURRENT_INDEX, name_all)
 
         except AttributeError:
             pass
     
-    def context_menu_this_pc(self, point):
+    # Context menu for this tab does not currently work
+    # def context_menu_this_pc(self, point):
 
-        index = self.getIndex.indexAt(point)
-        if not index.isValid():
-            return
+    #     index = self.getIndex.indexAt(point)
+    #     if not index.isValid():
+    #         return
 
-        item1 = self.getIndex.itemAt(point)
+    #     item1 = self.getIndex.itemAt(point)
 
-        firmware = item1.text(1) 
-        size = item1.text(2)
+    #     firmware = item1.text(1) 
+    #     size = item1.text(2)
 
-        menu = QMenu()
-        copy = menu.addAction("Copy Full Path")
-        copy.setIcon(QtGui.QIcon("icons/Copy.png"))
-        menu.addSeparator()
-        delete = menu.addAction("Delete")
-        delete.setIcon(QtGui.QIcon("icons/Delete.png"))
+    #     menu = QMenu()
+    #     copy = menu.addAction("Copy Full Path")
+    #     copy.setIcon(QtGui.QIcon("icons/Copy.png"))
+    #     menu.addSeparator()
+    #     delete = menu.addAction("Delete")
+    #     delete.setIcon(QtGui.QIcon("icons/Delete.png"))
 
-        value = menu.exec_(self.getIndex.mapToGlobal(point))
+    #     value = menu.exec_(self.getIndex.mapToGlobal(point))
 
-        try:
-            if value.text() == "Copy Full Path":
-                QApplication.clipboard().setText(firmware)
+    #     try:
+    #         if value.text() == "Copy Full Path":
+    #             QApplication.clipboard().setText(firmware)
 
-            if value.text() == "Delete":
-                value = messaged_box("Delete", 
-                            "icons/updated.png",
-                            "icons/Question.png",
-                            f"Delete {firmware}?",
-                            yes=True, 
-                            no=True,
-                            ok=False)
-                print(value)
+    #         if value.text() == "Delete":
+    #             value = messaged_box("Delete", 
+    #                         "icons/updated.png",
+    #                         "icons/Question.png",
+    #                         f"Delete {firmware}?",
+    #                         yes=True, 
+    #                         no=True,
+    #                         ok=False)
+    #             print(value)
 
-        except AttributeError:
-            pass
+    #     except AttributeError:
+    #         pass
 
 class HashingThreaded(QThread):
 
@@ -1672,14 +1714,14 @@ class ScanPC(QThread):
 
     def run(self):
         self.send_to_log.emit("Scan initiated")
-        MainApp.this_pc.clear()
+        MainApp.THIS_PC.clear()
         
         self.update_progress.emit(10)
 
         for directory in self.common_dirs:
             for path_to_file in pathlib.Path(directory).glob('*.ipsw'):
                 if path_to_file:
-                    MainApp.this_pc.append(path_to_file)
+                    MainApp.THIS_PC.append(path_to_file)
                     self.update_progress.emit(1)
         
         self.update_progress.emit(100)
