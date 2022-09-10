@@ -1,9 +1,7 @@
-import requests, os, time
+import requests, os, time, threading
 from humanize import naturalsize
 from PyQt5 import QtGui, QtWidgets, uic
 from PyQt5.QtCore import QThread, pyqtSignal
-import threading
-
 
 class MainDownload(QtWidgets.QMainWindow):
     is_downloading = False
