@@ -34,11 +34,11 @@ __dbversion__ = 'Not available' # Database version - will be updated when a new 
 Server = ''
 message_queue = [] # Used to display messages prior to launching iFTK. Will be used more in future versions.
 
-# The default destination where IPSWs will be downloaded
+# The default destination where firmware files will be downloaded
 # Not changing this will make iTunes pick up a firmware easily
 dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
 text_reset = '' # Clear the Live Log
-download_urls = {} # Used to pass URLs to the downloader
+download_urls = {} # Used to pass URLs to the downloader module  
 relevant_version = 15 # Specific firmware version to display
 relevant_only = True # Always show relevant firmwares only
 no_update = False # Do not update QTreeWidget, when checking for database update, if there is no updates available
@@ -442,7 +442,7 @@ class MainApp(QMainWindow):
             with open(_name, 'w') as _file:
                 _file.write(file.read())
 
-        self.log(f"Exported logs to {_name}")
+        self.log(f"Exported logs to: {_name}")
 
     def open_folder(self):
         # Open default destination
@@ -507,7 +507,7 @@ class MainApp(QMainWindow):
             self.disable_btns.hash_file.connect(self.hash_file)
 
         else:
-            self.log('No database was found.')
+            self.log('Could not find any databases.\nCheck for update first')
 
     def download_one_firmware(self, dev_name, url, hash_value, buildid):
         # Single firmware download. Only triggered from context menu 
@@ -1190,7 +1190,7 @@ class MainApp(QMainWindow):
     def delete_firmwares(self):
 
         if os.path.isdir(dest):
-            self.log("Delete firmwares?")
+            self.log("Delete firmware files?")
             files = os.listdir(dest)
 
             if files:
@@ -1224,7 +1224,7 @@ class MainApp(QMainWindow):
                     else:
                         self.log("Aborted by user.")
             else:
-                self.log('There are no IPSWs to delete.')
+                self.log('There are no firmware files to delete.')
 
         else:
             self.log("Destination folder does not exist.")
@@ -1477,7 +1477,7 @@ class HashingThreaded(QThread):
 
                     self.progress_update.emit(100)
             else:
-                self.send_to_log.emit('There are no firmwares to verify.')
+                self.send_to_log.emit('There are no firmware files in the current directory to verify.')
 
 class SoftwareUpdateThreaded(QThread):
 
