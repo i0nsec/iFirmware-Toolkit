@@ -33,6 +33,11 @@ QToolTip { color: #fff; background-color: #000; border: none; }
         <layout class="QGridLayout" name="gridLayout_21">
          <item row="0" column="0">
           <widget class="QFrame" name="frame_2">
+           <property name="font">
+            <font>
+             <family>Segoe UI Semibold</family>
+            </font>
+           </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
@@ -63,6 +68,28 @@ QToolTip { color: #fff; background-color: #000; border: none; }
 QToolBox::tab:selected { /* italicize selected tabs */
     font: italic;
     color: white;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+QScrollBar:vertical {
+    background: white;
+     width: 15px;
+ }
+
+QScrollBar::handle:vertical {
+    background: #0C632A;
+ }
+
+QScrollBar:horizontal {
+    background: white;
+    height: 15px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #0C632A;
 }</string>
               </property>
               <property name="frameShape">
@@ -75,7 +102,7 @@ QToolBox::tab:selected { /* italicize selected tabs */
                <number>0</number>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <property name="tabSpacing">
                <number>0</number>
@@ -86,7 +113,7 @@ QToolBox::tab:selected { /* italicize selected tabs */
                  <x>0</x>
                  <y>0</y>
                  <width>715</width>
-                 <height>609</height>
+                 <height>604</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -94,7 +121,7 @@ QToolBox::tab:selected { /* italicize selected tabs */
                  <normaloff>icons/pc.png</normaloff>icons/pc.png</iconset>
                </attribute>
                <attribute name="label">
-                <string>On this PC</string>
+                <string>On This PC</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_9">
                 <item row="1" column="0" colspan="2">
@@ -122,8 +149,6 @@ QTreeView::item:selected:active{
     background: #003451;
 }
 
-
-
  QScrollBar:vertical {
     background: white;
      width: 15px;
@@ -132,8 +157,6 @@ QTreeView::item:selected:active{
     background: #0C632A;
  }
 
-
-
 QScrollBar:horizontal {
     background: white;
     height: 15px;
@@ -141,9 +164,7 @@ QScrollBar:horizontal {
 
 QScrollBar::handle:horizontal {
     background: #0C632A;
-}
-
-QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMenu::item:selected {background-color: #654321;}</string>
+}</string>
                   </property>
                   <attribute name="headerMinimumSectionSize">
                    <number>50</number>
@@ -285,7 +306,7 @@ QToolTip {
                  <x>0</x>
                  <y>0</y>
                  <width>715</width>
-                 <height>609</height>
+                 <height>604</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -321,16 +342,19 @@ QToolTip {
                   </property>
                   <property name="styleSheet">
                    <string notr="true">QTabWidget::pane {
-  border: 1px solid lightgray;
-  top:-1px; 
+  	border: 2px solid gray;
+    border-radius: 5px;
+ 	 top:-1px; 
 } 
 
 QTabBar::tab {
-  background:#0C632A; 
-  border: 1px solid lightgray;
-  padding: 10px;
-  width: 100%;
-  color:#fff;
+  	background:#0C632A; 
+	border: 2px solid gray;
+    border-radius: 5px;
+    margin-top: 5ex; /* leave space at the top for the title */
+  	padding: 10px;
+  	width: 100%;
+  	color:#fff;
 } 
 
 QTabBar::tab:hover {
@@ -343,8 +367,8 @@ QTabBar::tab:selected {
 }
 
 QMenuBar {
-    background-color: rgb(49,49,49);
-    color: rgb(255,255,255);
+    background-color: #000000;
+    color: #ffffff;
     border: 1px solid #000;
 }
 
@@ -371,7 +395,7 @@ QMenu::item::selected {
                    <set>Qt::ImhNone</set>
                   </property>
                   <property name="currentIndex">
-                   <number>5</number>
+                   <number>1</number>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -514,7 +538,7 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                      <normaloff>icons/iPad.png</normaloff>icons/iPad.png</iconset>
                    </attribute>
                    <attribute name="title">
-                    <string>iPad</string>
+                    <string>iPadOS</string>
                    </attribute>
                    <layout class="QGridLayout" name="gridLayout_7">
                     <item row="0" column="0">
@@ -1000,6 +1024,7 @@ QGroupBox::title {
               </property>
               <property name="font">
                <font>
+                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
@@ -1064,6 +1089,12 @@ p, li { white-space: pre-wrap; }
                </item>
                <item row="3" column="0">
                 <widget class="QPushButton" name="clear_log">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
@@ -1117,7 +1148,7 @@ QToolTip {
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>0</height>
+                   <height>35</height>
                   </size>
                  </property>
                  <property name="cursor">
@@ -1154,6 +1185,12 @@ QToolTip {
                   <iconset>
                    <normaloff>icons/export.png</normaloff>icons/export.png</iconset>
                  </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>15</width>
+                   <height>15</height>
+                  </size>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -1169,8 +1206,9 @@ QToolTip {
               </property>
               <property name="font">
                <font>
+                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <bold>false</bold>
+                <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
@@ -1178,7 +1216,7 @@ QToolTip {
               <property name="styleSheet">
                <string notr="true">QGroupBox {
     border: 2px solid gray;
-    border-radius: 5px;
+    border-radius: 10px;
     margin-top: 5ex; /* leave space at the top for the title */
 }
 
@@ -1414,6 +1452,7 @@ QToolTip {
               </property>
               <property name="font">
                <font>
+                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
@@ -1781,8 +1820,9 @@ QToolTip {
               </property>
               <property name="font">
                <font>
+                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <bold>false</bold>
+                <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
@@ -2027,6 +2067,11 @@ QToolTip {
         <height>0</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI Semibold</family>
+       </font>
+      </property>
       <layout class="QGridLayout" name="gridLayout_23">
        <item row="0" column="0">
         <widget class="QFrame" name="frame">
@@ -2097,7 +2142,7 @@ QProgressBar::chunk {
             <property name="minimumSize">
              <size>
               <width>100</width>
-              <height>31</height>
+              <height>45</height>
              </size>
             </property>
             <property name="font">
