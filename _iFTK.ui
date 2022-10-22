@@ -34,9 +34,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }
          <item row="0" column="0">
           <widget class="QFrame" name="frame_2">
            <property name="font">
-            <font>
-             <family>Segoe UI Semibold</family>
-            </font>
+            <font/>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -49,6 +47,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }
              <widget class="QToolBox" name="toolBox">
               <property name="font">
                <font>
+                <family>Segoe UI Semibold</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -102,7 +101,7 @@ QScrollBar::handle:horizontal {
                <number>0</number>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <property name="tabSpacing">
                <number>0</number>
@@ -112,7 +111,7 @@ QScrollBar::handle:horizontal {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>715</width>
+                 <width>717</width>
                  <height>604</height>
                 </rect>
                </property>
@@ -305,7 +304,7 @@ QToolTip {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>715</width>
+                 <width>717</width>
                  <height>604</height>
                 </rect>
                </property>
@@ -321,6 +320,7 @@ QToolTip {
                  <widget class="QTabWidget" name="main_tab">
                   <property name="font">
                    <font>
+                    <family>Segoe UI Semibold</family>
                     <pointsize>9</pointsize>
                     <bold>false</bold>
                     <strikeout>false</strikeout>
@@ -1024,9 +1024,8 @@ QGroupBox::title {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <bold>false</bold>
+                <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
@@ -1087,112 +1086,6 @@ p, li { white-space: pre-wrap; }
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="clear_log">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>35</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Clear live log</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-		padding: 7px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string> Clear</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/Delete.png</normaloff>icons/Delete.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>15</width>
-                   <height>15</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1" alignment="Qt::AlignVCenter">
-                <widget class="QPushButton" name="export_log">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>35</height>
-                  </size>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Export logs to a file</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #a48912;
-        border: none;
-        color: #fff;
-		padding: 7px;
-		border: 2px solid #a48912;
-    	border-radius: 10px;
-    }
-
-QPushButton:hover {
-	background-color: #957d10;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}
-
-</string>
-                 </property>
-                 <property name="text">
-                  <string> Export</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/export.png</normaloff>icons/export.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>15</width>
-                   <height>15</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
               </layout>
              </widget>
             </item>
@@ -1206,7 +1099,6 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
                 <bold>true</bold>
                 <strikeout>false</strikeout>
@@ -1452,9 +1344,8 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
-                <bold>false</bold>
+                <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
                </font>
@@ -1820,7 +1711,6 @@ QToolTip {
               </property>
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>9</pointsize>
                 <bold>true</bold>
                 <strikeout>false</strikeout>
@@ -2068,9 +1958,7 @@ QToolTip {
        </size>
       </property>
       <property name="font">
-       <font>
-        <family>Segoe UI Semibold</family>
-       </font>
+       <font/>
       </property>
       <layout class="QGridLayout" name="gridLayout_23">
        <item row="0" column="0">

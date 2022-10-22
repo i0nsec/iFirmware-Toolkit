@@ -364,7 +364,7 @@ class MainApp(QMainWindow):
         self.verify.clicked.connect(self.hash_local_firmwares)
 
         # Clear logs button
-        self.clear_log.clicked.connect(self.reset_logger)
+        #self.clear_log.clicked.connect(self.reset_logger)
 
         # Check for database update button
         self._update.clicked.connect(self.database_update)
@@ -411,7 +411,7 @@ class MainApp(QMainWindow):
         self.main_download.clicked.connect(lambda: self.download_all_signed(MainApp.CURRENT_INDEX))
 
         # Export logs to a file
-        self.export_log.clicked.connect(self.export_logs)
+        #self.export_log.clicked.connect(self.export_logs)
 
         # Scan PC for IPSWs
         # Will check in the these places only:
@@ -1243,6 +1243,7 @@ class MainApp(QMainWindow):
                 font = QtGui.QFont()
                 font.setFamily("Segoe UI Semibold")
                 font.setPointSize(10)
+                font.setBold(True)
                 self.text_log.setFont(font)
                 self.text_log.setObjectName("text_log")
                 self.gridLayout_4.addWidget(self.text_log, 0, 0, 1, 2)
@@ -1706,8 +1707,10 @@ class ScanPC(QThread):
     common_dirs = [dest,
                     'C:\\',
                    f'C:\\Users\\{getuser()}',
+                   f'C:\\3uTools\\Firmware',
                    f'C:\\Users\\{getuser()}\\Downloads',
-                   f'C:\\Users\\{getuser()}\\Desktop']
+                   f'C:\\Users\\{getuser()}\\Desktop',
+                   f'C:\\Users\\{getuser()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates']
 
     def __init__(self):
         QThread.__init__(self)
