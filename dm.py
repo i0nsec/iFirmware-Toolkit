@@ -83,7 +83,7 @@ class MainDownload(QtWidgets.QMainWindow):
         MainDownload.all_signed = True
         self.disable_start_btn()
         self.skip.setEnabled(True)
-        self.skip.setStyleSheet("QPushButton {background-color: #c3a315;border: none;color: #fff;}QPushButton:hover {background-color: #b39614;}QToolTip { color: #fff; background-color: #000; border: none; }")
+        self.skip.setStyleSheet("QPushButton {background-color: #c3a315;border: none;border-radius: 10px;color: #fff;}QPushButton:hover {background-color: #b39614;}QToolTip { color: #fff; background-color: #000; border: none; }")
 
         for name, value in MainDownload.urls.items():
             MainDownload.skip_firmware = False

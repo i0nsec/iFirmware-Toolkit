@@ -213,16 +213,28 @@ QToolTip {
         color: #fff;
  		border: 2px solid #0C632A;
     	border-radius: 10px;
+}
+
+QPushButton:disabled {
+        border: none;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
     }
 
- QPushButton:hover {
+QPushButton:hover {
 	background-color: #084D20;
 }
 
 QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
-}</string>
+}
+
+
+       border: none;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
+ </string>
      </property>
      <property name="text">
       <string> Load</string>
@@ -233,6 +245,12 @@ QToolTip {
      </property>
      <property name="autoDefault">
       <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

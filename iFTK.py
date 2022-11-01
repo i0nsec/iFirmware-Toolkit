@@ -20,8 +20,7 @@ from PyQt5.QtWidgets import (
             QFileDialog,
             QMessageBox,
             QTreeWidgetItem,
-            QMenu,
-            QGridLayout)
+            QMenu)
 
 # dm.py - main downloader
 # Still in beta and may crash occasionally
@@ -37,7 +36,6 @@ message_queue = [] # Used to display messages prior to launching iFTK. Will be u
 # The default destination where firmware files will be downloaded
 # Not changing this will make iTunes pick up a firmware easily
 dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
-text_reset = '' # Clear the Live Log
 download_urls = {} # Used to pass URLs to the downloader module  
 relevant_version = 15 # Specific firmware version to display
 relevant_only = True # Always show relevant firmwares only
@@ -285,7 +283,7 @@ class ShowOptionsUI(QWidget):
 
         # Reset background color for the load button
         self.ok.setDisabled(True)
-        self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
+        self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:disabled {border: none;border-radius: 10px;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
 
     def open_dialog(self):
 
@@ -309,7 +307,7 @@ class ShowOptionsUI(QWidget):
 
                     # Enable the load button
                     self.ok.setEnabled(True)
-                    self.ok.setStyleSheet("QPushButton {background-color: #0C632A;border: none;color: #fff;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
+                    self.ok.setStyleSheet("QPushButton {background-color: #0C632A;border: none;border-radius: 10px;color: #fff;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
                     self.ok.clicked.connect(lambda: self.clean_and_refrush_ui(filename))
                     
             except TypeError:
@@ -343,12 +341,12 @@ class MainApp(QMainWindow):
     SHOW_RELEVANT = None
     OPTIONS = None
     THIS_PC = []
+    TEXT_RESET = '' # Clear the Live Log
 
     def __init__(self):
         super(MainApp, self).__init__()
         uic.loadUi("_iFTK.ui", self)
         self.show()
-
         self.show_in_current_folder()
 
         # Change default destination button
@@ -414,21 +412,38 @@ class MainApp(QMainWindow):
         #self.export_log.clicked.connect(self.export_logs)
 
         # Scan PC for IPSWs
-        # Will check in the these places only:
+        # It will check in the these places only:
         #   - var=dest (iTunes default destination),
         #   - C:\\,
         #   - C:\\Users\\[USER],
         #   - C:\\Users\\[USER]\\Downloads',
         #   - C:\\Users\\[USER]\\Desktop'
+        #   - C:\\Users\\[USER]\\3uTools'
         self.scan_pc.clicked.connect(self.scanpc)
-        
+
         # Context manager for This PC needs some more work
         # self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
         # self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
-        
+
         # Delete all IPSWs when button is clicked
         # Will only work when a scan has finished
         self.delete_all.clicked.connect(self.delete_all_ipsws)
+
+        self.pbar.setStyleSheet("""
+            QProgressBar {
+                min-height: 12px;
+                max-height: 12px;
+                border-radius: 6px;
+            }
+            QProgressBar::chunk {
+                border-radius: 6px;
+                background-color: #0C632A;
+            }
+        """)
+
+    def progress_bar_update(self):
+        self.pbar.setMinimum(0)
+        self.pbar.setMaximum(0)
 
     def export_logs(self):
         # Export logs to a file and append time.time() to the end
@@ -595,8 +610,9 @@ class MainApp(QMainWindow):
             self.db_thread.start()
             self.db_thread.no_update.connect(self.no_update)
             self.db_thread.send_to_log.connect(self.send_to_log)
-            self.db_thread.progress_update.connect(self.update_progressbar)
+            self.db_thread.progress_update.connect(self.progress_bar_update)
             self.db_thread.refrush_ui.connect(self.reset_data)
+            self.db_thread.is_ready.connect(lambda: self.pbar.setMaximum(100))
 
         else:
             self.log('Aborted by user.')
@@ -639,10 +655,11 @@ class MainApp(QMainWindow):
 
         self.up_thread = SoftwareUpdateThreaded()
         self.up_thread.start()
-        self.up_thread.progress_update.connect(self.update_progressbar)
+        self.up_thread.progress_update.connect(self.progress_bar_update)
         self.up_thread.send_to_log.connect(self.send_to_log)
         self.up_thread.no_update.connect(self.no_update)
         self.up_thread.update_available.connect(self.update_available)
+        self.up_thread.is_ready.connect(lambda: self.pbar.setMaximum(100))
 
     def scanpc(self):
         # Scan PC for available IPSWs and display them in This PC tab
@@ -733,74 +750,62 @@ class MainApp(QMainWindow):
         # Delete all databases
 
         to_delete = [db for db in dbs if os.path.isfile(db)]
-        try:
-            if to_delete:
-                self.pbar.setValue(10)
+        if to_delete:
+            for db in to_delete:
+                self.log(f"Found {db}")
+
+            self.log('Delete databases?')
+            show_dbs = "\n".join([db for db in to_delete])
+
+            value = messaged_box("Delete", 
+                        "icons/updated.png",
+                        "icons/Question.png",
+                        f"Delete databases?\n\n{show_dbs}",
+                        yes=True, 
+                        no=True,
+                        ok=False)
+
+            # Confirm deletion of all databases
+            if value == 0:
                 for db in to_delete:
-                    self.log(f"Found {db}")
+                    os.remove(db)
 
-                self.log('Delete databases?')
-                show_dbs = "\n".join([db for db in to_delete])
+                # Reset the config.cfg file that contains the databases version
+                if os.path.isfile('DBs\\config.cfg'):
+                    os.remove('DBs\\config.cfg')
 
-                value = messaged_box("Delete", 
-                            "icons/updated.png",
-                            "icons/Question.png",
-                            f"Delete databases?\n\n{show_dbs}",
-                            yes=True, 
-                            no=True,
-                            ok=False)
+                globals().update(__dbversion__='Not Available')
+                self.log("Deleted databases.")
 
-                # Confirm deletion of all databases
-                if value == 0:
-                    for db in to_delete:
-                        os.remove(db)
-
-                    # Reset the config.cfg file that contains the databases version
-                    if os.path.isfile('DBs\\config.cfg'):
-                        os.remove('DBs\\config.cfg')
-
-                    globals().update(__dbversion__='Not Available')
-                    self.log("Deleted databases.")
-                    self.pbar.setValue(100)
-
-                    self.reset_data()
-                else:
-                    self.log('Aborted by user.')
-
+                self.reset_data()
             else:
-                self.log('There are no databases to delete.')
+                self.log('Aborted by user.')
 
-        finally:
-            self.pbar.setValue(100)
+        else:
+            self.log('There are no databases to delete.')
 
     def backup_databases(self):
         # backup all databases to a zip file
 
         to_backup = [db for db in dbs if os.path.isfile(db)]
-        try:
-            if to_backup:
-                self.pbar.setValue(10)
+        if to_backup:
+            get_dbs = os.listdir('DBs\\')
+            self.log("Backing up...")
+            self.log("Zipping...")
+            file_name = f'DBs\\DBs-{time.time()}-.7z'
+            with py7zr.SevenZipFile(file_name, 'w') as file:
+                for each in get_dbs:
+                    if each[-3::] == '.db':
+                        file.writeall(f'DBs\\{each}')
 
-                get_dbs = os.listdir('DBs\\')
-                self.log("Backing up...")
-                self.log("Zipping...")
-                file_name = f'DBs\\DBs-{time.time()}-.7z'
-                with py7zr.SevenZipFile(file_name, 'w') as file:
-                    for each in get_dbs:
-                        if each[-3::] == '.db':
-                            file.writeall(f'DBs\\{each}')
-
-                if os.path.isfile(file_name):
-                    self.log("Backed up databases.")
-                    self.log(f"Backup: {file_name}")
-                else:
-                    self.log("Something went wrong, try again later")
-
+            if os.path.isfile(file_name):
+                self.log("Backed up databases.")
+                self.log(f"Backup: {file_name}")
             else:
-                self.log('There are no databases to backup.')
+                self.log("Something went wrong, try again later")
 
-        finally:
-            self.pbar.setValue(100)
+        else:
+            self.log('There are no databases to backup.')
 
     def load_data(self):
         # Main method for displaying the IPSWs informatio
@@ -1236,19 +1241,19 @@ class MainApp(QMainWindow):
             self.logger.info(new_log)
 
         with open('logs.txt', 'r') as logs:
-                log = logs.read()
-                self.text_log = QTextBrowser(self.logs)
-                global text_reset
-                text_reset = self.text_log
-                font = QtGui.QFont()
-                font.setFamily("Segoe UI Semibold")
-                font.setPointSize(10)
-                font.setBold(True)
-                self.text_log.setFont(font)
-                self.text_log.setObjectName("text_log")
-                self.gridLayout_4.addWidget(self.text_log, 0, 0, 1, 2)
-                self.text_log.setText(log)
-                self.text_log.moveCursor(QtGui.QTextCursor.End)
+            log = logs.read()
+            self.text_log = QTextBrowser(self.logs)
+            MainApp.TEXT_RESET = self.text_log
+            font = QtGui.QFont()
+            font.setFamily("Segoe UI Semibold")
+            font.setPointSize(11)
+            font.setBold(True)
+            self.text_log.setFont(font)
+            self.text_log.setObjectName("text_log")
+            self.gridLayout_4.addWidget(self.text_log, 0, 0, 1, 2)
+            self.text_log.setText(log)
+            self.text_log.moveCursor(QtGui.QTextCursor.End)
+            self.text_log.setStyleSheet("background-color: rgb(52, 52, 52);")
 
     def init_logger(self):
         # Reset the log file before initializing a new logger
@@ -1263,7 +1268,7 @@ class MainApp(QMainWindow):
         self.logger.addHandler(output)
 
     def reset_logger(self):
-        text_reset.setText('')
+        MainApp.TEXT_RESET.setText('')
         self.logger.handlers[0].close()
         self.logger.removeHandler(self.logger.handlers[0])
         self.init_logger()
@@ -1403,44 +1408,6 @@ class MainApp(QMainWindow):
 
         except AttributeError:
             pass
-    
-    # Context menu for this tab does not currently work
-    # def context_menu_this_pc(self, point):
-
-    #     index = self.getIndex.indexAt(point)
-    #     if not index.isValid():
-    #         return
-
-    #     item1 = self.getIndex.itemAt(point)
-
-    #     firmware = item1.text(1) 
-    #     size = item1.text(2)
-
-    #     menu = QMenu()
-    #     copy = menu.addAction("Copy Full Path")
-    #     copy.setIcon(QtGui.QIcon("icons/Copy.png"))
-    #     menu.addSeparator()
-    #     delete = menu.addAction("Delete")
-    #     delete.setIcon(QtGui.QIcon("icons/Delete.png"))
-
-    #     value = menu.exec_(self.getIndex.mapToGlobal(point))
-
-    #     try:
-    #         if value.text() == "Copy Full Path":
-    #             QApplication.clipboard().setText(firmware)
-
-    #         if value.text() == "Delete":
-    #             value = messaged_box("Delete", 
-    #                         "icons/updated.png",
-    #                         "icons/Question.png",
-    #                         f"Delete {firmware}?",
-    #                         yes=True, 
-    #                         no=True,
-    #                         ok=False)
-    #             print(value)
-
-    #     except AttributeError:
-    #         pass
 
 class HashingThreaded(QThread):
 
@@ -1486,13 +1453,14 @@ class SoftwareUpdateThreaded(QThread):
     update_available = pyqtSignal(str)
     no_update = pyqtSignal(str)
     progress_update = pyqtSignal(int)
+    is_ready = pyqtSignal(bool)
 
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
         try:
-            self.progress_update.emit(10)
+            self.progress_update.emit(1)
             self.send_to_log.emit('Checking for update...')
             from_url = f"{Server}/verval.txt"
             get_update = requests.get(from_url)
@@ -1510,7 +1478,7 @@ class SoftwareUpdateThreaded(QThread):
             self.send_to_log.emit('Server is offline.\nOr check your internet connection.')
 
         finally:
-            self.progress_update.emit(100)
+            self.is_ready.emit(True)
 
 class DatabaseUpdateThreaded(QThread):
 
@@ -1518,13 +1486,13 @@ class DatabaseUpdateThreaded(QThread):
     no_update = pyqtSignal(str)
     refrush_ui = pyqtSignal(bool)
     progress_update = pyqtSignal(int)
-    finished = pyqtSignal(bool)
+    is_ready = pyqtSignal(bool)
 
     def run(self):
         try:
-            self.progress_update.emit(10)
-            DB_Url = f"{Server}/updates/verval.txt"
-            db_get = requests.get(DB_Url)
+            self.progress_update.emit(1)
+            db_url = f"{Server}/updates/verval.txt"
+            db_get = requests.get(db_url)
 
             if db_get.ok:
                 with open('DBs\\config.cfg', 'w') as cfg:
@@ -1543,11 +1511,10 @@ class DatabaseUpdateThreaded(QThread):
                 if up_to_date == __dbversion__:
                     self.no_update.emit('db')
                     self.send_to_log.emit('Already up to date.')
-                    self.progress_update.emit(100)
+                    self.is_ready.emit(True)
                 
                 # If new version is available...
                 else:
-                    self.progress_update.emit(10)
                     self.send_to_log.emit(f'New version is available.\nCurrent: {__dbversion__}\nNew: {up_to_date}')
                     self.send_to_log.emit('Getting database file...')
                     
@@ -1555,11 +1522,9 @@ class DatabaseUpdateThreaded(QThread):
                     get_data = requests.get(Url)
 
                     if get_data.ok:
-                        self.progress_update.emit(20)
                         with open('DBs.7z', 'wb') as db_file:
                             db_file.write(get_data.content)
 
-                        self.progress_update.emit(10)
                         self.send_to_log.emit('Finished downloading.')
                         self.send_to_log.emit('Checking SHA256...')
 
@@ -1570,18 +1535,15 @@ class DatabaseUpdateThreaded(QThread):
 
                         hashed = sha256.hexdigest()
                         self.send_to_log.emit(f"SHA256: {hashed}")
-                        self.progress_update.emit(20)
                         
                         Url = f"{Server}/updates/sha256sum.txt"
                         get_data = requests.get(Url)
                         online_hash = 'Unavailable'
 
                         if get_data.ok:
-                            self.progress_update.emit(10)
                             online_hash = get_data.text.rstrip().lower()
 
                         if hashed == online_hash or force_continue:
-                            self.progress_update.emit(10)
                             if not force_continue:
                                 self.send_to_log.emit('SHA256 matched.')
                             
@@ -1594,7 +1556,6 @@ class DatabaseUpdateThreaded(QThread):
                             os.remove('DBs.7z')
                             self.send_to_log.emit('Refrushing UI... ')
                             self.refrush_ui.emit(True)
-                            self.progress_update.emit(20)
                             globals().update(__dbversion__=up_to_date)
 
                         else:
@@ -1609,8 +1570,7 @@ class DatabaseUpdateThreaded(QThread):
             self.send_to_log.emit('Server is offline.\nOr check your internet connection.')
 
         finally:
-            self.progress_update.emit(100)
-            self.finished.emit(True)
+            self.is_ready.emit(True)
 
 class ModelLookupThreaded(QThread):
     send_to_log = pyqtSignal(str)
@@ -1764,7 +1724,7 @@ if __name__ == '__main__':
     # Display firmwares if databases exist
     window.load_data()
 
-    window.log(f'DB Version: {__dbversion__}\n=================\n')
+    window.log(f'Database Version: {__dbversion__}\n---------------------------------\n')
 
     # Display error messages if there is any. Will be used more often in future versions
     if message_queue:

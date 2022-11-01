@@ -76,7 +76,6 @@ QScrollBar::handle:horizontal {
        </property>
        <property name="font">
         <font>
-         <family>Segoe UI Semibold</family>
          <pointsize>10</pointsize>
          <strikeout>false</strikeout>
         </font>
@@ -153,7 +152,6 @@ QScrollBar::handle:horizontal {
     </property>
     <property name="font">
      <font>
-      <family>Segoe UI Semibold</family>
       <pointsize>10</pointsize>
      </font>
     </property>
@@ -167,9 +165,7 @@ QScrollBar::handle:horizontal {
      <item row="0" column="0">
       <widget class="QFrame" name="frame">
        <property name="font">
-        <font>
-         <family>Segoe UI Semibold</family>
-        </font>
+        <font/>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -184,7 +180,6 @@ QScrollBar::handle:horizontal {
            <widget class="QLabel" name="size">
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -200,7 +195,6 @@ QScrollBar::handle:horizontal {
            <widget class="QLabel" name="name">
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -219,7 +213,6 @@ QScrollBar::handle:horizontal {
            <widget class="QLabel" name="device">
             <property name="font">
              <font>
-              <family>Segoe UI Semibold</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -249,7 +242,6 @@ QScrollBar::handle:horizontal {
     </property>
     <property name="font">
      <font>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -271,9 +263,7 @@ QScrollBar::handle:horizontal {
     </property>
     <property name="font">
      <font>
-      <family>Segoe UI Semibold</family>
       <pointsize>10</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -310,9 +300,7 @@ QScrollBar::handle:horizontal {
        </property>
        <property name="font">
         <font>
-         <family>Segoe UI Semibold</family>
          <pointsize>10</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -361,9 +349,7 @@ QToolTip {
        </property>
        <property name="font">
         <font>
-         <family>Segoe UI Semibold</family>
          <pointsize>10</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -411,9 +397,7 @@ QToolTip {
          </property>
          <property name="font">
           <font>
-           <family>Segoe UI Semibold</family>
            <pointsize>10</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -429,6 +413,11 @@ QToolTip {
 		border: 2px solid #a48912;
     	border-radius: 10px;
     }
+
+QPushButton:disabled {
+        border: none;
+    	border-radius: 10px;
+}
 
 QPushButton:hover {
 	background-color: #957d10;
