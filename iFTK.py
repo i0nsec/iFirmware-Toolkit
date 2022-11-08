@@ -50,16 +50,12 @@ dbs = [
 ]
 
 def check_integrity(state):
-    # CheckBox for hashing a firmware
-
     if state == 2:
         globals().update(hash_ipsw=True)
     else:
         globals().update(hash_ipsw=False)
 
 def check_databases():
-    # Check if all required databases exists
-
     for db in dbs:
         if not os.path.isfile(db):
             MainApp.SIGNED_ONLY.setDisabled(True)
@@ -69,8 +65,6 @@ def check_databases():
             MainApp.SHOW_RELEVANT.setDisabled(False)
 
 def show_singed_only(state):
-    # Show signed only 
-
     if state == 2:
         globals().update(signed_only=True)
         window.reset_data()
@@ -81,8 +75,6 @@ def show_singed_only(state):
         MainApp.SHOW_RELEVANT.setDisabled(True)
 
 def show_relevant(state):
-    # Show the most relevant versions only
-    
     if state == 2:
         globals().update(relevant_only=True)
         window.reset_data()
@@ -91,8 +83,6 @@ def show_relevant(state):
         window.reset_data()
 
 def delete_from_database(URL, current_index, name):
-    # Delete a firmware version from the selected database
-
     window.log(f"Deleting {name} from database...")
 
     # Display a message to the user making sure before deleting the firmware
@@ -128,8 +118,6 @@ def delete_from_database(URL, current_index, name):
         window.log("Aborted by user.")
     
 def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
-    # This function will be used to create a custom message for the user 
-    
     message = QMessageBox()
 
     # Title and icons
@@ -337,7 +325,7 @@ class MainApp(QMainWindow):
     OPTIONS = None
     THIS_PC = []
     TEXT_RESET = '' # Clear the Live Log
-    # The default destination where firmware files will be downloaded
+    # The default destination to download any firmware
     # Not changing this will make iTunes pick up a firmware easily
     DEST: str = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
 
