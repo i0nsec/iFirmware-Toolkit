@@ -28,18 +28,15 @@ import dm
 
 __version__ = 'v2.4-1107' # Application version
 __dbversion__ = 'Not available' # Database version
-
 Server = '' # Server address to download updates
 message_queue = [] # Used to display messages prior to launching iFTK. Will be used more in future versions.
 download_urls = {} # Used to pass URLs to the downloader module  
-relevant_version = 15 # Specific firmware version to display
+relevant_version = 16 # Specific firmware version to display
 relevant_only = True # Always show relevant firmware files only
 no_update = False # Do not update QTreeWidget, when checking for database update, if there is no updates available
 hash_ipsw = False # Whether to hash after a download is finished 
 signed_only = True # Show signed firmware files only
 force_continue = False # Force updating by checking for update again even if SHA256 does not match
-# Default location for database files
-# Used to check if all required databases exist
 dbs = [
     'DBs\\ios_devices.db',
     'DBs\\ipad_devices.db', 
