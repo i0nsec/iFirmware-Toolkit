@@ -462,11 +462,11 @@ class MainApp(QMainWindow):
                         #identifier = info[1] # Unused
                         sha1 = info[2]
                         url = info[3] 
-                        buildid = info[6]
-                        #version = info[5] # Unused
+                        # buildid = info[6] # Unused
+                        version = info[5]
                         file_name = url.split('/')[-1:][0] # Get file name from URL
                         dest_folder = f"{MainApp.DEST}/{file_name}" # Full path with file name
-                        download_urls[index] = [name, url, sha1, buildid]
+                        download_urls[index] = [name, url, sha1, version]
                         index += 1
             
             self.enable_btns(True)
@@ -485,9 +485,6 @@ class MainApp(QMainWindow):
             self.log('Could not find any databases.\nCheck for update first')
 
     def download_one_firmware(self, dev_name, url, hash_value, buildid):
-        # Single firmware download. Only triggered from context menu 
-        
-        # If the default directory for iTunes does not exist, create it
         if not os.path.exists(MainApp.DEST):
             os.makedirs(MainApp.DEST)
 
@@ -590,15 +587,17 @@ class MainApp(QMainWindow):
         self.search.clear() # Reset user input
         self.worker_lookup = ModelLookupThreaded(model=model)
         self.worker_lookup.start()
-        self.worker_lookup.progress_update.connect(self.update_progressbar)
+        self.worker_lookup.progress_update.connect(self.progress_bar_update)
         self.worker_lookup.send_to_log.connect(self.send_to_log)
         self.worker_lookup.show_in_ui.connect(self.show_in_ui)
+        self.worker_lookup.is_ready.connect(lambda: self.pbar.setMaximum(100))
 
     def hash_local_firmwares(self):
         self.hash_firmware = HashingThreaded(current_tab=MainApp.CURRENT_INDEX)
         self.hash_firmware.start()
         self.hash_firmware.send_to_log.connect(self.send_to_log)
-        self.hash_firmware.progress_update.connect(self.update_progressbar)
+        self.hash_firmware.progress_update.connect(self.progress_bar_update)
+        self.hash_firmware.is_ready.connect(lambda: self.pbar.setMaximum(100))
 
     def update_btn_clicked(self):
         # If hosts file does not exist, do not continue
@@ -620,7 +619,8 @@ class MainApp(QMainWindow):
         self.scan.start()
         self.scan.send_to_log.connect(self.send_to_log)
         self.scan.finished.connect(self.update_this_pc)
-        self.scan.update_progress.connect(self.update_progressbar)
+        self.scan.update_progress.connect(self.progress_bar_update)
+        self.scan.is_ready.connect(lambda: self.pbar.setMaximum(100))
 
     def update_this_pc(self):
         for get_size in MainApp.THIS_PC:
@@ -1109,9 +1109,6 @@ class MainApp(QMainWindow):
     def send_to_log(self, val):
         self.log(val)
 
-    def update_progressbar(self, val):
-        self.pbar.setValue(val)
-
     def change_dir(self):
         new_dest = str(QFileDialog.getExistingDirectory(None, "Select Directory"))
         if not new_dest:
@@ -1400,6 +1397,7 @@ class MainApp(QMainWindow):
 class HashingThreaded(QThread):
     progress_update = pyqtSignal(int)
     send_to_log = pyqtSignal(str)
+    is_ready = pyqtSignal(bool)
 
     def __init__(self, parent=None, current_tab=int):
         QThread.__init__(self)
@@ -1419,18 +1417,15 @@ class HashingThreaded(QThread):
                     self.send_to_log.emit(f"Using SHA1 to hash...\n")
 
                     sha1 = hashlib.sha1()
-                    num = 1
-                    self.progress_update.emit(0)
+                    self.progress_update.emit(1)
                     for each_file in to_hash:
                         with open(each_file, 'rb') as file:
                             sha1.update(file.read())
 
                         each_file = each_file.split('\\')[-1::][0]
                         self.send_to_log.emit(f"{each_file}\nSHA1: {sha1.hexdigest()}")
-                        self.progress_update.emit(num)
-                        num = num + len(to_hash) % 100
 
-                    self.progress_update.emit(100)
+                    self.is_ready.emit(True)
             else:
                 self.send_to_log.emit('There are no firmware files in the current directory to verify.')
 
@@ -1561,20 +1556,24 @@ class ModelLookupThreaded(QThread):
     send_to_log = pyqtSignal(str)
     progress_update = pyqtSignal(int)
     show_in_ui = pyqtSignal(list)
+    is_ready = pyqtSignal(bool)
 
     def __init__(self, parent=None, model=''):
         QThread.__init__(self)
         self.model = model
 
     def run(self):
+        self.progress_update.emit(1)
         if not self.model.strip():
             self.send_to_log.emit('Type in a model number to lookup')
         else:
             self.send_to_log.emit(f"Looking up {self.model}...")
+
             if self.model[:1].upper() == 'A':
                 try:
                     device_lookup = f"https://api.ipsw.me/v4/model/{self.model}" # Lookup a device using its model number
                     get_info = requests.get(device_lookup)
+
                     if get_info.ok:
                         url = f"https://api.ipsw.me/v4/device/{get_info.json()['identifier']}"
                         get_data = requests.get(url)
@@ -1588,10 +1587,14 @@ class ModelLookupThreaded(QThread):
                         self.send_to_log.emit(f"Name: {name}\nIdentifier: {identifier}\nBoardconfig: {boardconfig}\nPlatform: {platform}\nCPID: {cpid}\n=================\n")
                     else:
                         self.send_to_log.emit('Server response: Unknown model number')
+
                 except requests.exceptions.ConnectionError:
                         self.send_to_log.emit("Server unavailable, try again later.")
+                finally:
+                    self.is_ready.emit(True)
             else:
                 self.send_to_log.emit('Invalid model number')
+                self.is_ready.emit(True)
 
 class DMButtonMngThreaded(QThread):
     enable_btns = pyqtSignal(bool)
@@ -1647,6 +1650,7 @@ class DeviceSearchThreaded(QThread):
 class ScanPC(QThread):
     update_count = pyqtSignal(int)
     send_to_log = pyqtSignal(str)
+    is_ready = pyqtSignal(bool)
     update_progress = pyqtSignal(int)
     common_dirs = [MainApp.DEST,
                     'C:\\',
@@ -1661,19 +1665,16 @@ class ScanPC(QThread):
 
     def run(self):
         self.send_to_log.emit("Scan initiated")
-        MainApp.THIS_PC.clear()
-        
-        self.update_progress.emit(10)
+        MainApp.THIS_PC.clear()        
+        self.update_progress.emit(1)
 
         for directory in self.common_dirs:
             for path_to_file in pathlib.Path(directory).glob('*.ipsw'):
                 if path_to_file:
                     MainApp.THIS_PC.append(path_to_file)
-                    self.update_progress.emit(1)
         
-        self.update_progress.emit(100)
+        self.is_ready.emit(True)
         self.send_to_log.emit(f"Finished scanning")
-        self.send_to_log.emit(f"-----------------")
                 
 if __name__ == '__main__':
 
