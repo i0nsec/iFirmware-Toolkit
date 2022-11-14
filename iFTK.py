@@ -266,20 +266,16 @@ class ShowOptionsUI(QWidget):
         self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:disabled {border: none;border-radius: 10px;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
 
     def open_dialog(self):
-
-        # Pick a file
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
         if filename:
 
-            # Show file name
             self.edit_line.setText(filename)
             try:
                 created = filename.split("/")[-1].split("-")[1]
             except IndexError:
                 created = None
 
-            # Validate backup
             try:
                 if float(created):
                     self.validate.setStyleSheet("color: #0b6c2d")
@@ -295,6 +291,7 @@ class ShowOptionsUI(QWidget):
                 self.validate.setText("ERROR: No file uploaded or invalid file type. Ex: DBs-[creation time in seconds]-.7z")
 
     def clean_and_refrush_ui(self, filename):
+        window.log(f"Importing database from backup, {filename}...")
         try:
             if filename and filename[-2:] == '7z':
                 
@@ -330,7 +327,6 @@ class MainApp(QMainWindow):
         super(MainApp, self).__init__()
         uic.loadUi("_iFTK.ui", self)
         self.show()
-        self.show_in_current_folder()
 
         # Change default destination button
         self.location.clicked.connect(self.change_dir)
@@ -344,9 +340,6 @@ class MainApp(QMainWindow):
         # Hash IPSWs in the current destination folder
         self.verify.clicked.connect(self.hash_local_firmwares)
 
-        # Clear logs button
-        #self.clear_log.clicked.connect(self.reset_logger)
-
         # Check for database update button
         self._update.clicked.connect(self.database_update)
 
@@ -354,11 +347,9 @@ class MainApp(QMainWindow):
         self.db_delete.clicked.connect(self.delete_datebases)
 
         # Backup databases
-        # A backup database can be used to restore access
         self.backup.clicked.connect(self.backup_databases)
 
         # Search for a device in a database
-        # ex: iPhone 12, A1287, etc
         self.device_search.textChanged.connect(lambda: self.device_lookup(self.device_search.text(), MainApp.CURRENT_INDEX))
 
         # Device model number lookup
@@ -400,10 +391,6 @@ class MainApp(QMainWindow):
         #   - C:\\Users\\[USER]\\Desktop'
         #   - C:\\Users\\[USER]\\3uTools'
         self.scan_pc.clicked.connect(self.scanpc)
-
-        # Context manager for This PC needs some more work
-        # self.pc_tree.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.pc_tree.customContextMenuRequested.connect(self.context_menu_this_pc)
 
         # Delete all IPSWs when button is clicked
         # Will only work when a scan has finished
@@ -1657,14 +1644,13 @@ class ScanPC(QThread):
                    f'C:\\Users\\{getuser()}',
                    f'C:\\3uTools\\Firmware',
                    f'C:\\Users\\{getuser()}\\Downloads',
-                   f'C:\\Users\\{getuser()}\\Desktop',
-                   f'C:\\Users\\{getuser()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates']
+                   f'C:\\Users\\{getuser()}\\Desktop']
 
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
-        self.send_to_log.emit("Scan initiated")
+        self.send_to_log.emit("Scan initiated...")
         MainApp.THIS_PC.clear()        
         self.update_progress.emit(1)
 
@@ -1674,7 +1660,7 @@ class ScanPC(QThread):
                     MainApp.THIS_PC.append(path_to_file)
         
         self.is_ready.emit(True)
-        self.send_to_log.emit(f"Finished scanning")
+        self.send_to_log.emit(f"Finished scanning. Found: {len(MainApp.THIS_PC)}")
                 
 if __name__ == '__main__':
 

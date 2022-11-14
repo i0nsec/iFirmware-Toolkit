@@ -47,7 +47,6 @@ QToolTip { color: #fff; background-color: #000; border: none; }
              <widget class="QToolBox" name="toolBox">
               <property name="font">
                <font>
-                <family>Segoe UI Semibold</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -64,7 +63,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }
     color: darkgray;
 }
 
-QToolBox::tab:selected { /* italicize selected tabs */
+QToolBox::tab:selected {
     font: italic;
     color: white;
 }
@@ -320,7 +319,6 @@ QToolTip {
                  <widget class="QTabWidget" name="main_tab">
                   <property name="font">
                    <font>
-                    <family>Segoe UI Semibold</family>
                     <pointsize>9</pointsize>
                     <bold>false</bold>
                     <strikeout>false</strikeout>
@@ -395,7 +393,7 @@ QMenu::item::selected {
                    <set>Qt::ImhNone</set>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>5</number>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -404,9 +402,9 @@ QMenu::item::selected {
                    </size>
                   </property>
                   <property name="elideMode">
-                   <enum>Qt::ElideRight</enum>
+                   <enum>Qt::ElideMiddle</enum>
                   </property>
-                  <property name="movable">
+                  <property name="documentMode">
                    <bool>true</bool>
                   </property>
                   <widget class="QWidget" name="ios_tab">
@@ -955,11 +953,11 @@ QScrollBar::handle:horizontal {
                       <property name="uniformRowHeights">
                        <bool>true</bool>
                       </property>
-                      <property name="sortingEnabled">
-                       <bool>false</bool>
-                      </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
+                      <attribute name="headerCascadingSectionResizes">
+                       <bool>true</bool>
+                      </attribute>
+                      <attribute name="headerHighlightSections">
+                       <bool>true</bool>
                       </attribute>
                       <column>
                        <property name="text">
