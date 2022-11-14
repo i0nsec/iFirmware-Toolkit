@@ -3,6 +3,8 @@ from humanize import naturalsize
 from PyQt5 import QtGui, QtWidgets, uic
 from PyQt5.QtCore import QThread, pyqtSignal
 
+__version__ = 'v1.0-1114'
+
 class MainDownload(QtWidgets.QMainWindow):
     is_downloading = False
     all_signed = False
@@ -16,7 +18,7 @@ class MainDownload(QtWidgets.QMainWindow):
         uic.loadUi("_dm.ui", self)
         self.setFixedSize(560, 500)
         self.show()
-        self.setWindowTitle('Download - v1.0-1322')
+        self.setWindowTitle(f'Download - v1.0-1322')
         pixmapi = QtWidgets.QStyle.SP_ArrowDown
         icon = self.style().standardIcon(pixmapi)
         self.setWindowIcon(icon)
