@@ -14,27 +14,23 @@ class MainDownload(QtWidgets.QMainWindow):
     def __init__(self): 
         super(MainDownload, self).__init__()
         uic.loadUi("_dm.ui", self)
-        self.setFixedSize(640, 600)
+        self.setFixedSize(560, 500)
         self.show()
-        self.setWindowTitle('Download - Beta')
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(".\\../v2/icons/Download.png"))
+        self.setWindowTitle('Download - v1.0-1322')
+        pixmapi = QtWidgets.QStyle.SP_ArrowDown
+        icon = self.style().standardIcon(pixmapi)
         self.setWindowIcon(icon)
         MainDownload.is_downloading = True
         
         self.disable_skip_btn()
-
-        # Cancel button. It stops Downloader() and main_thread
         self.cancel_btn.clicked.connect(self.stop)
-
-        # Start downloading button
         self.start.clicked.connect(lambda: self._start())
-
-        # Change header for now
         self.header.setText("Hit Start to begin downloading")
-
-        # Skip button
         self.skip.clicked.connect(lambda: self._skip())
+
+    def progress_bar_update(self):
+        self.pbar.setMinimum(0)
+        self.pbar.setMaximum(0)
 
     def _skip(self):
         MainDownload.skip_firmware = True
@@ -48,7 +44,6 @@ class MainDownload(QtWidgets.QMainWindow):
         self.stop()
 
     def stop(self):
-
         try:
             self.th_download.terminate() # Terminate main download thread 
             self.th_download.file.close() # Close file
@@ -68,9 +63,8 @@ class MainDownload(QtWidgets.QMainWindow):
             self.close()
 
     def list_items(self):
-        """Display all firmwares being downloaded"""
-        for name, value in MainDownload.urls.items():
-            QtWidgets.QListWidgetItem(f"{value[0]}", self.main_list)
+        for index, value in MainDownload.urls.items():
+            QtWidgets.QTreeWidgetItem(self.pc_tree, [str(index), value[0], value[3]])
 
     def DownloadAllSigned(self):
         self.current_url = ''
@@ -83,9 +77,31 @@ class MainDownload(QtWidgets.QMainWindow):
         MainDownload.all_signed = True
         self.disable_start_btn()
         self.skip.setEnabled(True)
-        self.skip.setStyleSheet("QPushButton {background-color: #c3a315;border: none;border-radius: 10px;color: #fff;}QPushButton:hover {background-color: #b39614;}QToolTip { color: #fff; background-color: #000; border: none; }")
+        self.skip.setStyleSheet("""
+            QPushButton {
+                background-color: #c3a315;
+                border: none;
+                border-radius: 10px;
+                color: #fff;
+            }
 
-        for name, value in MainDownload.urls.items():
+            QPushButton:disabled {
+                border: none;
+                border: 2px solid #0C632A;
+                border-radius: 10px;
+            }
+
+            QPushButton:hover {
+                background-color: #b39614;
+            }
+            
+            QToolTip {
+                color: #fff;
+                background-color: #000;
+                border: none;
+            }""")
+
+        for index, value in MainDownload.urls.items():
             MainDownload.skip_firmware = False
 
             # Parse data passed from the main app
@@ -102,32 +118,27 @@ class MainDownload(QtWidgets.QMainWindow):
             r = requests.get(self.current_url, stream=True)
             self.file_size = r.headers['Content-Length'] # Get firmware size
 
-            # Display firmware information: name, size, type
-            self.name.setText(f"Name: {self.current_url.split('/')[-1:][0]}") # Show firmware name 
-            self.size.setText(f"Size: {str(naturalsize(int(self.file_size)))}") # Show firmware size
-            self.device.setText(f"Device: {self._name} - {self.buildid}")
-
             self.got_data = 0
             self.full_destination = f"{self.destination}\\{self.current_url.split('/')[-1:][0]}"
 
             MainDownload.finished = True
+            self.top_header.setText(f"{self._name} - {self.buildid}")
             self.th_download = Downloader(url=self.current_url, destination=self.full_destination)
             self.th_download.send_header.connect(self.update_header)
             self.th_download.disable_cancel_btn.connect(self.disable_cancel_btn)
             self.th_download.start()
             self.wait_for_threads()
             self.downloaded += 1
-            QtWidgets.QListWidget.takeItem(self.main_list, 0)
             self.list_items()
 
     def wait_for_threads(self):
         while MainDownload.finished:
-            
             time.sleep(0.5)
             if not MainDownload.finished:
                 break
 
             if MainDownload.skip_firmware:
+                time.sleep(0.5)
                 self.th_download.terminate() # Terminate main download thread 
                 self.th_download.file.close() # Close file
 
@@ -137,9 +148,19 @@ class MainDownload(QtWidgets.QMainWindow):
 
                 break
 
-    def Download(self, url, destination, device, firmwares=1, downloaded=1):
-        self.start.setVisible(False)
-        self.skip.setVisible(False)
+    def Download(self, url, destination, device, firmwares=1, downloaded=1, version=None):
+        self.setFixedSize(560, 300)
+        self.start.setDisabled(True)
+        self.start.setStyleSheet("""
+            QPushButton {
+                background-color: #000;
+            }
+
+            QPushButton:disabled {
+                border: none;
+                border-radius: 10px;
+            }""")
+        self.skip.setDisabled(True)
         self.url = url
         self.destination = destination
         self.firmwares = firmwares
@@ -148,40 +169,53 @@ class MainDownload(QtWidgets.QMainWindow):
         self.current_seconds = time.time()
         MainDownload.is_downloading = True
 
-        QtWidgets.QListWidgetItem(f"{device}", self.main_list)
-
         # Update headers information
         self.header.setText(f"Downloading {self.downloaded}/{self.firmwares}")
-
+        self.header.setStyleSheet("color: #c2df04")
         r = requests.get(self.url, stream=True)
-        self.file_size = r.headers['Content-Length'] # Get firmware size
+        self.file_size = r.headers['Content-Length']
 
-        self.name.setText(f"Name: {self.url.split('/')[-1:][0]}") # Show firmware name 
-        self.size.setText(f"Size: {str(naturalsize(int(self.file_size)))}") # Show firmware size
-        self.device.setText(f"Device: {device}")
+        QtWidgets.QTreeWidgetItem(self.pc_tree, ["1", device, str(naturalsize(int(self.file_size)))])
 
         self.got_data = 0
+        self.progress_bar_update()
+        self.top_header.setText(device)
         self.th_download = Downloader(url=self.url, destination=self.destination)
         self.th_download.start()
         self.th_download.send_header.connect(self.update_header)
         self.th_download.disable_cancel_btn.connect(self.disable_cancel_btn)
 
     def disable_skip_btn(self):
-        self.skip.setStyleSheet("background-color: #000")
+        self.skip.setStyleSheet("""
+            QPushButton {
+                background-color: #000;
+            }
+
+            QPushButton:disabled {
+                border: none;
+                border-radius: 10px;
+            }""")
+
         self.skip.setDisabled(True)
 
     def disable_start_btn(self):
-        self.start.setStyleSheet("background-color: #000")
+        self.start.setStyleSheet("""
+            QPushButton {
+                background-color: #000;
+            }
+
+            QPushButton:disabled {
+                border: none;
+                border-radius: 10px;
+            }""")
         self.start.setDisabled(True)
 
     def disable_cancel_btn(self, val):
-        """Disable the cancel button"""
         self.cancel_btn.setDisabled(val)
         self.cancel_btn.setStyleSheet("background-color: #000")
         self.stop()
 
     def update_header(self, val):
-        """Update header"""
         self.got_data += val
         self.header.setText(f"Downloading {self.downloaded}/{self.firmwares} {naturalsize(int(self.got_data))}/{naturalsize(int(self.file_size))}\nElapsed: {self.get_est(time.time() - self.current_seconds)}")
 
