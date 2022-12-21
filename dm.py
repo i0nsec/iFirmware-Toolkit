@@ -1,51 +1,69 @@
 import requests, os, time, threading
 from humanize import naturalsize
-from PyQt5 import QtGui, QtWidgets, uic
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThread, pyqtSignal
 
-__version__ = 'v1.0-1114'
+app_version = 'v3.0-1220'
 
-class MainDownload(QtWidgets.QMainWindow):
+class DownloadManager(QtWidgets.QMainWindow):
     is_downloading = False
     all_signed = False
     finished = False
     urls = {}
     dest_folder = None
     skip_firmware = False
+    total_all_to_download = 0
+    download_combo = {}
+    target_ios_version = ''
 
-    def __init__(self): 
-        super(MainDownload, self).__init__()
+    def __init__(self) -> None:
+        super(DownloadManager, self).__init__()
         uic.loadUi("_dm.ui", self)
-        self.setFixedSize(560, 500)
+        self.setFixedSize(660, 500)
         self.show()
-        self.setWindowTitle(f'Download - v1.0-1322')
+        self.setWindowTitle(f'Download - {app_version}')
         pixmapi = QtWidgets.QStyle.SP_ArrowDown
         icon = self.style().standardIcon(pixmapi)
         self.setWindowIcon(icon)
-        MainDownload.is_downloading = True
-        
+    
         self.disable_skip_btn()
         self.cancel_btn.clicked.connect(self.stop)
         self.start.clicked.connect(lambda: self._start())
+        pixmapi = QtWidgets.QStyle.SP_ArrowDown
+        icon = self.style().standardIcon(pixmapi)
+        self.start.setIcon(icon)
+
         self.header.setText("Hit Start to begin downloading")
         self.skip.clicked.connect(lambda: self._skip())
+        pixmapi = QtWidgets.QStyle.SP_ArrowForward
+        icon = self.style().standardIcon(pixmapi)
+        self.skip.setIcon(icon)
 
-    def progress_bar_update(self):
+        pixmapi = QtWidgets.QStyle.SP_MessageBoxCritical
+        icon = self.style().standardIcon(pixmapi)
+        self.cancel_btn.setIcon(icon)
+
+        self.dest_label.setText(f"Dest: {DownloadManager.dest_folder}")
+
+        DownloadManager.is_downloading = True
+
+    def progress_bar_update(self) -> None:
         self.pbar.setMinimum(0)
         self.pbar.setMaximum(0)
 
-    def _skip(self):
-        MainDownload.skip_firmware = True
+    def _skip(self) -> None:
+        DownloadManager.skip_firmware = True
 
-    def _start(self):
-        self.main_thread = threading.Thread(target=self.DownloadAllSigned)
+    def _start(self) -> None:
+        self.ios_combo.setDisabled(True)
+        self.main_thread = threading.Thread(target=self.download_all_signed)
         self.main_thread.daemon = True
         self.main_thread.start()
 
-    def closeEvent(self, event): 
+    def closeEvent(self, event) -> None: 
         self.stop()
 
-    def stop(self):
+    def stop(self) -> None:
         try:
             self.th_download.terminate() # Terminate main download thread 
             self.th_download.file.close() # Close file
@@ -58,88 +76,148 @@ class MainDownload(QtWidgets.QMainWindow):
                     os.remove(self.th_download.destination)
 
         except AttributeError as msg:
+            # Need to implement this...
             self.close()
 
         finally:
-            MainDownload.is_downloading = False
+            DownloadManager.is_downloading = False
             self.close()
 
-    def list_items(self):
-        for index, value in MainDownload.urls.items():
-            QtWidgets.QTreeWidgetItem(self.pc_tree, [str(index), value[0], value[3]])
+    def list_items(self) -> None:
+        for index, value in DownloadManager.urls.items():
+            if value[3] == DownloadManager.target_ios_version:
+                QtWidgets.QTreeWidgetItem(self.pc_tree, [value[0], value[3]])
 
-    def DownloadAllSigned(self):
+    def download_all_signed(self) -> None:
         self.current_url = ''
-        self.destination = MainDownload.dest_folder
+        self.destination = DownloadManager.dest_folder
         self.full_destination = ''
-        self.firmwares = len(MainDownload.urls)
+        self.firmwares = len(DownloadManager.urls)
         self.downloaded = 1
         self.file_size = 0
         self.current_seconds = time.time()
-        MainDownload.all_signed = True
+        DownloadManager.all_signed = True
         self.disable_start_btn()
         self.skip.setEnabled(True)
         self.skip.setStyleSheet("""
-            QPushButton {
-                background-color: #c3a315;
-                border: none;
-                border-radius: 10px;
+            QPushButton {background-color: #24293B;border: 2px solid #313850;border-radius: 10px;color: #fff;}
+            QPushButton:hover {background-color: #1E2230;}
+            QToolTip { color: #fff; background-color: #000; border: none;}
+                """)
+
+        for index, value in DownloadManager.urls.items():
+            if value[3] == DownloadManager.target_ios_version:
+                DownloadManager.skip_firmware = False
+
+                # Parse data passed from the main app
+                self._name = value[0]
+                self.current_url = value[1]
+                self.sha1 = value[2]
+                self.buildid = value[3]
+
+                # Update headers 
+                self.header.setText(f"Downloading {self.downloaded}/{self.firmwares}")
+                self.header.setStyleSheet("color: #c2df04")
+
+                # Get file size
+                r = requests.get(self.current_url, stream=True)
+                self.file_size = r.headers['Content-Length'] # Get firmware size
+
+                self.got_data = 0
+                self.full_destination = f"{self.destination}\\{self.current_url.split('/')[-1:][0]}"
+
+                DownloadManager.finished = True
+                self.top_header.setText(f"{self._name} - {self.buildid}")
+                self.th_download = Downloader(url=self.current_url, destination=self.full_destination)
+                self.th_download.send_header.connect(self.update_header)
+                self.th_download.disable_cancel_btn.connect(self.disable_cancel_btn)
+                self.th_download.start()
+                self.wait_for_threads()
+                self.downloaded += 1
+                self.list_items()
+
+    def set_target_ios_version(self, version) -> None:
+        DownloadManager.target_ios_version = version
+        self.top_header.setText(f"Total to be downloaded: {str(naturalsize(DownloadManager.download_combo[version]))}")
+        self.pc_tree.clear()
+        self.list_items()
+
+    def get_download_estimate(self) -> None: 
+        if len(DownloadManager.download_combo) == 0:
+            self.progress_bar_update()
+            self.header.setText("Estimating overall download size, please wait...")
+            self.get_est_for_all = GetTotalDownloads()
+            self.get_est_for_all.start()
+            self.get_est_for_all.finished.connect(self.set_est_in_human_readable)
+        else:
+            self.set_est_in_human_readable()
+
+    def set_est_in_human_readable(self) -> None:
+        self.pbar.setMaximum(100)
+        self.start.setEnabled(True)
+        self.start.setStyleSheet("""
+            QPushButton {background-color: #24293B;border: 2px solid #313850;border-radius: 10px;color: #fff;}
+            QPushButton:hover {background-color: #1E2230;}
+            QToolTip { color: #fff; background-color: #000; border: none;}
+                """)
+        self.ios_combo.currentTextChanged.connect(lambda: self.set_target_ios_version(self.ios_combo.currentText()))
+        self.ios_combo.addItems(DownloadManager.download_combo)
+        self.ios_combo.setStyleSheet("""
+            * {
                 color: #fff;
             }
 
-            QPushButton:disabled {
-                border: none;
-                border: 2px solid #0C632A;
+            QComboBox {
+                border: 2px solid #313850;
+                border-radius: 10px;
+                background-color: #24293B;
+                padding: 1px 18px 1px 3px;
+            }
+
+            QComboBox:editable {
+                    background-color: #24293B;
+            }
+
+            QComboBox:!editable, QComboBox::drop-down:editable {
+                background-color: #24293B;
+                color: #fff;
+                border: 2px solid #313850;
                 border-radius: 10px;
             }
 
-            QPushButton:hover {
-                background-color: #b39614;
+            /* QComboBox gets the "on" state when the popup is open */
+            QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+                background-color: #24293B;
             }
-            
-            QToolTip {
-                color: #fff;
-                background-color: #000;
-                border: none;
-            }""")
 
-        for index, value in MainDownload.urls.items():
-            MainDownload.skip_firmware = False
+            QComboBox:on { /* shift the text when the popup opens */
+                padding-top: 3px;
+                padding-left: 4px;
+            }
 
-            # Parse data passed from the main app
-            self._name = value[0]
-            self.current_url = value[1]
-            self.sha1 = value[2]
-            self.buildid = value[3]
+            QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 15px;
 
-            # Update headers 
-            self.header.setText(f"Downloading {self.downloaded}/{self.firmwares}")
-            self.header.setStyleSheet("color: #c2df04")
+                border-left-width: 0px;
+                border-left-color: darkgray;
+                border-left-style: solid; /* just a single line */
+                border-top-right-radius: 3px; /* same radius as the QComboBox */
+                border-bottom-right-radius: 3px;
+            }
+        
+        """)
+        self.header.setText("Hit Start to begin downloading")
+        self.top_header.setText(f"Total to be downloaded: {str(naturalsize(DownloadManager.download_combo[DownloadManager.target_ios_version]))}")
 
-            # Get file size
-            r = requests.get(self.current_url, stream=True)
-            self.file_size = r.headers['Content-Length'] # Get firmware size
-
-            self.got_data = 0
-            self.full_destination = f"{self.destination}\\{self.current_url.split('/')[-1:][0]}"
-
-            MainDownload.finished = True
-            self.top_header.setText(f"{self._name} - {self.buildid}")
-            self.th_download = Downloader(url=self.current_url, destination=self.full_destination)
-            self.th_download.send_header.connect(self.update_header)
-            self.th_download.disable_cancel_btn.connect(self.disable_cancel_btn)
-            self.th_download.start()
-            self.wait_for_threads()
-            self.downloaded += 1
-            self.list_items()
-
-    def wait_for_threads(self):
-        while MainDownload.finished:
+    def wait_for_threads(self) -> None:
+        while DownloadManager.finished:
             time.sleep(0.5)
-            if not MainDownload.finished:
+            if not DownloadManager.finished:
                 break
 
-            if MainDownload.skip_firmware:
+            if DownloadManager.skip_firmware:
                 time.sleep(0.5)
                 self.th_download.terminate() # Terminate main download thread 
                 self.th_download.file.close() # Close file
@@ -150,8 +228,8 @@ class MainDownload(QtWidgets.QMainWindow):
 
                 break
 
-    def Download(self, url, destination, device, firmwares=1, downloaded=1, version=None):
-        self.setFixedSize(560, 300)
+    def download_one_firmware(self, url, destination, device, version, firmwares=1, downloaded=1) -> None:
+
         self.start.setDisabled(True)
         self.start.setStyleSheet("""
             QPushButton {
@@ -169,7 +247,7 @@ class MainDownload(QtWidgets.QMainWindow):
         self.downloaded = downloaded
         self.file_size = 0
         self.current_seconds = time.time()
-        MainDownload.is_downloading = True
+        DownloadManager.is_downloading = True
 
         # Update headers information
         self.header.setText(f"Downloading {self.downloaded}/{self.firmwares}")
@@ -177,7 +255,7 @@ class MainDownload(QtWidgets.QMainWindow):
         r = requests.get(self.url, stream=True)
         self.file_size = r.headers['Content-Length']
 
-        QtWidgets.QTreeWidgetItem(self.pc_tree, ["1", device, str(naturalsize(int(self.file_size)))])
+        QtWidgets.QTreeWidgetItem(self.pc_tree, [device, version])
 
         self.got_data = 0
         self.progress_bar_update()
@@ -187,7 +265,7 @@ class MainDownload(QtWidgets.QMainWindow):
         self.th_download.send_header.connect(self.update_header)
         self.th_download.disable_cancel_btn.connect(self.disable_cancel_btn)
 
-    def disable_skip_btn(self):
+    def disable_skip_btn(self) -> None:
         self.skip.setStyleSheet("""
             QPushButton {
                 background-color: #000;
@@ -200,7 +278,7 @@ class MainDownload(QtWidgets.QMainWindow):
 
         self.skip.setDisabled(True)
 
-    def disable_start_btn(self):
+    def disable_start_btn(self) -> None:
         self.start.setStyleSheet("""
             QPushButton {
                 background-color: #000;
@@ -212,16 +290,16 @@ class MainDownload(QtWidgets.QMainWindow):
             }""")
         self.start.setDisabled(True)
 
-    def disable_cancel_btn(self, val):
+    def disable_cancel_btn(self, val) -> None:
         self.cancel_btn.setDisabled(val)
         self.cancel_btn.setStyleSheet("background-color: #000")
         self.stop()
 
-    def update_header(self, val):
+    def update_header(self, val) -> None:
         self.got_data += val
         self.header.setText(f"Downloading {self.downloaded}/{self.firmwares} {naturalsize(int(self.got_data))}/{naturalsize(int(self.file_size))}\nElapsed: {self.get_est(time.time() - self.current_seconds)}")
 
-    def get_est(self, seconds):
+    def get_est(self, seconds) -> str:
         return time.strftime("%H:%M:%S", time.gmtime(seconds))
 
 class Downloader(QThread):
@@ -236,6 +314,7 @@ class Downloader(QThread):
     def run(self):
         r = requests.get(self.url, stream=True)
         self.file = open(self.destination, 'wb')
+
         try:
             for data in r.iter_content(chunk_size=8192):
                 self.file.write(data)
@@ -243,7 +322,27 @@ class Downloader(QThread):
 
         finally:
             self.file.close()
-            if not MainDownload.all_signed:
+            if not DownloadManager.all_signed:
                 self.disable_cancel_btn.emit(True)
 
-            MainDownload.finished = False
+            DownloadManager.finished = False
+
+class GetTotalDownloads(QThread):
+
+    def __init__(self, parent=None):
+        QThread.__init__(self)
+        self.total = 0
+        self.current_ios_versions = set()
+
+    def run(self):
+        for url in DownloadManager.urls.items():
+            self.current_ios_versions.add(url[1][3])
+
+        DownloadManager.download_combo = DownloadManager.download_combo.fromkeys(self.current_ios_versions, 0)
+
+        with requests.Session() as session:
+            for url in DownloadManager.urls.items():
+                for ios_version in DownloadManager.download_combo.keys():
+                    if ios_version == url[1][3]:
+                        r = session.get(url[1][1], stream=True)
+                        DownloadManager.download_combo[ios_version] += int(r.headers['Content-Length'])
