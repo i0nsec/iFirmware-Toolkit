@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1282</width>
-    <height>801</height>
+    <height>802</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,10 @@
     <normaloff>icons/Other.png</normaloff>icons/Other.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #191919;
-color:#fff;
-
+   <string notr="true">* { 
+	background-color: #15171E;
+	color:#fff;
+}
 QToolTip { color: #fff; background-color: #000; border: none; }
 </string>
   </property>
@@ -47,7 +48,9 @@ QToolTip { color: #fff; background-color: #000; border: none; }
              <widget class="QToolBox" name="toolBox">
               <property name="font">
                <font>
-                <pointsize>10</pointsize>
+                <pointsize>11</pointsize>
+                <italic>false</italic>
+                <bold>true</bold>
                </font>
               </property>
               <property name="cursor">
@@ -58,7 +61,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }
               </property>
               <property name="styleSheet">
                <string notr="true">QToolBox::tab {
-    background: #0C632A;
+    background: #24293B;
     border-radius: 5px;
     color: darkgray;
 }
@@ -78,7 +81,7 @@ QScrollBar:vertical {
  }
 
 QScrollBar::handle:vertical {
-    background: #0C632A;
+    background: #24293B;
  }
 
 QScrollBar:horizontal {
@@ -87,7 +90,7 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
 }</string>
               </property>
               <property name="frameShape">
@@ -100,18 +103,18 @@ QScrollBar::handle:horizontal {
                <number>0</number>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <property name="tabSpacing">
-               <number>0</number>
+               <number>2</number>
               </property>
               <widget class="QWidget" name="main_page">
                <property name="geometry">
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>717</width>
-                 <height>604</height>
+                 <width>782</width>
+                 <height>597</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -122,21 +125,185 @@ QScrollBar::handle:horizontal {
                 <string>On This PC</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_9">
-                <item row="1" column="0" colspan="2">
+                <item row="1" column="1">
+                 <widget class="QLabel" name="total_label">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Total: 0GB</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="found_label">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Found: 0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QFrame" name="frame_4">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_10">
+                   <item row="0" column="0">
+                    <widget class="QPushButton" name="scan_pc">
+                     <property name="minimumSize">
+                      <size>
+                       <width>50</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>150</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string> Scan PC</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/Search1.png</normaloff>icons/Search1.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QPushButton" name="delete_all">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>150</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string> Delete all</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/Error.png</normaloff>icons/Error.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
                  <widget class="QTreeWidget" name="pc_tree">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
                   <property name="cursor" stdset="0">
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">QHeaderView::section {
-    background-color: #292929;
+                   <string notr="true">QTreeView {
+	border: none;
+}
+
+QHeaderView::section {
+    background-color: #24293B;
     color: white;
-    padding-left: 4px;
-    border: 1px solid #191919;
+	padding-left: 4px;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 0px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -145,15 +312,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -161,7 +330,18 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                   </property>
                   <attribute name="headerMinimumSectionSize">
@@ -185,114 +365,16 @@ QScrollBar::handle:horizontal {
                   </column>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QPushButton" name="delete_all">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>40</height>
-                   </size>
-                  </property>
+                <item row="0" column="0" colspan="2">
+                 <widget class="QLabel" name="label">
                   <property name="font">
                    <font>
-                    <pointsize>9</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-        background-color: #831721;
-        border: none;
-        color: #fff;
- 		border: 2px solid #831721;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #75141d;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                  </property>
-                  <property name="text">
-                   <string> Delete all</string>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>icons/Error.png</normaloff>icons/Error.png</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QPushButton" name="scan_pc">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>9</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                  </property>
-                  <property name="text">
-                   <string> Scan PC</string>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>icons/Search1.png</normaloff>icons/Search1.png</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="found_label">
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
+                    <pointsize>12</pointsize>
                     <bold>true</bold>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Found: 0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="total_label">
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Total: 0GB</string>
+                   <string>Find and delete firmware files in other locations other than the default directory</string>
                   </property>
                  </widget>
                 </item>
@@ -303,8 +385,8 @@ QToolTip {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>717</width>
-                 <height>604</height>
+                 <width>782</width>
+                 <height>597</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -316,11 +398,24 @@ QToolTip {
                </attribute>
                <layout class="QGridLayout" name="gridLayout_2">
                 <item row="0" column="0">
+                 <widget class="QLabel" name="label_2">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Download the latest updates for all Apple devices</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
                  <widget class="QTabWidget" name="main_tab">
                   <property name="font">
                    <font>
                     <pointsize>9</pointsize>
-                    <bold>false</bold>
+                    <bold>true</bold>
                     <strikeout>false</strikeout>
                     <stylestrategy>PreferDefault</stylestrategy>
                     <kerning>false</kerning>
@@ -346,17 +441,17 @@ QToolTip {
 } 
 
 QTabBar::tab {
-  	background:#0C632A; 
-	border: 2px solid gray;
+  	background:#24293B; 
     border-radius: 5px;
     margin-top: 5ex; /* leave space at the top for the title */
-  	padding: 10px;
+	margin-right: 1ex;
+  	padding: 5px;
   	width: 100%;
   	color:#fff;
 } 
 
 QTabBar::tab:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 QTabBar::tab:selected { 
   background: rgb(245, 245, 245); 
@@ -365,7 +460,7 @@ QTabBar::tab:selected {
 }
 
 QMenuBar {
-    background-color: #000000;
+    background-color: #24293B;
     color: #ffffff;
     border: 1px solid #000;
 }
@@ -421,6 +516,7 @@ QMenu::item::selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
@@ -434,14 +530,17 @@ QMenu::item::selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -450,19 +549,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
-
-
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -470,10 +567,19 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
 }
 
-QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMenu::item:selected {background-color: #654321;}</string>
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
+}</string>
                       </property>
                       <property name="frameShape">
                        <enum>QFrame::VLine</enum>
@@ -520,11 +626,8 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                       <property name="columnCount">
                        <number>0</number>
                       </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
-                      </attribute>
-                      <attribute name="headerShowSortIndicator" stdset="0">
-                       <bool>false</bool>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
                      </widget>
                     </item>
@@ -544,21 +647,31 @@ QMenu {border: 1px solid black;}QMenu::item {background-color: transparent;}QMen
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
                        <cursorShape>PointingHandCursor</cursorShape>
                       </property>
+                      <property name="contextMenuPolicy">
+                       <enum>Qt::CustomContextMenu</enum>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -567,17 +680,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -585,32 +698,68 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                       </property>
                       <property name="frameShape">
                        <enum>QFrame::VLine</enum>
                       </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
                       <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                      </property>
+                      <property name="tabKeyNavigation">
+                       <bool>true</bool>
+                      </property>
+                      <property name="selectionMode">
+                       <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="horizontalScrollMode">
+                       <enum>QAbstractItemView::ScrollPerPixel</enum>
+                      </property>
+                      <property name="autoExpandDelay">
                        <number>0</number>
                       </property>
                       <property name="indentation">
                        <number>10</number>
                       </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
                       <property name="sortingEnabled">
                        <bool>false</bool>
+                      </property>
+                      <property name="animated">
+                       <bool>true</bool>
                       </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
                       </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
+                      <property name="headerHidden">
+                       <bool>false</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>0</number>
+                      </property>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
-                      <column>
-                       <property name="text">
-                        <string notr="true">1</string>
-                       </property>
-                      </column>
                      </widget>
                     </item>
                    </layout>
@@ -623,27 +772,37 @@ QScrollBar::handle:horizontal {
                    <attribute name="title">
                     <string>iPod</string>
                    </attribute>
-                   <layout class="QGridLayout" name="gridLayout_8">
+                   <layout class="QGridLayout" name="gridLayout_15">
                     <item row="0" column="0">
                      <widget class="QTreeWidget" name="ipod_tree">
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
                        <cursorShape>PointingHandCursor</cursorShape>
                       </property>
+                      <property name="contextMenuPolicy">
+                       <enum>Qt::CustomContextMenu</enum>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -652,17 +811,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -670,29 +829,68 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                       </property>
                       <property name="frameShape">
                        <enum>QFrame::VLine</enum>
                       </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
                       <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                      </property>
+                      <property name="tabKeyNavigation">
+                       <bool>true</bool>
+                      </property>
+                      <property name="selectionMode">
+                       <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="horizontalScrollMode">
+                       <enum>QAbstractItemView::ScrollPerPixel</enum>
+                      </property>
+                      <property name="autoExpandDelay">
                        <number>0</number>
                       </property>
                       <property name="indentation">
                        <number>10</number>
                       </property>
+                      <property name="uniformRowHeights">
+                       <bool>true</bool>
+                      </property>
+                      <property name="sortingEnabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="animated">
+                       <bool>true</bool>
+                      </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
                       </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
+                      <property name="headerHidden">
+                       <bool>false</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>0</number>
+                      </property>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
-                      <column>
-                       <property name="text">
-                        <string notr="true">1</string>
-                       </property>
-                      </column>
                      </widget>
                     </item>
                    </layout>
@@ -703,7 +901,7 @@ QScrollBar::handle:horizontal {
                      <normaloff>icons/MacBook.png</normaloff>icons/MacBook.png</iconset>
                    </attribute>
                    <attribute name="title">
-                    <string>Mac</string>
+                    <string>MacOS</string>
                    </attribute>
                    <layout class="QGridLayout" name="gridLayout_18">
                     <item row="0" column="0">
@@ -711,6 +909,7 @@ QScrollBar::handle:horizontal {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
@@ -718,14 +917,17 @@ QScrollBar::handle:horizontal {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -734,17 +936,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -752,7 +954,18 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                       </property>
                       <property name="frameShape">
@@ -779,8 +992,8 @@ QScrollBar::handle:horizontal {
                       <property name="columnCount">
                        <number>0</number>
                       </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
                      </widget>
                     </item>
@@ -794,27 +1007,37 @@ QScrollBar::handle:horizontal {
                    <attribute name="title">
                     <string>iTunes</string>
                    </attribute>
-                   <layout class="QGridLayout" name="gridLayout_19">
+                   <layout class="QGridLayout" name="gridLayout_11">
                     <item row="0" column="0">
                      <widget class="QTreeWidget" name="itunes_tree">
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
                        <cursorShape>PointingHandCursor</cursorShape>
                       </property>
+                      <property name="contextMenuPolicy">
+                       <enum>Qt::CustomContextMenu</enum>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -823,17 +1046,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -841,23 +1064,43 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                       </property>
                       <property name="frameShape">
                        <enum>QFrame::VLine</enum>
                       </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
                       <property name="lineWidth">
                        <number>0</number>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
                       </property>
                       <property name="tabKeyNavigation">
                        <bool>true</bool>
                       </property>
-                      <property name="showDropIndicator" stdset="0">
-                       <bool>false</bool>
-                      </property>
                       <property name="selectionMode">
                        <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="horizontalScrollMode">
+                       <enum>QAbstractItemView::ScrollPerPixel</enum>
+                      </property>
+                      <property name="autoExpandDelay">
+                       <number>0</number>
                       </property>
                       <property name="indentation">
                        <number>10</number>
@@ -865,17 +1108,24 @@ QScrollBar::handle:horizontal {
                       <property name="uniformRowHeights">
                        <bool>true</bool>
                       </property>
+                      <property name="sortingEnabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="animated">
+                       <bool>true</bool>
+                      </property>
                       <property name="allColumnsShowFocus">
                        <bool>true</bool>
                       </property>
-                      <attribute name="headerDefaultSectionSize">
-                       <number>120</number>
+                      <property name="headerHidden">
+                       <bool>false</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>0</number>
+                      </property>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
-                      <column>
-                       <property name="text">
-                        <string notr="true">1</string>
-                       </property>
-                      </column>
                      </widget>
                     </item>
                    </layout>
@@ -888,27 +1138,36 @@ QScrollBar::handle:horizontal {
                    <attribute name="title">
                     <string>Other</string>
                    </attribute>
-                   <layout class="QGridLayout" name="gridLayout_20">
+                   <layout class="QGridLayout" name="gridLayout_8">
                     <item row="0" column="0">
                      <widget class="QTreeWidget" name="other_tree">
                       <property name="font">
                        <font>
-                        <pointsize>10</pointsize>
+                        <bold>true</bold>
                        </font>
                       </property>
                       <property name="cursor" stdset="0">
                        <cursorShape>PointingHandCursor</cursorShape>
                       </property>
+                      <property name="contextMenuPolicy">
+                       <enum>Qt::CustomContextMenu</enum>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #292929;
+    background-color: #24293B;
     color: white;
     padding-left: 4px;
-    border: 1px solid #191919;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 QTreeView::item {
-	padding: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: rgb(0, 30, 47);
 }
 
 QTreeView::item:hover {
@@ -917,17 +1176,17 @@ QTreeView::item:hover {
 
 QTreeView::item:selected:active{
     background: #003451;
+	color: #fff;
 }
 
- QScrollBar:vertical {
+QScrollBar:vertical {
     background: white;
      width: 15px;
- }
+}
+
  QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
+    background: #24293B;
+}
 
 QScrollBar:horizontal {
     background: white;
@@ -935,17 +1194,43 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: #0C632A;
+    background: #24293B;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
 }</string>
                       </property>
                       <property name="frameShape">
                        <enum>QFrame::VLine</enum>
                       </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
                       <property name="lineWidth">
                        <number>0</number>
                       </property>
                       <property name="editTriggers">
-                       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+                       <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                      </property>
+                      <property name="tabKeyNavigation">
+                       <bool>true</bool>
+                      </property>
+                      <property name="selectionMode">
+                       <enum>QAbstractItemView::SingleSelection</enum>
+                      </property>
+                      <property name="horizontalScrollMode">
+                       <enum>QAbstractItemView::ScrollPerPixel</enum>
+                      </property>
+                      <property name="autoExpandDelay">
+                       <number>0</number>
                       </property>
                       <property name="indentation">
                        <number>10</number>
@@ -953,17 +1238,24 @@ QScrollBar::handle:horizontal {
                       <property name="uniformRowHeights">
                        <bool>true</bool>
                       </property>
-                      <attribute name="headerCascadingSectionResizes">
+                      <property name="sortingEnabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="animated">
                        <bool>true</bool>
-                      </attribute>
-                      <attribute name="headerHighlightSections">
+                      </property>
+                      <property name="allColumnsShowFocus">
                        <bool>true</bool>
+                      </property>
+                      <property name="headerHidden">
+                       <bool>false</bool>
+                      </property>
+                      <property name="columnCount">
+                       <number>0</number>
+                      </property>
+                      <attribute name="headerMinimumSectionSize">
+                       <number>175</number>
                       </attribute>
-                      <column>
-                       <property name="text">
-                        <string notr="true">1</string>
-                       </property>
-                      </column>
                      </widget>
                     </item>
                    </layout>
@@ -1006,326 +1298,6 @@ QGroupBox::title {
             <enum>QFrame::Raised</enum>
            </property>
            <layout class="QGridLayout" name="gridLayout_16">
-            <item row="2" column="0" colspan="2">
-             <widget class="QGroupBox" name="logs">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>400</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>false</kerning>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}
-
- QScrollBar:vertical {
-    background: white;
-     width: 15px;
- }
- QScrollBar::handle:vertical {
-    background: #0C632A;
- }
-
-
-
-QScrollBar:horizontal {
-    background: white;
-    height: 15px;
-}
-
-QScrollBar::handle:horizontal {
-    background: #0C632A;
-}</string>
-              </property>
-              <property name="title">
-               <string>Live Log</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_4">
-               <item row="0" column="0" colspan="2">
-                <widget class="QTextBrowser" name="text_log">
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="toolTip">
-                  <string>Live log </string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">outline: none;</string>
-                 </property>
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::FixedPixelWidth</enum>
-                 </property>
-                 <property name="html">
-                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QGroupBox" name="database_">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>126</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>false</kerning>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QGroupBox {
-    border: 2px solid gray;
-    border-radius: 10px;
-    margin-top: 5ex; /* leave space at the top for the title */
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top center; /* position at the top center */
-    padding: 0 3px;
-	background-color: rgb(25, 25, 25);
-}</string>
-              </property>
-              <property name="title">
-               <string>Database </string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_13">
-               <item row="1" column="1">
-                <widget class="QPushButton" name="backup">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Backup databases</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string> Backup</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/backup.png</normaloff>icons/backup.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="_update">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Check for database update</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string> Update</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/updated.png</normaloff>icons/updated.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>16</width>
-                   <height>16</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QPushButton" name="db_delete">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Delete databases</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string> Delete</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/Delete.png</normaloff>icons/Delete.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="options">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>App options (beta)</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string> Options</string>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/settings.png</normaloff>icons/settings.png</iconset>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item row="1" column="0" colspan="2">
              <widget class="QGroupBox" name="other_2">
               <property name="minimumSize">
@@ -1356,8 +1328,8 @@ QToolTip {
               </property>
               <property name="styleSheet">
                <string notr="true">QGroupBox {
-    border: 2px solid gray;
-    border-radius: 5px;
+    border: 2px solid #313850;
+    border-radius: 10px;
     margin-top: 5ex; /* leave space at the top for the title */
 }
 
@@ -1372,101 +1344,6 @@ QGroupBox::title {
                <string>Other</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_12">
-               <item row="1" column="0" colspan="4">
-                <widget class="QLineEdit" name="search">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>8</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="toolTip">
-                  <string>Lookup a device using its model number (A1670)</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}
-
-QLineEdit {
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    selection-background-color: darkgray;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Lookup a device using its model number (A1670)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="4">
-                <widget class="QPushButton" name="search_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>95</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Search</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-        background-color: #0C632A;
-        border: none;
-        color: #fff;
- 		border: 2px solid #0C632A;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #084D20;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/Search.png</normaloff>icons/Search.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>20</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="0">
                 <widget class="QPushButton" name="location">
                  <property name="minimumSize">
@@ -1478,7 +1355,7 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1491,15 +1368,15 @@ QToolTip {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -1516,40 +1393,59 @@ QToolTip {
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0" colspan="5">
-                <widget class="QLineEdit" name="device_search">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
+               <item row="3" column="2">
+                <widget class="QCheckBox" name="show_signed">
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
-                   <kerning>true</kerning>
+                   <kerning>false</kerning>
                   </font>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="toolTip">
-                  <string>Search for a device. ex: iPhone 11, 17A844 or iPhone12,1</string>
+                  <string>Display signed firmwares only</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QToolTip { 
 	color: #fff; background-color: #000; border: none; 
-
-}
-
-QLineEdit {
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 0 8px;
-    selection-background-color: darkgray;
 }</string>
                  </property>
-                 <property name="placeholderText">
-                  <string>Search for a device. Ex: iPhone 11, 17A844 or iPhone12,1</string>
+                 <property name="text">
+                  <string>Signed Only</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="show_relevant">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string notr="true">Show lastest versions only</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Relevant</string>
                  </property>
                 </widget>
                </item>
@@ -1567,7 +1463,7 @@ QLineEdit {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1585,7 +1481,7 @@ QLineEdit {
 }
 
 QLineEdit {
-    border: 2px solid gray;
+    border: 2px solid #313850;
     border-radius: 10px;
     padding: 0 8px;
     selection-background-color: darkgray;
@@ -1608,78 +1504,65 @@ QLineEdit {
                  </property>
                 </widget>
                </item>
-               <item row="3" column="2">
-                <widget class="QCheckBox" name="show_signed">
+               <item row="1" column="0" colspan="4">
+                <widget class="QLineEdit" name="search">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <pointsize>8</pointsize>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
                  </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
                  <property name="toolTip">
-                  <string>Display signed firmwares only</string>
+                  <string>Lookup a device using its model number (A1670)</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">
-QToolTip { 
+                  <string notr="true">QToolTip { 
 	color: #fff; background-color: #000; border: none; 
 
 }
-</string>
-                 </property>
-                 <property name="text">
-                  <string>Show Signed Only</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QCheckBox" name="show_relevant">
-                 <property name="font">
-                  <font>
-                   <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true">Show lastest versions only</string>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
 
+QLineEdit {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
 }</string>
                  </property>
                  <property name="text">
-                  <string>Show Relevant</string>
+                  <string/>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Lookup a device using its model number (A1670)</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
+               <item row="3" column="4">
                 <widget class="QCheckBox" name="check_integrity">
+                 <property name="maximumSize">
+                  <size>
+                   <width>95</width>
+                   <height>20</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
-                   <strikeout>false</strikeout>
-                   <kerning>false</kerning>
+                   <bold>true</bold>
                   </font>
                  </property>
                  <property name="cursor">
                   <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="acceptDrops">
+                  <bool>false</bool>
                  </property>
                  <property name="toolTip">
                   <string notr="true">Verify firmware when download is finished</string>
@@ -1692,7 +1575,105 @@ QToolTip {
 }</string>
                  </property>
                  <property name="text">
-                  <string>Check Integrity</string>
+                  <string>Verify</string>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="5">
+                <widget class="QLineEdit" name="device_search">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>true</kerning>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Search for a device. ex: iPhone 11, 17A844 or iPhone12,1</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+QLineEdit {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
+}</string>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Search for a device. Ex: iPhone 11, 17A844 or iPhone12,1</string>
+                 </property>
+                 <property name="clearButtonEnabled">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QPushButton" name="search_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>95</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Search</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/Search.png</normaloff>icons/Search.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -1717,8 +1698,8 @@ QToolTip {
               </property>
               <property name="styleSheet">
                <string notr="true">QGroupBox {
-    border: 2px solid gray;
-    border-radius: 5px;
+    border: 2px solid #313850;
+    border-radius: 10px;
     margin-top: 5ex; /* leave space at the top for the title */
 }
 
@@ -1744,7 +1725,7 @@ QGroupBox::title {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1757,15 +1738,15 @@ QGroupBox::title {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -1774,8 +1755,7 @@ QToolTip {
 }</string>
                  </property>
                  <property name="text">
-                  <string>Download
-   (beta)</string>
+                  <string>Download</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -1800,7 +1780,7 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1813,15 +1793,15 @@ QToolTip {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -1849,7 +1829,7 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1862,15 +1842,15 @@ QToolTip {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -1898,7 +1878,7 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <bold>false</bold>
+                   <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
                   </font>
@@ -1911,15 +1891,15 @@ QToolTip {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -1933,6 +1913,340 @@ QToolTip {
                  <property name="icon">
                   <iconset>
                    <normaloff>icons/verified.png</normaloff>icons/verified.png</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="database_">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>126</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>false</kerning>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    margin-top: 5ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}</string>
+              </property>
+              <property name="title">
+               <string>Database </string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_13">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="_update">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Check for database update</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string> Update</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/updated.png</normaloff>icons/updated.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>16</width>
+                   <height>16</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="backup">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Backup databases</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string> Backup</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/backup.png</normaloff>icons/backup.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="db_delete">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete databases</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string> Delete</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/Delete.png</normaloff>icons/Delete.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="options">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                   <strikeout>false</strikeout>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>App options (beta)</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string> Options</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/settings.png</normaloff>icons/settings.png</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QGroupBox" name="logs">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>400</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>false</kerning>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    margin-top: 5ex; /* leave space at the top for the title */
+	padding: 0px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+	background-color: rgb(25, 25, 25);
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+ QScrollBar:vertical {
+    background: white;
+     width: 15px;
+ }
+ QScrollBar::handle:vertical {
+    background: #24293B;
+ }
+
+QScrollBar:horizontal {
+    background: white;
+    height: 15px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #24293B;
+}</string>
+              </property>
+              <property name="title">
+               <string>Log</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_4">
+               <item row="0" column="0" colspan="2">
+                <widget class="QTextBrowser" name="text_log">
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Live log </string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">* {
+	border: none;
+}</string>
+                 </property>
+                 <property name="lineWrapMode">
+                  <enum>QTextEdit::FixedPixelWidth</enum>
+                 </property>
+                 <property name="html">
+                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:700; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -1982,12 +2296,12 @@ QToolTip {
           <number>0</number>
          </property>
          <layout class="QGridLayout" name="gridLayout_22">
-          <item row="0" column="0">
+          <item row="0" column="1">
            <widget class="QProgressBar" name="pbar">
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
             <property name="font">
@@ -2000,7 +2314,7 @@ QToolTip {
             </property>
             <property name="styleSheet">
              <string notr="true">QProgressBar {
-    border: 2px solid grey;
+    border: 2px solid #313850;
     border-radius: 5px;
 }
 
@@ -2023,7 +2337,36 @@ QProgressBar::chunk {
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="2">
+           <widget class="QLabel" name="db_version">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: #1E2230;
+color:#fff;
+border: 2px solid #313850;
+border-radius: 10px;
+</string>
+            </property>
+            <property name="text">
+             <string>DB Version
+Unavailable</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
            <widget class="QLabel" name="current_v">
             <property name="minimumSize">
              <size>
@@ -2033,16 +2376,13 @@ QProgressBar::chunk {
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
-              <bold>false</bold>
-              <strikeout>false</strikeout>
-              <kerning>false</kerning>
+              <bold>true</bold>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(52, 52, 52);
+             <string notr="true">background-color: #1E2230;
 color:#fff;
-border: 2px solid #191919;
+border: 2px solid #313850;
 border-radius: 10px;
 </string>
             </property>
@@ -2054,12 +2394,12 @@ border-radius: 10px;
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="4">
            <widget class="QPushButton" name="get_update">
             <property name="minimumSize">
              <size>
               <width>160</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
             <property name="font">
@@ -2078,15 +2418,15 @@ border-radius: 10px;
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
-        background-color: #0C632A;
+        background-color: #24293B;
         border: none;
         color: #fff;
- 		border: 2px solid #0C632A;
+ 		border: 2px solid #313850;
     	border-radius: 10px;
     }
 
  QPushButton:hover {
-	background-color: #084D20;
+	background-color: #1E2230;
 }
 
 QToolTip { 
@@ -2105,6 +2445,39 @@ QToolTip {
              <size>
               <width>15</width>
               <height>15</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="git_link">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: transparent;
+color:#fff;
+border: 2px solid #191919;
+border-radius: 10px;
+</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>icons/github.png</normaloff>icons/github.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>
