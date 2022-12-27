@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThread, pyqtSignal
 
 app_version = 'v3.0-1220'
-
+ 
 class DownloadManager(QtWidgets.QMainWindow):
     is_downloading = False
     all_signed = False
