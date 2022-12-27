@@ -33,7 +33,6 @@ class DownloadManager(QtWidgets.QMainWindow):
         icon = self.style().standardIcon(pixmapi)
         self.start.setIcon(icon)
 
-        self.header.setText("Hit Start to begin downloading")
         self.skip.clicked.connect(lambda: self._skip())
         pixmapi = QtWidgets.QStyle.SP_ArrowForward
         icon = self.style().standardIcon(pixmapi)
@@ -208,7 +207,7 @@ class DownloadManager(QtWidgets.QMainWindow):
             }
         
         """)
-        self.header.setText("Hit Start to begin downloading")
+        self.header.clear()
         self.top_header.setText(f"Total to be downloaded: {str(naturalsize(DownloadManager.download_combo[DownloadManager.target_ios_version]))}")
 
     def wait_for_threads(self) -> None:
@@ -279,6 +278,8 @@ class DownloadManager(QtWidgets.QMainWindow):
         self.skip.setDisabled(True)
 
     def disable_start_btn(self) -> None:
+        if DownloadManager.download_combo:
+            return 
         self.start.setStyleSheet("""
             QPushButton {
                 background-color: #000;
