@@ -385,7 +385,7 @@ QToolTip {
       </font>
      </property>
      <property name="text">
-      <string>Always verify a firmware once it's finihsed downloading</string>
+      <string>Always verify a firmware once it's finished downloading</string>
      </property>
     </widget>
    </item>
