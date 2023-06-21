@@ -30,7 +30,7 @@ it will be updated here.
 
 ```json
 {
-    "Server1": "http://45-33-10-205.ip.linodeusercontent.com:61983"
+    "host_address": "http://45-33-10-205.ip.linodeusercontent.com:61983"
 }
 ```
 ## Credits
