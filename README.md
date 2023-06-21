@@ -30,7 +30,7 @@ it will be updated here.
 
 ```json
 {
-    "Server1": "http://li2194-245.members.linode.com:61983"
+    "Server1": "45-33-10-205.ip.linodeusercontent.com:61983"
 }
 ```
 ## Credits
