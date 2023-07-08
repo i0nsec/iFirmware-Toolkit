@@ -18,7 +18,7 @@ class DownloadManager(QtWidgets.QMainWindow):
 
     def __init__(self) -> None:
         super(DownloadManager, self).__init__()
-        uic.loadUi("_dm.ui", self)
+        uic.loadUi("UI\\_dm.ui", self)
         self.setFixedSize(660, 500)
         self.show()
         self.setWindowTitle(f'Download - {app_version}')
