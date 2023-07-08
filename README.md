@@ -1,4 +1,4 @@
-# iFirmware-Toolkit v3.0-1220
+# iFirmware-Toolkit v3.1-0708
 Download and manage any firmware for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
 <img src=".\\Resources/Main-UI.png" alt="logo" width="700" hieght="700"/>
