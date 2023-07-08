@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>664</width>
+    <height>502</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Options</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/Gear.png</normaloff>icons/Gear.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #15171E;
+color:#fff;
+
+QToolTip { color: #fff; background-color: #000; border: none; }</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="Line" name="line_5">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>2</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(52, 52, 52);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="Line" name="line_2">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>2</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(52, 52, 52);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Available Options</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="Line" name="line_3">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>2</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(52, 52, 52);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+    <widget class="QPushButton" name="save_config">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+     </property>
+     <property name="text">
+      <string>Save</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/checkmark.png</normaloff>icons/checkmark.png</iconset>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+S</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="Line" name="line_4">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>2</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(52, 52, 52);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="header_2">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Always use this path when downloading</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QFrame" name="main_frame_2">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="change_dir">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+        </property>
+        <property name="text">
+         <string> Choose</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/folder.png</normaloff>icons/folder.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="change_dir_line">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+QLineEdit {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string> Choose a new location...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="reset">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+        </property>
+        <property name="text">
+         <string> Reset</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/Delete.png</normaloff>icons/Delete.png</iconset>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QCheckBox" name="always_hash">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+     </property>
+     <property name="text">
+      <string>Always verify a firmware once it's finished downloading</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QCheckBox" name="auto_check_update">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+     </property>
+     <property name="text">
+      <string>Automatically check for database updates on app launch</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="header">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Restore a database backup</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QFrame" name="main_frame">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="edit_btn">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+        </property>
+        <property name="text">
+         <string> Choose</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/file.png</normaloff>icons/file.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="edit_line">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+QLineEdit {
+    border: 2px solid #313850;
+    border-radius: 10px;
+    padding: 0 8px;
+    selection-background-color: darkgray;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string> Choose a file....</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="ok">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+}
+
+QPushButton:disabled {
+        border: none;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+QPushButton:hover {
+	background-color: #084D20;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}
+
+
+       border: none;
+ 		border: 2px solid #0C632A;
+    	border-radius: 10px;
+ </string>
+        </property>
+        <property name="text">
+         <string> Load</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/loading.png</normaloff>icons/loading.png</iconset>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QCheckBox" name="always_unsigned">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+     </property>
+     <property name="text">
+      <string>Always show unsigned</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QCheckBox" name="hide_column">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+     </property>
+     <property name="text">
+      <string>Hide irrelevant columns</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="dark_blue/style.qrc"/>
+ </resources>
+ <connections/>
+</ui>
