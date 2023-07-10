@@ -39,6 +39,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      </property>
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -60,6 +61,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      </property>
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -76,6 +78,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      <property name="font">
       <font>
        <pointsize>12</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -94,6 +97,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      </property>
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -125,6 +129,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -171,6 +176,7 @@ QToolTip {
      </property>
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -187,6 +193,7 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -199,6 +206,7 @@ QToolTip {
     <widget class="QFrame" name="main_frame_2">
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -226,6 +234,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -276,6 +285,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -331,6 +341,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -381,8 +392,87 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
      </property>
      <property name="text">
       <string>Always verify a firmware once it's finished downloading</string>
@@ -394,8 +484,87 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
      </property>
      <property name="text">
       <string>Automatically check for database updates on app launch</string>
@@ -407,6 +576,7 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -419,6 +589,7 @@ QToolTip {
     <widget class="QFrame" name="main_frame">
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -446,6 +617,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -496,6 +668,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -554,6 +727,7 @@ QToolTip {
         <property name="font">
          <font>
           <pointsize>10</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -616,8 +790,87 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
      </property>
      <property name="text">
       <string>Always show unsigned</string>
@@ -629,8 +882,87 @@ QToolTip {
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
      </property>
      <property name="text">
       <string>Hide irrelevant columns</string>
@@ -642,6 +974,8 @@ QToolTip {
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="dark_blue/style.qrc"/>
+ </resources>
  <connections/>
 </ui>

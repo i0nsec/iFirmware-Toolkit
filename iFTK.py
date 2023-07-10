@@ -8,25 +8,33 @@ import py7zr
 import sqlite3
 import json
 import logging
+import pyqtcss
 from getpass import getuser
 from humanize import naturalsize
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import pyqtSignal, Qt, QThread
-from PyQt5.QtWidgets import (
-            QWidget, 
-            QMainWindow,
-            QApplication,
-            QTextBrowser,
-            QFileDialog,
-            QMessageBox,
-            QTreeWidgetItem,
-            QMenu,
-            QStyle)
+from PyQt5.QtWidgets import (QWidget,
+                            QMainWindow,
+                            QApplication,
+                            QTextBrowser,
+                            QFileDialog,
+                            QMessageBox,
+                            QTreeWidgetItem,
+                            QMenu,
+                            QStyle,
+                            QTableWidgetItem)
+from pymobiledevice3 import usbmux
+from pymobiledevice3.lockdown import LockdownClient
+from pymobiledevice3.services.mobilebackup2 import Mobilebackup2Service
+from pymobiledevice3.services.diagnostics import DiagnosticsService
+from pymobiledevice3.exceptions import (NoDeviceConnectedError,
+                                        MissingValueError,
+                                        LockdownError)
 
 # dm.py - main downloader
 import dm
-
-app_version = 'v3.0-1220' # App version
+pyqtcss.get_style("dark_blue")
+app_version = 'v3.1-0708' # App version
 download_urls = {} # Used to pass URLs to the downloader module  
 no_update = False # Do not update QTreeWidget when checking for database update, if there is no updates available
 dbs = [
@@ -42,8 +50,8 @@ def delete_from_database(URL, current_index, name):
     window.log(f"Deleting {name} from database...")
     value = messaged_box(
         "Delete",
-        "icons/updated.png",
-        "icons/Question.png",
+        "UI/icons/updated.png",
+        "UI/icons/Question.png",
        f"Are you sure you want to delete {name} from database?", 
        ok=False,
        yes=True,
@@ -73,7 +81,16 @@ def delete_from_database(URL, current_index, name):
     elif value == 1:
         window.log("Aborted by user.")
 
-def messaged_box(title, window_icon, icon, text, ok=True, copy=False, yes=False, no=False, abort=False, get=False):
+def messaged_box(title, 
+                 window_icon, 
+                 icon, 
+                 text, 
+                 ok=True, 
+                 copy=False, 
+                 yes=False, 
+                 no=False, 
+                 abort=False, 
+                 get=False):
     message = QMessageBox()
     message.setIconPixmap(QtGui.QPixmap(icon))
     message.setWindowIcon(QtGui.QIcon(window_icon))
@@ -234,7 +251,7 @@ class Options(QWidget):
 
     def __init__(self):
         super(Options, self).__init__()
-        uic.loadUi("_config.ui", self)
+        uic.loadUi("UI\\_config.ui", self)
         self.filename = "DBs/settings.json"
 
         if os.path.exists(self.filename):
@@ -306,8 +323,8 @@ class Options(QWidget):
     def save_changes(self):
         with open(self.filename, "w") as config:
             json.dump({
-                'dest':Options.NEW_DEST,
-                'always_hash':Options.ALWAYS_HASH,
+                'dest': Options.NEW_DEST,
+                'always_hash': Options.ALWAYS_HASH,
                 'always_unsigned': Options.ALWAYS_UNSIGNED,
                 'auto_update': Options.AUTO_CHECK_UPDATE,
                 'hide_columns': Options.hide_columns
@@ -315,9 +332,9 @@ class Options(QWidget):
 
         window.log("Successfully saved settings.")
         messaged_box("Settings", 
-                        "icons/settings.png", 
-                        "icons/Checkmark_1.png", 
-                        f"Successfully saved settings.")
+                        "UI/icons/settings.png", 
+                        "UI/icons/Checkmark_1.png", 
+                        f"Successfully saved settings. Please restart iFTK.")
 
     def set_always_hash(self, state):
         if state == 2:
@@ -407,18 +424,23 @@ class MainApp(QMainWindow):
     current_index = 0
     options = None
     this_pc = []
+    current_device = {}
+    notified = True
+    connected = False
+    udid = ""
     text_reset = None
     dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
     ACTUAL_DEST = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
     force_continue = False # Force updating even when SHA256 mismatched 
+    
     def __init__(self):
         super(MainApp, self).__init__()
-        uic.loadUi("_iFTK.ui", self)
+        uic.loadUi("UI\\_iFTK.ui", self)
         self.show()
 
         # Check if hosts file exists
         if not os.path.exists('.hosts'):
-            self.log("Hosts file does not exist.\nCheck out online documentation for more information")
+            self.log("Hosts file does not exist.")
 
         elif os.path.exists('.hosts'):
             with open('.hosts', 'r') as file:
@@ -475,6 +497,7 @@ class MainApp(QMainWindow):
         # Show most relevant IPSWs versions only
         self.show_relevant.clicked.connect(lambda: self.show_relevant_box(self.show_relevant.checkState()))
         self.show_relevant.setChecked(True)
+        self.show_signed.setChecked(True)
 
         if os.path.exists("DBs/settings.json"):
             with open("DBs/settings.json", "r") as setting:
@@ -568,6 +591,12 @@ class MainApp(QMainWindow):
                 background-color: #24293B;
             }
         """)
+        self.check_if_device_connected()
+        self.enter_recovery.clicked.connect(lambda: self.enter_recovery_())
+        self.poweroff.clicked.connect(lambda: self.shutdown())
+        self.reboot.clicked.connect(lambda: self.restart())
+        self.erase_btn.clicked.connect(lambda: self.erase())
+        self.export_device.clicked.connect(lambda: self.export_device_info())
 
     @classmethod
     def check_integrity_box(cls, state):
@@ -676,8 +705,8 @@ class MainApp(QMainWindow):
         self.log(f"Downloading: {dev_name} - {buildid}\n{hash_value}\n")
 
         value = messaged_box("Download Firmware", 
-                            "icons/updated.png",
-                            "icons/Question.png",
+                            "UI/UI/icons/updated.png",
+                            "UI/UI/icons/Question.png",
                             f"Start downloading firmware for {dev_name}?",
                             ok=False,
                             yes=True,
@@ -693,8 +722,8 @@ class MainApp(QMainWindow):
                 
                 self.log('Firmware already exists!')
                 value = messaged_box("Error", 
-                                    "icons/updated.png",
-                                    "icons/Question.png",
+                                    "UI/icons/updated.png",
+                                    "UI/icons/Question.png",
                                     "Firmware already exists, do you want to delete it and continue?",
                                     ok=False,
                                     yes=True,
@@ -742,8 +771,8 @@ class MainApp(QMainWindow):
 
         value = messaged_box(
                             "Update", 
-                            "icons/updated.png", 
-                            "icons/database.png", 
+                            "UI/icons/updated.png", 
+                            "UI/icons/database.png", 
                             "Check for database update?",
                             ok=False,
                             yes=True, 
@@ -833,8 +862,8 @@ class MainApp(QMainWindow):
         if MainApp.this_pc:
             value = messaged_box(
                             "Delete All", 
-                            "icons/Question.png", 
-                            "icons/Question.png", 
+                            "UI/icons/Question.png", 
+                            "UI/icons/Question.png", 
                             "Are you sure you want to delete all?\n\n{}".format(' '.join([str(x).split('\\')[-1] for x in MainApp.this_pc])),
                             yes=True,
                             no=True,
@@ -852,16 +881,16 @@ class MainApp(QMainWindow):
         else:
             value = messaged_box(
                                 "Delete All",
-                                "icons/Info.png",
-                                "icons/Info.png",
+                                "UI/icons/Info.png",
+                                "UI/icons/Info.png",
                                 "Could not find any firmware to delete.",
                                 ok=True)
 
     def show_in_ui(self, val):
         data = f"Name: {val[0]}\nIdentifier: {val[1]}\nBoardconfig: {val[2]}\nPlatform: {val[3]}\nCPID: {val[4]}\n"
         value = messaged_box("Search results",
-                    "icons/Search1.png",
-                    "icons/Info.png",
+                    "UI/icons/Search1.png",
+                    "UI/icons/Info.png",
                     data, copy=True)
 
         if value == 0:
@@ -881,8 +910,8 @@ class MainApp(QMainWindow):
             show_dbs = ", ".join([db for db in ["iOS", "iPadOS", "iPod", "MacOS", "iTunes", "Other"]])
 
             value = messaged_box("Delete", 
-                        "icons/updated.png",
-                        "icons/Question.png",
+                        "UI/icons/updated.png",
+                        "UI/icons/Question.png",
                         f"Delete databases for the follwoing devices?\n\n{show_dbs}",
                         yes=True, 
                         no=True,
@@ -1217,15 +1246,15 @@ class MainApp(QMainWindow):
     def no_update(self, val):
         if val == 'db':
             messaged_box("Database Update", 
-                        "icons/updated.png", 
-                        "icons/Checkmark_1.png", 
+                        "UI/icons/updated.png", 
+                        "UI/icons/Checkmark_1.png", 
                         f"Already up to date.\nDB Version: {MainApp.database_version}")
             return
 
         # If iFirnware Toolkit is up to date
         messaged_box("iFirmware Update", 
-                    "icons/updated.png", 
-                    "icons/Checkmark_1.png", 
+                    "UI/icons/updated.png", 
+                    "UI/icons/Checkmark_1.png", 
                     f"Already up to date.\nVersion: {app_version}")
 
     def hash_file(self, val):
@@ -1242,8 +1271,8 @@ class MainApp(QMainWindow):
 
     def update_available(self, val):
         value = messaged_box("iFTK Update",
-                    "icons/updated.png",
-                    "icons/Information.png",
+                    "UI/icons/updated.png",
+                    "UI/icons/Information.png",
                     f"A new version is available.\nCurrent: {app_version}\nNew: {val}", get=True)
                     
         if value == 1:
@@ -1282,8 +1311,8 @@ class MainApp(QMainWindow):
                     show_ipsws = "\n".join([file for file in files if file[-5:] == '.ipsw'])
 
                     value = messaged_box("Delete", 
-                                "icons/updated.png",
-                                "icons/Question.png",
+                                "UI/icons/updated.png",
+                                "UI/icons/Question.png",
                                 f"Delete the follwoing firmware files?\n\n{show_ipsws}",
                                 ok=False,
                                 yes=True,
@@ -1328,6 +1357,8 @@ class MainApp(QMainWindow):
         if os.path.isfile('logs.txt'):
             with open('logs.txt', 'w') as file:
                 pass
+
+        MainApp.text_reset = self.text_log
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.INFO)
         output = logging.FileHandler('logs.txt')
@@ -1338,7 +1369,7 @@ class MainApp(QMainWindow):
         self.logger.handlers[0].close()
         self.logger.removeHandler(self.logger.handlers[0])
         self.init_logger()
-        
+
     def enable_btns(self, val):
         if val:
             self.main_download.setDisabled(val)
@@ -1438,14 +1469,14 @@ class MainApp(QMainWindow):
             url64 = item.text(4) # URL for a 64Bit iTunes
 
             copy = menu.addAction("Copy All")
-            copy.setIcon(QtGui.QIcon("icons/Copy.png"))
+            copy.setIcon(QtGui.QIcon("UI/icons/Copy.png"))
             copy_url = menu.addAction("Copy URL:32Bit")
-            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))
+            copy_url.setIcon(QtGui.QIcon("UI/icons/CopyURL.png"))
             copy_url = menu.addAction("Copy URL:64Bit")
-            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))
+            copy_url.setIcon(QtGui.QIcon("UI/icons/CopyURL.png"))
             menu.addSeparator()
             delete = menu.addAction("Delete All")
-            delete.setIcon(QtGui.QIcon("icons/Delete.png"))
+            delete.setIcon(QtGui.QIcon("UI/icons/Delete.png"))
 
         else:
             name = item.text(0) # Name of current selected device
@@ -1456,16 +1487,16 @@ class MainApp(QMainWindow):
             url = item.text(6) # URL of current selected device 
 
             download = menu.addAction("Download")
-            download.setIcon(QtGui.QIcon("icons/Download.png"))
+            download.setIcon(QtGui.QIcon("UI/icons/Download.png"))
             copy = menu.addAction("Copy")
-            copy.setIcon(QtGui.QIcon("icons/Copy.png"))
+            copy.setIcon(QtGui.QIcon("UI/icons/Copy.png"))
             copy_hash = menu.addAction("Copy SHA1")
-            copy_hash.setIcon(QtGui.QIcon("icons/CopyHash.png"))
+            copy_hash.setIcon(QtGui.QIcon("UI/icons/CopyHash.png"))
             copy_url = menu.addAction("Copy URL")
-            copy_url.setIcon(QtGui.QIcon("icons/CopyURL.png"))
+            copy_url.setIcon(QtGui.QIcon("UI/icons/CopyURL.png"))
             menu.addSeparator()
             delete = menu.addAction("Delete")
-            delete.setIcon(QtGui.QIcon("icons/Delete.png"))
+            delete.setIcon(QtGui.QIcon("UI/icons/Delete.png"))
 
         value = menu.exec_(self.getIndex.mapToGlobal(point))
 
@@ -1500,6 +1531,236 @@ class MainApp(QMainWindow):
 
         except AttributeError:
             return 1
+
+    def check_if_device_connected(self):
+        self.check_conn = CheckConnection()
+        self.check_conn.start()
+        self.check_conn.is_connected.connect(self.print_to_label)
+        self.check_conn.not_connected.connect(self.clear_print_to_label)
+
+    def clear_print_to_label(self):
+        if not MainApp.notified:
+            self.toolBox.setItemText(2, "iDevice - Not connected.")
+            self.idevice_restore.clearContents()
+            MainApp.notified = True
+            MainApp.connected = False
+
+    def print_to_label(self):
+        if MainApp.connected:
+            return
+
+        if MainApp.notified:
+            MainApp.notified = False
+            return
+
+        lockdown = LockdownClient()
+        current_device = {
+            "DeviceName": '',
+            "ActivationState": '',
+            "fm-activation-locked": '',
+            "InternationalMobileEquipmentIdentity": '',
+            "InternationalMobileEquipmentIdentity2": '',
+            "SerialNumber": '',
+            "ProductType": '',
+            "ProductVersion": '',
+            "BuildVersion": '',
+            "SIMStatus": '',
+            "SIMTrayStatus": '',
+            "UniqueDeviceID": '',
+            "WiFiAddress": '',
+            "BluetoothAddress": '',
+            "CarrierBundleInfoArray": '',
+            "PhoneNumber": '',
+            "CPUArchitecture": '',
+            "FirmwareVersion": '',
+            "IntegratedCircuitCardIdentity": ''
+        }
+
+        for key in current_device:
+            try:
+
+                if key == 'fm-activation-locked':
+                    try:
+                        result = lockdown.get_value(key='NonVolatileRAM')['fm-activation-locked'].decode('utf8')
+                        if result == 'NO':
+                            MainApp.current_device[key] = 'No'
+                        else:
+                            MainApp.current_device[key] = 'Yes'
+                    except KeyError:
+                        MainApp.current_device[key] = 'Not available.'
+                    
+                    continue
+
+                if key == 'CarrierBundleInfoArray':
+                    result = lockdown.get_value(key="CarrierBundleInfoArray")
+                    if not result:
+                        MainApp.current_device[key] = 'Not available.'
+                    else:
+                        MainApp.current_device[key] = result
+
+                    continue
+
+                if key == 'SIMStatus':
+                    result = lockdown.get_value(key="SIMStatus")
+                    if result == 'kCTSIMSupportSIMStatusNotInserted':
+                        MainApp.current_device[key] = 'No SIM.'
+                    else:
+                        MainApp.current_device[key] = 'SIM is inserted.'
+
+                    continue
+
+                if key == 'SIMTrayStatus':
+                    result = lockdown.get_value(key="SIMTrayStatus")
+                    if result == 'kCTSIMSupportSIMTrayAbsent':
+                        MainApp.current_device[key] = 'SIM Tray is not inserted.'
+                    else:
+                        MainApp.current_device[key] = 'SIM Tray is inserted.'
+
+                    continue
+
+                MainApp.current_device[key] = lockdown.get_value(key=key)
+
+            except MissingValueError:
+                 MainApp.current_device[key] = "Not available."
+                 continue
+
+        device = MainApp.current_device.values()
+        carrires = []
+        # print(lockdown.get_value(key="InternationalMobileSubscriberIdentity"))
+        for index, value in enumerate(device):
+            try:
+                if type(value) is list:
+                    for xcarrier in value:
+                        carrires.append(xcarrier['CFBundleIdentifier'])
+
+                    self.idevice_restore.setItem(index, 0, QTableWidgetItem(', '.join(carrires)))
+                    continue
+
+                self.idevice_restore.setItem(index, 0, QTableWidgetItem(value))
+
+            except (NoDeviceConnectedError, MissingValueError, LockdownError) as msg:
+                continue
+
+        MainApp.connected = True
+        MainApp.udid = lockdown.get_value(key='UniqueDeviceID')
+        with open('.devices.txt', 'a') as device_udids:
+            device_udids.write(f"{time.asctime()};; {MainApp.udid}\n")
+
+        self.toolBox.setItemText(2, f"iDevice - Connected: {MainApp.udid}")
+
+    def enter_recovery_(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+        
+        value = messaged_box("Enter Recovery", 
+                            "UI/icons/updated.png",
+                            "UI/icons/Question.png",
+                            f"Reboot device into recovery mode?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+
+        try:
+            self.log("Device is entering recovery mode...")
+            lockdown = LockdownClient()
+            lockdown.enter_recovery()
+        except NoDeviceConnectedError as error_msg:
+            pass
+
+    def shutdown(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+        
+        value = messaged_box("Shutdown", 
+                            "UI/icons/updated.png",
+                            "UI/icons/Question.png",
+                            f"Shutdown device?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+        
+        try:
+            self.log("Device is shutting down...")
+            lockdown = LockdownClient()
+            do_shutdown = DiagnosticsService(lockdown=lockdown)
+            do_shutdown.shutdown()
+
+        except NoDeviceConnectedError as error_msg:
+            pass
+
+    def restart(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+        
+        value = messaged_box("Restart", 
+                            "UI/icons/updated.png",
+                            "UI/icons/Question.png",
+                            f"Restart device?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+
+        try:
+            self.log("Device is restarting...")
+            lockdown = LockdownClient()
+            do_shutdown = DiagnosticsService(lockdown=lockdown)
+            do_shutdown.restart()
+
+        except NoDeviceConnectedError as error_msg:
+            pass
+
+    def erase(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+        
+        value = messaged_box("Erase", 
+                            "UI/icons/updated.png",
+                            "UI/icons/clean-code-small.png",
+                            f"WARNING: ALL CONTENT AND SETTINGS WILL BE ERASED, THIS ACTION CANNOT BE UNDONE.\n\nErase device?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+
+        lockdown = LockdownClient()
+
+        self.erase_threaded = Erase(lockdown=lockdown)
+        self.erase_threaded.start()
+        self.erase_threaded.log.connect(self.log)
+        self.erase_threaded.pbar.connect(self.progress_bar_update)
+        self.erase_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
+
+    def export_device_info(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}.txt", '.txt', )
+        if not file_name:
+            return
+        
+        with open(file_name, 'w') as file:
+            for category, device_value in MainApp.current_device.items():
+                file.write(f"{category}: {device_value}\n")
+            
+            file.write(f"\n==============================\nTime: {time.asctime()}")
+
+        self.log(f"Exported data to {file_name}")
 
 class VerifyFirmware(QThread):
     progress_update = pyqtSignal(int)
@@ -1739,7 +2000,7 @@ class ModelNumberLookup(QThread):
                 self.send_to_log.emit('Invalid model number')
                 self.is_ready.emit(True)
 
-class DownloadManagerSignal(QThread): 
+class DownloadManagerSignal(QThread):
     enable_btns = pyqtSignal(bool)
     send_to_log = pyqtSignal(str)
     hash_file = pyqtSignal(list)
@@ -1775,7 +2036,7 @@ class DeviceSearch(QThread):
             try:
                 conn = sqlite3.connect(to_download)
                 cur = conn.cursor()
-                cur.execute(f"SELECT * FROM devices where DEVICE_NAME='{self.query}' OR IDENTIFIER='{self.query}' OR BUILDID='{self.query}'")
+                cur.execute(f"SELECT * FROM devices where DEVICE_NAME='{self.query}' COLLATE NOCASE OR IDENTIFIER='{self.query}' COLLATE NOCASE OR BUILDID='{self.query}' COLLATE NOCASE")
                 data = cur.fetchall()
                 if data:
                     for device in data:
@@ -1784,7 +2045,7 @@ class DeviceSearch(QThread):
                         version = device[3]
                         buildid = device[4]
                         date = device[8]
-                        self.send_to_log.emit(f"Name: {name}\nIdentifier: {identifier}\nVersion: {version}\nBuildID: {buildid}\nRelease Date: {date}")
+                        self.send_to_log.emit(f"Name: {name}\nIdentifier: {identifier}\nVersion: {version}\nBuildID: {buildid}\nRelease Date: {date}\n------------------\n")
 
             except sqlite3.OperationalError:
                 pass
@@ -1817,6 +2078,45 @@ class ScanPC(QThread):
         self.is_ready.emit(True)
         self.send_to_log.emit(f"Finished scanning. Found: {len(MainApp.this_pc)}")
 
+class CheckConnection(QThread):
+    is_connected: bool = pyqtSignal(bool)
+    not_connected: bool = pyqtSignal(bool)
+
+    def __init__(self, parent=None):
+        QThread.__init__(self)
+
+    def run(self):
+        while True:
+            get_device = usbmux.list_devices()
+
+            if not get_device:
+                self.not_connected.emit(True)
+            else:
+                self.is_connected.emit(True)
+
+            time.sleep(1)
+
+class Erase(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(str)
+
+    def __init__(self, parent=None, lockdown=None, full_path=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+        self.full_path = full_path
+
+    def run(self):
+        try:
+            self.pbar.emit(True)
+            self.log.emit("Erasing...")
+            backup_it = Mobilebackup2Service(self.lockdown)
+            backup_it.erase_device()
+            self.is_finished.emit(True)
+        except ConnectionAbortedError:
+            self.log.emit("Device has been erased.")
+            self.is_finished.emit(True)
+            
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainApp()

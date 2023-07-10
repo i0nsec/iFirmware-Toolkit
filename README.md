@@ -1,7 +1,7 @@
-# iFirmware-Toolkit v3.0-1220
+# iFirmware-Toolkit v3.1-0708
 Download and manage any firmware for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
-<img src=".\\Resources/Main-UI.png" alt="logo" width="700" hieght="700"/>
+<img src=".\\UI/Main-UI.png" alt="logo" width="700" hieght="700"/>
 
 iFTK runs only on Windows. It's currently not fully compatible on other operating systems.
 
@@ -30,7 +30,7 @@ it will be updated here.
 
 ```json
 {
-    "Server1": "http://li2194-245.members.linode.com:61983"
+    "host_address": "http://45-33-10-205.ip.linodeusercontent.com:61983"
 }
 ```
 ## Credits
