@@ -1824,6 +1824,10 @@ QCheckBox::indicator:unchecked:disabled
                       <property name="text">
                        <string>Activation State</string>
                       </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff>icons/status.png</normaloff>icons/status.png</iconset>
+                      </property>
                      </row>
                      <row>
                       <property name="text">
@@ -1975,104 +1979,8 @@ QCheckBox::indicator:unchecked:disabled
                     <height>60</height>
                    </size>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_20">
-                   <item row="0" column="4">
-                    <widget class="QPushButton" name="poweroff">
-                     <property name="minimumSize">
-                      <size>
-                       <width>130</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>9</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="toolTip">
-                      <string>Enter recovery mode on any Apple device.</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
-        background-color: #24293B;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Shutdown</string>
-                     </property>
-                     <property name="icon">
-                      <iconset>
-                       <normaloff>icons/power-button.png</normaloff>icons/power-button.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QPushButton" name="erase_btn">
-                     <property name="minimumSize">
-                      <size>
-                       <width>130</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>9</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="toolTip">
-                      <string>Enter recovery mode on any Apple device.</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
-        background-color: #24293B;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Erase All Data</string>
-                     </property>
-                     <property name="icon">
-                      <iconset>
-                       <normaloff>icons/clean-code.png</normaloff>icons/clean-code.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
+                  <layout class="QGridLayout" name="gridLayout_13">
+                   <item row="0" column="0" rowspan="2">
                     <widget class="QPushButton" name="enter_recovery">
                      <property name="minimumSize">
                       <size>
@@ -2120,7 +2028,7 @@ QToolTip {
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="2">
+                   <item row="0" column="5" rowspan="2">
                     <widget class="Line" name="line">
                      <property name="styleSheet">
                       <string notr="true">border: 2px solid #313850</string>
@@ -2130,7 +2038,151 @@ QToolTip {
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="3">
+                   <item row="0" column="4">
+                    <widget class="QPushButton" name="activate_device">
+                     <property name="minimumSize">
+                      <size>
+                       <width>130</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="toolTip">
+                      <string>Enter recovery mode on any Apple device.</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Activate</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/start-up.png</normaloff>icons/start-up.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2" rowspan="2" colspan="2">
+                    <widget class="QPushButton" name="erase_btn">
+                     <property name="minimumSize">
+                      <size>
+                       <width>130</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="toolTip">
+                      <string>Enter recovery mode on any Apple device.</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Erase All Data</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/clean-code.png</normaloff>icons/clean-code.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="7" rowspan="2">
+                    <widget class="QPushButton" name="poweroff">
+                     <property name="minimumSize">
+                      <size>
+                       <width>130</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="toolTip">
+                      <string>Enter recovery mode on any Apple device.</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #24293B;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Shutdown</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/power-button.png</normaloff>icons/power-button.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="6" rowspan="2">
                     <widget class="QPushButton" name="reboot">
                      <property name="minimumSize">
                       <size>
@@ -2178,7 +2230,7 @@ QToolTip {
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="5">
+                   <item row="0" column="9">
                     <widget class="QPushButton" name="export_device">
                      <property name="minimumSize">
                       <size>
