@@ -26,6 +26,7 @@ from PyQt5.QtWidgets import (QWidget,
 from pymobiledevice3 import usbmux
 from pymobiledevice3.lockdown import LockdownClient
 from pymobiledevice3.services.mobilebackup2 import Mobilebackup2Service
+from pymobiledevice3.services.mobile_activation import MobileActivationService
 from pymobiledevice3.services.diagnostics import DiagnosticsService
 from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         MissingValueError,
@@ -597,6 +598,7 @@ class MainApp(QMainWindow):
         self.reboot.clicked.connect(lambda: self.restart())
         self.erase_btn.clicked.connect(lambda: self.erase())
         self.export_device.clicked.connect(lambda: self.export_device_info())
+        self.activate_device.clicked.connect(lambda: self.activate_this_device())
 
     @classmethod
     def check_integrity_box(cls, state):
@@ -1738,12 +1740,34 @@ class MainApp(QMainWindow):
             return
 
         lockdown = LockdownClient()
-
         self.erase_threaded = Erase(lockdown=lockdown)
         self.erase_threaded.start()
         self.erase_threaded.log.connect(self.log)
         self.erase_threaded.pbar.connect(self.progress_bar_update)
         self.erase_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
+
+    def activate_this_device(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.")
+            return
+        
+        value = messaged_box("Erase", 
+                            "UI/icons/updated.png",
+                            "UI/icons/Question.png",
+                            f"Activate device?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+
+        lockdown = LockdownClient()
+        self.activate_threaded = Activate(lockdown=lockdown)
+        self.activate_threaded.start()
+        self.activate_threaded.log.connect(self.log)
+        self.activate_threaded.pbar.connect(self.progress_bar_update)
+        self.activate_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
 
     def export_device_info(self):
         if not MainApp.connected:
@@ -2101,10 +2125,9 @@ class Erase(QThread):
     is_finished = pyqtSignal(bool)
     log = pyqtSignal(str)
 
-    def __init__(self, parent=None, lockdown=None, full_path=None):
+    def __init__(self, parent=None, lockdown=None):
         QThread.__init__(self)
         self.lockdown = lockdown
-        self.full_path = full_path
 
     def run(self):
         try:
@@ -2116,7 +2139,28 @@ class Erase(QThread):
         except ConnectionAbortedError:
             self.log.emit("Device has been erased.")
             self.is_finished.emit(True)
-            
+
+class Activate(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(str)
+
+    def __init__(self, parent=None, lockdown=None, full_path=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        try:
+            self.pbar.emit(True)
+            self.log.emit("Activating device...")
+            activate_it = MobileActivationService(self.lockdown)
+            activate_it.activate()
+            self.log.emit("Device has been activated!")
+        except AssertionError:
+            self.log.emit("Device seems to be already activated.")
+        finally: 
+            self.is_finished.emit(True)
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainApp()
