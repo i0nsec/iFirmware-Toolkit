@@ -1581,6 +1581,24 @@ class MainApp(QMainWindow):
         for key in current_device:
             try:
 
+                if key == "ProductVersion":
+                    MainApp.current_device[key] = lockdown.get_value(key="ProductVersion")
+
+                    if os.path.exists('DBs\\ios_devices.db'):
+                        conn = sqlite3.connect('DBs\\ios_devices.db')
+                        cur = conn.cursor()
+                        cur.execute(f"SELECT * FROM devices where IDENTIFIER='{MainApp.current_device['ProductType']}'")
+                        data = cur.fetchall()
+                        if data:
+                            for device in data:
+                                version = device[3]
+                                if version == MainApp.current_device["ProductVersion"]:
+                                    MainApp.current_device["ProductVersion"] = f"{lockdown.get_value(key='ProductVersion')} - Latest version."
+                                else:
+                                    MainApp.current_device["ProductVersion"] = f"{lockdown.get_value(key='ProductVersion')} - Update available ({version})."
+                                break
+                    continue
+
                 if key == 'fm-activation-locked':
                     try:
                         result = lockdown.get_value(key='NonVolatileRAM')['fm-activation-locked'].decode('utf8')
