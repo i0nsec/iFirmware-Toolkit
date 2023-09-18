@@ -5,10 +5,12 @@ import webbrowser
 import time
 import pathlib
 import py7zr
+import asyncio
 import sqlite3
 import json
 import logging
 import pyqtcss
+import validators
 from getpass import getuser
 from humanize import naturalsize
 from PyQt5 import QtGui, uic
@@ -22,20 +24,42 @@ from PyQt5.QtWidgets import (QWidget,
                             QTreeWidgetItem,
                             QMenu,
                             QStyle,
-                            QTableWidgetItem)
+                            QTableWidgetItem,
+                            QPushButton)
 from pymobiledevice3 import usbmux
 from pymobiledevice3.lockdown import LockdownClient
 from pymobiledevice3.services.mobilebackup2 import Mobilebackup2Service
+from pymobiledevice3.services.crash_reports import CrashReportsManager
 from pymobiledevice3.services.mobile_activation import MobileActivationService
 from pymobiledevice3.services.diagnostics import DiagnosticsService
 from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         MissingValueError,
-                                        LockdownError)
+                                        LockdownError,
+                                        PasswordRequiredError,
+                                        WebInspectorNotEnabledError,
+                                        RemoteAutomationNotEnabledError,
+                                        InvalidServiceError)
+from pymobiledevice3.lockdown import LockdownClient
+from pymobiledevice3.services.web_protocol.cdp_server import app
+from pymobiledevice3.services.web_protocol.driver import WebDriver
+from pymobiledevice3.services.webinspector import SAFARI, WebinspectorService
+
+import posixpath
+from termcolor import colored
+
+from pymobiledevice3.cli.cli_common import Command
+from pymobiledevice3.lockdown import LockdownClient
+from pymobiledevice3.services.os_trace import OsTraceService
+from pymobiledevice3.services.syslog import SyslogService
 
 # dm.py - main downloader
 import dm
+_s = "#91c881" # Green - for success
+_w = "#ffffff" # White - for normal message output
+_d = "#DEDE00" # Red - for errors
+_y = "#9EBB00" # Yellow - for warnings
 pyqtcss.get_style("dark_blue")
-app_version = 'v3.1-0708' # App version
+app_version = 'v3.3-0917' # App version
 download_urls = {} # Used to pass URLs to the downloader module  
 no_update = False # Do not update QTreeWidget when checking for database update, if there is no updates available
 dbs = [
@@ -331,7 +355,7 @@ class Options(QWidget):
                 'hide_columns': Options.hide_columns
                 }, config)
 
-        window.log("Successfully saved settings.")
+        window.log("Successfully saved settings.", _s)
         messaged_box("Settings", 
                         "UI/icons/settings.png", 
                         "UI/icons/Checkmark_1.png", 
@@ -364,7 +388,7 @@ class Options(QWidget):
     def change_dirs(self):
         new_dest = str(QFileDialog.getExistingDirectory(None, "Select Directory"))
         Options.NEW_DEST = new_dest
-        window.log(f"Setting new default path: {Options.NEW_DEST}")
+        window.log(f"Setting new default path: {Options.NEW_DEST}", _s)
         self.change_dir_line.setText(Options.NEW_DEST)
 
     def open_dialog(self):
@@ -407,6 +431,7 @@ class Options(QWidget):
                 extract = py7zr.SevenZipFile(filename)
                 extract.extractall('.')
                 extract.close()
+                window.log("Finished importing databases from backup.", _s)
 
         finally:
             window.load_data()
@@ -428,7 +453,10 @@ class MainApp(QMainWindow):
     current_device = {}
     notified = True
     connected = False
+    safari_session = True
+    safari_tabs = []
     udid = ""
+    ls = list
     text_reset = None
     dest = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
     ACTUAL_DEST = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
@@ -441,7 +469,7 @@ class MainApp(QMainWindow):
 
         # Check if hosts file exists
         if not os.path.exists('.hosts'):
-            self.log("Hosts file does not exist.")
+            self.log("Hosts file does not exist.", _d)
 
         elif os.path.exists('.hosts'):
             with open('.hosts', 'r') as file:
@@ -539,12 +567,18 @@ class MainApp(QMainWindow):
                         self.db_thread.start()
                         self.db_thread.send_to_log.connect(self.send_to_log)
 
+                        self.up_thread = AppUpdate()
+                        self.up_thread.start()
+                        self.up_thread.send_to_log.connect(self.send_to_log)
+
                 except KeyError:
                     setting.close()
                     if os.path.exists("DBs//settings.json"):
                         os.remove("DBs//settings.json")
                         
-                    print("Unable to load settings.json, deleting settings.json...\nYour settings have been reset.")
+                    print("Unable to load settings.json.", _d)
+                    print("Deleting settings.json...", _y)
+                    print("Your settings have been reset.", _s)
         self.load_data()
 
         # Show options menu
@@ -599,6 +633,28 @@ class MainApp(QMainWindow):
         self.erase_btn.clicked.connect(lambda: self.erase())
         self.export_device.clicked.connect(lambda: self.export_device_info())
         self.activate_device.clicked.connect(lambda: self.activate_this_device())
+        self.deactivate_device.clicked.connect(lambda: self.dectivate_this_device())
+
+        # Launch a URL in Safari
+        self.start_url.clicked.connect(lambda: self.all_safari()) 
+
+        # Stop safari URL
+        self.stop_url.clicked.connect(lambda: self.session_stop_button())
+
+        # Show Safari open tabs
+        self.show_tabs.clicked.connect(lambda: self.safari_tabs_button())
+
+        # Export Safari tabs
+        self.export_tabs.clicked.connect(lambda: self.export_safari_tabs())
+
+        # Crash reports
+        self.pull_all_reports.clicked.connect(lambda: self.pull_crash_report())
+        self.flush_reports.clicked.connect(lambda: self.flush_all_reports())
+        self.clear_reports.clicked.connect(lambda: self.clear_all_reports())
+        
+        # Syslog 
+        self.start_device_log.clicked.connect(lambda: self.start_device_syslog())
+        self.stop_device_log.clicked.connect(lambda: self.stop_device_syslog())
 
     @classmethod
     def check_integrity_box(cls, state):
@@ -641,9 +697,10 @@ class MainApp(QMainWindow):
 
     def open_folder(self):
         try:
+            self.log(f"Opening folder: {MainApp.ACTUAL_DEST}")
             os.startfile(MainApp.dest)
         except FileNotFoundError:
-            self.log("Directory does not exist.\niTunes is not installed, or it has not been initialized or used.")
+            self.log("Directory does not exist.\niTunes is not installed, or it has not been initialized or used.", _d)
 
     def show_config(self):
         # Show options menu
@@ -654,7 +711,7 @@ class MainApp(QMainWindow):
     def download_all_signed(self, current_tab):
 
         if current_tab != 0:
-            self.log("Only iOS is supported for this feature.")
+            self.log("Only iOS is supported for this feature.", _y)
             return
 
         self.abort = False
@@ -698,7 +755,7 @@ class MainApp(QMainWindow):
             self.disable_btns.hash_file.connect(self.hash_file)
 
         else:
-            self.log('Could not find any databases.\nCheck for update first')
+            self.log('Could not find any databases.\nCheck for update first.', _d)
 
     def download_one_firmware(self, dev_name, url, hash_value, buildid, version):
         if not os.path.exists(MainApp.dest):
@@ -766,10 +823,8 @@ class MainApp(QMainWindow):
 
         # Exit if hosts file does not exist
         if not MainApp.server_address:
-            self.log("No hosts file found.")
+            self.log("No hosts file found.", _d)
             return
-
-        self.log("Checking for database update...")
 
         value = messaged_box(
                             "Update", 
@@ -791,7 +846,7 @@ class MainApp(QMainWindow):
             self.db_thread.set_version.connect(lambda: self.db_version.setText(f"DB Version\n{MainApp.database_version}"))
             
         else:
-            self.log('Aborted by user.')
+            self.log('Aborted by user.', _d)
 
     def device_lookup(self, query, current_tab):
         self.worker_search = DeviceSearch(query=query, current_tab=current_tab)
@@ -820,7 +875,7 @@ class MainApp(QMainWindow):
     def update_btn_clicked(self):
         # If hosts file does not exist, do not continue
         if not MainApp.server_address:
-            self.log("No hosts file found.")
+            self.log("No hosts file found.", _d)
             return 
 
         self.up_thread = AppUpdate()
@@ -899,16 +954,16 @@ class MainApp(QMainWindow):
             pass
 
         elif value == 1:
-            self.log("Copied results!")
+            self.log("Copied results!", _s)
             QApplication.clipboard().setText(data)
 
     def delete_datebases(self):
         to_delete = [db for db in dbs if os.path.isfile(db)]
         if to_delete:
             for db in to_delete:
-                self.log(f"Found {db}")
+                self.log(f"Found {db}", _y)
 
-            self.log('Delete databases?')
+            self.log('Delete databases?', _y)
             show_dbs = ", ".join([db for db in ["iOS", "iPadOS", "iPod", "MacOS", "iTunes", "Other"]])
 
             value = messaged_box("Delete", 
@@ -930,10 +985,10 @@ class MainApp(QMainWindow):
 
                 MainApp.database_version = 'Not Available'
                 self.db_version.setText(f"DB Version\n{MainApp.database_version}")
-                self.log("Deleted databases.")
+                self.log("Deleted databases.", _s)
                 self.reset_data()
             else:
-                self.log('Aborted by user.')
+                self.log('Aborted by user.', _d)
 
         else:
             self.log('There are no databases to delete.')
@@ -944,7 +999,7 @@ class MainApp(QMainWindow):
         to_backup = [db for db in dbs if os.path.isfile(db)]
         if to_backup:
             get_dbs = os.listdir('DBs\\')
-            self.log("Backing up...")
+            self.log("Backing up databases...")
             self.log("Zipping...")
             file_name = f'DBs\\DBs-{time.time()}-.7z'
             with py7zr.SevenZipFile(file_name, 'w') as file:
@@ -953,13 +1008,13 @@ class MainApp(QMainWindow):
                         file.writeall(f'DBs\\{each}')
 
             if os.path.isfile(file_name):
-                self.log("Backed up databases.")
-                self.log(f"Backup: {file_name}")
+                self.log("Backed up databases.", _s)
+                self.log(f"Backup: {file_name}", _s)
             else:
-                self.log("Something went wrong, try again later")
+                self.log("Something went wrong, try again later.", _d)
 
         else:
-            self.log('There are no databases to backup.')
+            self.log('There are no databases to backup.', _y)
 
     def hide_irrelevant_columns(self, table):
 
@@ -1267,9 +1322,9 @@ class MainApp(QMainWindow):
             
             hashed = sha1.hexdigest()
             if hashed == val[1]:
-                self.log(f"SHA1 matched: {val[1]}")
+                self.log(f"SHA1 matched: {val[1]}", _s)
             else:
-                self.log(f"SHA1 mismatched: {val[1]}")
+                self.log(f"SHA1 mismatched: {val[1]}", _d)
 
     def update_available(self, val):
         value = messaged_box("iFTK Update",
@@ -1279,7 +1334,7 @@ class MainApp(QMainWindow):
                     
         if value == 1:
             url = "https://github.com/i0nsec/iFirmware-Toolkit/releases"
-            self.log(f"Opening your default browser to download the new version\n{url}")
+            self.log(f"Opening your default browser to download the new version\n{url}", _s)
             webbrowser.open(url)
 
     def send_to_log(self, val):
@@ -1291,12 +1346,12 @@ class MainApp(QMainWindow):
             return
 
         MainApp.dest = new_dest
-        self.log(f"New path: {MainApp.dest}")
+        self.log(f"New path: {MainApp.dest}", _s)
         self.location_value.setText(MainApp.dest)
 
     def delete_firmwares(self):
         if os.path.isdir(MainApp.dest):
-            self.log("Delete firmware files?")
+            self.log("Delete firmware files?", _y)
             files = os.listdir(MainApp.dest)
 
             if files:
@@ -1324,31 +1379,36 @@ class MainApp(QMainWindow):
                         for del_ipsw in to_delete:
                             os.remove(del_ipsw)
 
-                        self.log('Finished deleting.')
+                        self.log('Finished deleting.', _s)
 
                     else:
-                        self.log("Aborted by user.")
+                        self.log("Aborted by user.", _d)
             else:
                 self.log('There are no firmware files to delete.')
 
         else:
-            self.log("Destination folder does not exist.")
+            self.log("Destination folder does not exist.", _d)
 
-    def log(self, new_log):
+    def custom_log_messages(self, log, category):
+        if type(log) is list:
+            return f"<p style=\"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Segoe UI\'; color:{log[1]};\">{log[0]}</span></p>\n"
+
+        return f"<p style=\"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Segoe UI\'; color:{category};\">{log}</span></p>\n"
+
+    def log(self, new_log, category=''):
         if new_log is not None:
-            self.logger.info(new_log)
+            self.logger.info(self.custom_log_messages(new_log, category))
 
-        with open('logs.txt', 'r') as logs:
+        with open('logs.txt', 'r') as logs:            
             log = logs.read()
             self.text_log = QTextBrowser(self.logs)
-            MainApp.text_reset = self.text_log
             font = QtGui.QFont()
-            font.setPointSize(9)
             font.setBold(True)
+            font.setPointSize(10)
             self.text_log.setFont(font)
             self.text_log.setObjectName("text_log")
             self.gridLayout_4.addWidget(self.text_log, 0, 0, 1, 2)
-            self.text_log.setText(log)
+            self.text_log.setHtml(log)
             self.text_log.moveCursor(QtGui.QTextCursor.End)
             self.text_log.setStyleSheet("border: none;")
 
@@ -1361,7 +1421,7 @@ class MainApp(QMainWindow):
                 pass
 
         MainApp.text_reset = self.text_log
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         output = logging.FileHandler('logs.txt')
         self.logger.addHandler(output)
@@ -1554,30 +1614,39 @@ class MainApp(QMainWindow):
         if MainApp.notified:
             MainApp.notified = False
             return
-
-        lockdown = LockdownClient()
+        
+        try:
+            lockdown = LockdownClient()
+        except PasswordRequiredError:
+            self.log("Password required. Unlock device and hit trust.", _d)
+            return
+        
         current_device = {
             "DeviceName": '',
+            "DisplayName": '',
+            "ProductType": '',
+            "com.apple.mobile.battery": '',
             "ActivationState": '',
             "fm-activation-locked": '',
+            "Blacklisted": '',
             "InternationalMobileEquipmentIdentity": '',
             "InternationalMobileEquipmentIdentity2": '',
+            "ecid": '',
             "SerialNumber": '',
-            "ProductType": '',
             "ProductVersion": '',
             "BuildVersion": '',
             "SIMStatus": '',
             "SIMTrayStatus": '',
+            "IntegratedCircuitCardIdentity": '',
+            "InternationalMobileSubscriberIdentity": '',
+            "CarrierBundleInfoArray": '',
+            "PhoneNumber": '',
             "UniqueDeviceID": '',
             "WiFiAddress": '',
             "BluetoothAddress": '',
-            "CarrierBundleInfoArray": '',
-            "PhoneNumber": '',
             "CPUArchitecture": '',
             "FirmwareVersion": '',
-            "IntegratedCircuitCardIdentity": ''
         }
-
         for key in current_device:
             try:
 
@@ -1603,9 +1672,9 @@ class MainApp(QMainWindow):
                     try:
                         result = lockdown.get_value(key='NonVolatileRAM')['fm-activation-locked'].decode('utf8')
                         if result == 'NO':
-                            MainApp.current_device[key] = 'No'
+                            MainApp.current_device[key] = 'OFF'
                         else:
-                            MainApp.current_device[key] = 'Yes'
+                            MainApp.current_device[key] = 'ON'
                     except KeyError:
                         MainApp.current_device[key] = 'Not available.'
                     
@@ -1617,6 +1686,15 @@ class MainApp(QMainWindow):
                         MainApp.current_device[key] = 'Not available.'
                     else:
                         MainApp.current_device[key] = result
+
+                    continue
+
+                if key == 'com.apple.mobile.battery':
+                    result = lockdown.all_domains['com.apple.mobile.battery']['BatteryCurrentCapacity']
+                    if result:
+                        MainApp.current_device[key] = f"{result}%"
+                    else:
+                        MainApp.current_device[key] = 'Not available.'
 
                     continue
 
@@ -1638,28 +1716,84 @@ class MainApp(QMainWindow):
 
                     continue
 
+                if key == 'DisplayName':
+                    result = lockdown.display_name
+                    if result:
+                        MainApp.current_device[key] = result
+                    else:
+                        MainApp.current_device[key] = 'Not available.'
+
+                    continue
+                
+                if key == 'ecid':
+                    result = lockdown.ecid
+                    if result:
+                        MainApp.current_device[key] = str(result)
+                    else:
+                        MainApp.current_device[key] = 'Not available.'
+
+                    continue
+                
+                if key == 'InternationalMobileSubscriberIdentity':
+                    result = lockdown.get_value()["InternationalMobileSubscriberIdentity"]
+                    if result:
+                        MainApp.current_device[key] = result
+                    else:
+                        MainApp.current_device[key] = "Not available."
+
+                    continue
+
                 MainApp.current_device[key] = lockdown.get_value(key=key)
 
-            except MissingValueError:
+            except (MissingValueError, KeyError):
                  MainApp.current_device[key] = "Not available."
                  continue
 
         device = MainApp.current_device.values()
         carrires = []
-        # print(lockdown.get_value(key="InternationalMobileSubscriberIdentity"))
+        
         for index, value in enumerate(device):
             try:
                 if type(value) is list:
                     for xcarrier in value:
+                        if "Verizon" in xcarrier['CFBundleIdentifier']:
+                            carrires.append(f"Verizon Wireless:{xcarrier['CFBundleVersion']}")
+                            continue
+
+                        if "TMobile" in xcarrier['CFBundleIdentifier']:
+                            carrires.append(f"T-Mobile:{xcarrier['CFBundleVersion']}")
+                            continue
+
+                        if "ATT" in xcarrier['CFBundleIdentifier']:
+                            carrires.append(f"AT&T:{xcarrier['CFBundleVersion']}")
+                            continue
+    
                         carrires.append(xcarrier['CFBundleIdentifier'])
 
                     self.idevice_restore.setItem(index, 0, QTableWidgetItem(', '.join(carrires)))
                     continue
+                
+                self.item = QTableWidgetItem(str(value))
+                font = QtGui.QFont()
+                font.setPointSize(10)
+                font.setBold(True)
+                font.setFamily("Segoe UI")
+                self.item.setFont(font)
 
-                self.idevice_restore.setItem(index, 0, QTableWidgetItem(value))
+                if value == "OFF" or value == "Activated":
+                    self.item.setForeground(QtGui.QBrush(QtGui.QColor(145, 200, 129)))
+                    self.idevice_restore.setItem(index, 0,  self.item)
+                    continue
+
+                if value == "ON" or value == "Unactivated":
+                    self.item.setForeground(QtGui.QBrush(QtGui.QColor(150, 0, 0)))
+                    self.idevice_restore.setItem(index, 0,  self.item)
+                    continue
+
+                self.idevice_restore.setItem(index, 0,  self.item)
 
             except (NoDeviceConnectedError, MissingValueError, LockdownError) as msg:
-                continue
+                continue    
 
         MainApp.connected = True
         MainApp.udid = lockdown.get_value(key='UniqueDeviceID')
@@ -1667,10 +1801,11 @@ class MainApp(QMainWindow):
             device_udids.write(f"{time.asctime()};; {MainApp.udid}\n")
 
         self.toolBox.setItemText(2, f"iDevice - Connected: {MainApp.udid}")
+        self.log(f"New device connected, {MainApp.current_device['DisplayName']}", _s)
 
     def enter_recovery_(self):
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
         
         value = messaged_box("Enter Recovery", 
@@ -1685,7 +1820,7 @@ class MainApp(QMainWindow):
             return
 
         try:
-            self.log("Device is entering recovery mode...")
+            self.log("Device is entering recovery mode...", _y)
             lockdown = LockdownClient()
             lockdown.enter_recovery()
         except NoDeviceConnectedError as error_msg:
@@ -1693,7 +1828,7 @@ class MainApp(QMainWindow):
 
     def shutdown(self):
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
         
         value = messaged_box("Shutdown", 
@@ -1708,7 +1843,7 @@ class MainApp(QMainWindow):
             return
         
         try:
-            self.log("Device is shutting down...")
+            self.log("Device is shutting down...", _y)
             lockdown = LockdownClient()
             do_shutdown = DiagnosticsService(lockdown=lockdown)
             do_shutdown.shutdown()
@@ -1718,7 +1853,7 @@ class MainApp(QMainWindow):
 
     def restart(self):
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
         
         value = messaged_box("Restart", 
@@ -1733,7 +1868,7 @@ class MainApp(QMainWindow):
             return
 
         try:
-            self.log("Device is restarting...")
+            self.log("Device is restarting...", _y)
             lockdown = LockdownClient()
             do_shutdown = DiagnosticsService(lockdown=lockdown)
             do_shutdown.restart()
@@ -1743,7 +1878,7 @@ class MainApp(QMainWindow):
 
     def erase(self):
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
         
         value = messaged_box("Erase", 
@@ -1766,10 +1901,10 @@ class MainApp(QMainWindow):
 
     def activate_this_device(self):
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
         
-        value = messaged_box("Erase", 
+        value = messaged_box("Activate", 
                             "UI/icons/updated.png",
                             "UI/icons/Question.png",
                             f"Activate device?",
@@ -1780,16 +1915,44 @@ class MainApp(QMainWindow):
         if value == 1:
             return
 
+        self.all_device_buttons(True)
         lockdown = LockdownClient()
         self.activate_threaded = Activate(lockdown=lockdown)
         self.activate_threaded.start()
         self.activate_threaded.log.connect(self.log)
         self.activate_threaded.pbar.connect(self.progress_bar_update)
         self.activate_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
+        self.activate_threaded.reset.connect(lambda: self.all_device_buttons(False))
+
+    def dectivate_this_device(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+        
+        value = messaged_box("Dectivate", 
+                            "UI/icons/updated.png",
+                            "UI/icons/Question.png",
+                            f"Dectivate device?",
+                            ok=False,
+                            yes=True,
+                            no=True)
+        
+        if value == 1:
+            return
+
+        self.all_device_buttons(True)
+        lockdown = LockdownClient()
+        self.dectivate_threaded = Dectivate(lockdown=lockdown)
+        self.dectivate_threaded.start()
+        self.dectivate_threaded.log.connect(self.log)
+        self.dectivate_threaded.pbar.connect(self.progress_bar_update)
+        self.dectivate_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
+        self.dectivate_threaded.reset.connect(lambda: self.all_device_buttons(False))
 
     def export_device_info(self):
+        self.log("Exporting device information to a file...")
         if not MainApp.connected:
-            self.log("Device is not connected.")
+            self.log("Device is not connected.", _d)
             return
 
         file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}.txt", '.txt', )
@@ -1802,7 +1965,193 @@ class MainApp(QMainWindow):
             
             file.write(f"\n==============================\nTime: {time.asctime()}")
 
-        self.log(f"Exported data to {file_name}")
+        self.log(f"Exported data to {file_name}", _s)
+
+    def all_safari(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+        
+        user_url = self.url_input.text()
+        if validators.domain(user_url):
+            actual_url = f"https://{user_url}"
+            lockdown = LockdownClient()
+            self.stop_url.setEnabled(True)
+            self.all_device_buttons(True)
+            self.launch_url = LaunchURL(lockdown=lockdown, url=actual_url)
+            self.launch_url.start()
+            self.launch_url.log.connect(self.log)
+            self.launch_url.pbar.connect(self.progress_bar_update)
+            self.launch_url.is_finished.connect(lambda: self.pbar.setMaximum(100))
+            self.launch_url.reset.connect(lambda: self.all_device_buttons(False))
+        else:
+            self.log("Check the domain you entered.", _d)
+
+    def session_stop_button(self):
+        self.log("Working on it...", _y)
+        self.stop_url.setDisabled(True)
+        MainApp.safari_session = False
+
+    def safari_tabs_button(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+
+        self.all_device_buttons(True)
+        lockdown = LockdownClient()
+        MainApp.safari_tabs.clear()
+        self.tabs_list.clear()
+        self.pull_tabs = GetSafariTabs(lockdown=lockdown)
+        self.pull_tabs.start()
+        self.pull_tabs.log.connect(self.log)
+        self.pull_tabs.pbar.connect(self.progress_bar_update)
+        self.pull_tabs.is_finished.connect(lambda: self.pbar.setMaximum(100))
+        self.pull_tabs.reset.connect(lambda: self.display_safari_tabs())
+
+    def display_safari_tabs(self):
+        self.all_device_buttons(False)
+        if MainApp.safari_tabs:
+            for url in MainApp.safari_tabs:
+                QTreeWidgetItem(self.tabs_list, [url])
+        else:
+            self.log("Did not find any open tabs.")
+            self.log("Make sure to keep Safari open before you try again.")
+
+    def export_safari_tabs(self):
+        self.log("Exporting device tabs to a file...")
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+        
+        if MainApp.safari_tabs:
+            file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}.txt", '.txt', )
+            if not file_name:
+                return
+            
+            with open(file_name, 'w') as file:
+                for tab in MainApp.safari_tabs:
+                    file.write(f"- {tab}\n")
+                
+                file.write(f"\nDevice Signature {MainApp.current_device['SerialNumber']}")
+                file.write(f"\n==============================\nTime: {time.asctime()}")
+
+            self.log(f"Exported data to {file_name}", _s)
+        else:
+            self.log("No open tabs found to export.")
+
+    def pull_crash_report(self):
+        self.log("Pulling all crash reports...", _w)
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}-crash_reports.txt", '.txt', )
+        if not file_name:
+            return
+        
+        self.list_all_reports.setDisabled(True)
+        lockdown = LockdownClient()
+        self.ls_reports = LSReports(lockdown=lockdown, file_name=file_name)
+        self.ls_reports.start()
+        self.ls_reports.log.connect(self.log)
+        self.ls_reports.pbar.connect(self.progress_bar_update)
+        self.ls_reports.is_finished.connect(lambda: self.pbar.setMaximum(100))
+        self.ls_reports.reset.connect(lambda: self.list_all_reports.setEnabled(True))
+
+    def all_device_buttons(self, val):
+        if val:
+            self.activate_device.setDisabled(True)
+            self.enter_recovery.setDisabled(True)
+            self.erase_btn.setDisabled(True)
+            self.pull_all_reports.setDisabled(True)
+            self.clear_reports.setDisabled(True)
+            self.flush_reports.setDisabled(True)
+            self.cdp_server.setDisabled(True)
+            self.ipython_shell.setDisabled(True)
+            self.js_shell.setDisabled(True)
+            self.deactivate_device.setDisabled(True)
+            self.reboot.setDisabled(True)
+            self.poweroff.setDisabled(True)
+            self.show_tabs.setDisabled(True)
+            self.start_url.setDisabled(True)
+            return
+        
+        self.activate_device.setEnabled(True)
+        self.enter_recovery.setEnabled(True)
+        self.erase_btn.setEnabled(True)
+        self.pull_all_reports.setEnabled(True)
+        self.clear_reports.setEnabled(True)
+        self.flush_reports.setEnabled(True)
+        self.cdp_server.setEnabled(True)
+        self.ipython_shell.setEnabled(True)
+        self.js_shell.setEnabled(True)
+        self.deactivate_device.setEnabled(True)
+        self.reboot.setEnabled(True)
+        self.poweroff.setEnabled(True)
+        self.show_tabs.setEnabled(True)
+        self.start_url.setEnabled(True)
+
+    def start_device_syslog(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+
+        lockdown = LockdownClient()
+        MainApp.live_syslog = True
+        self.stop_device_log.setEnabled(True)
+        self.start_device_log.setDisabled(True)
+        self.ls_log = SysLog(lockdown=lockdown)
+        self.ls_log.start()
+        self.ls_log.log.connect(self.sys_log_logger)
+        self.ls_log.reset.connect(self.stop_device_syslog)
+
+    def stop_device_syslog(self):
+        MainApp.live_syslog = False
+        self.stop_device_log.setDisabled(True)
+        self.start_device_log.setEnabled(True)
+        with open("sys_logs.txt", "w") as file:
+            file.write("")
+
+    def sys_log_logger(self, logs, category=''):
+        if logs is not None:
+            with open("sys_logs.txt", "a") as sys_log:
+                sys_log.write(self.custom_log_messages(logs, category))
+
+        with open("sys_logs.txt", "r") as logs:            
+            log = logs.read()
+            self.device_live_log = QTextBrowser(self.device_live_log)
+            font = QtGui.QFont()
+            font.setPointSize(10)
+            self.device_live_log.setFont(font)
+            self.device_live_log.setObjectName("device_live_log")
+            self.gridLayout_28.addWidget(self.device_live_log, 0, 0, 1, 1)
+            self.device_live_log.setHtml(log)
+            self.device_live_log.moveCursor(QtGui.QTextCursor.End)
+            self.device_live_log.setStyleSheet("border: none;")
+
+    def flush_all_reports(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+
+        self.enable_btns(True)
+        lockdown = LockdownClient()
+        self.flush = FlushReports(lockdown=lockdown)
+        self.flush.start()
+        self.flush.log.connect(self.log)
+        self.flush.reset.connect(lambda: self.enable_btns(False))
+
+    def clear_all_reports(self):
+        if not MainApp.connected:
+            self.log("Device is not connected.", _d)
+            return
+
+        self.enable_btns(True)
+        lockdown = LockdownClient()
+        self._clear = ClearReports(lockdown=lockdown)
+        self._clear.start()
+        self._clear.log.connect(self.log)
+        self._clear.reset.connect(lambda: self.enable_btns(False))
 
 class VerifyFirmware(QThread):
     progress_update = pyqtSignal(int)
@@ -1874,7 +2223,7 @@ class VerifyFirmware(QThread):
             self.send_to_log.emit("|__SHA1 did not match!")
 
 class AppUpdate(QThread):
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
     update_available = pyqtSignal(str)
     no_update = pyqtSignal(str)
     progress_update = pyqtSignal(int)
@@ -1886,27 +2235,27 @@ class AppUpdate(QThread):
     def run(self):
         try:
             self.progress_update.emit(1)
-            self.send_to_log.emit('Checking for update...')
+            self.send_to_log.emit(['Checking for iFTK updates...', _w])
             from_url = f"{MainApp.server_address}/verval.txt"
             get_update = requests.get(from_url)
             if get_update.ok:
                 is_up_to_date = get_update.text.rstrip()
                 if is_up_to_date == app_version:
                     self.no_update.emit('Already up to date.')
-                    self.send_to_log.emit('Already up to date.')
+                    self.send_to_log.emit(['Already up to date.', _s])
                 else:
                     self.update_available.emit(f'{is_up_to_date}')
-                    self.send_to_log.emit('Update available.')
-                    self.send_to_log.emit(f'New: {is_up_to_date}')
+                    self.send_to_log.emit(['Update available.', _y])
+                    self.send_to_log.emit([f'New: {is_up_to_date}', _y])
 
         except requests.exceptions.ConnectionError:
-            self.send_to_log.emit('Server is offline.\nOr check your internet connection.')
+            self.send_to_log.emit(['Server is offline.\nOr check your internet connection.', _d])
 
         finally:
             self.is_ready.emit(True)
 
 class DatabaseUpdate(QThread):
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
     no_update = pyqtSignal(str)
     refrush_ui = pyqtSignal(bool)
     progress_update = pyqtSignal(int)
@@ -1915,6 +2264,7 @@ class DatabaseUpdate(QThread):
 
     def run(self):
         try:
+            self.send_to_log.emit([f"Checking for database update...", _w])
             self.progress_update.emit(1)
             db_url = f"{MainApp.server_address}/updates/verval.txt"
             db_get = requests.get(db_url)
@@ -1934,13 +2284,13 @@ class DatabaseUpdate(QThread):
                 # Check if remote version is up to date
                 if up_to_date == MainApp.database_version:
                     self.no_update.emit('db')
-                    self.send_to_log.emit('Already up to date.')
+                    self.send_to_log.emit(['Already up to date.', _s])
                     self.is_ready.emit(True)
                 
                 # If new version is available...
                 else:
-                    self.send_to_log.emit(f'New version is available.\nCurrent: {MainApp.database_version}\nNew: {up_to_date}')
-                    self.send_to_log.emit('Getting database file...')
+                    self.send_to_log.emit([f'New version is available.\nCurrent: {MainApp.database_version}\nNew: {up_to_date}', _y])
+                    self.send_to_log.emit(['Getting database file...', _w])
                     
                     Url = f"{MainApp.server_address}/updates/DBs.7z"
                     get_data = requests.get(Url)
@@ -1949,8 +2299,8 @@ class DatabaseUpdate(QThread):
                         with open('DBs.7z', 'wb') as db_file:
                             db_file.write(get_data.content)
 
-                        self.send_to_log.emit('Finished downloading.')
-                        self.send_to_log.emit('Checking SHA256...')
+                        self.send_to_log.emit(['Finished downloading.', _s])
+                        self.send_to_log.emit(['Checking SHA256...', _y])
 
                         # Check sha1sum and verify files
                         sha256 = hashlib.sha256()
@@ -1958,7 +2308,7 @@ class DatabaseUpdate(QThread):
                             sha256.update(db_file.read())
 
                         hashed = sha256.hexdigest()
-                        self.send_to_log.emit(f"SHA256: {hashed}")
+                        self.send_to_log.emit([f"SHA256: {hashed}", _w])
                         
                         Url = f"{MainApp.server_address}/updates/sha256sum.txt"
                         get_data = requests.get(Url)
@@ -1969,36 +2319,36 @@ class DatabaseUpdate(QThread):
 
                         if hashed == online_hash or MainApp.force_continue:
                             if not MainApp.force_continue:
-                                self.send_to_log.emit('SHA256 matched.')
+                                self.send_to_log.emit(['SHA256 matched.', _s])
                             
-                            self.send_to_log.emit('Extracting files...')
+                            self.send_to_log.emit(['Extracting files...', _w])
                             extract = py7zr.SevenZipFile('DBs.7z')
                             extract.extractall('DBs\\')
                             extract.close()
                             
-                            self.send_to_log.emit('Cleaning...')
+                            self.send_to_log.emit(['Cleaning...', _w])
                             os.remove('DBs.7z')
-                            self.send_to_log.emit('Refrushing UI... ')
+                            self.send_to_log.emit(['Refrushing UI... ', _w])
                             self.refrush_ui.emit(True)
                             MainApp.database_version = up_to_date 
 
                         else:
-                            self.send_to_log.emit('SHA1 mismatched.')
-                            self.send_to_log.emit('Run update again to continue anyway.')
+                            self.send_to_log.emit(['SHA1 mismatched.', _d])
+                            self.send_to_log.emit(['Run update again to continue anyway.', _d])
                             MainApp.force_continue = True
 
                     else:
-                        self.send_to_log.emit(f'Something went wrong...\nCODE:{get_data.status_code}')
+                        self.send_to_log.emit([f'Something went wrong...\nCODE:{get_data.status_code}', _d])
                             
         except requests.exceptions.ConnectionError:
-            self.send_to_log.emit('Server is offline.\nOr check your internet connection.')
+            self.send_to_log.emit(['Server is offline.\nOr check your internet connection.', _d])
 
         finally:
             self.is_ready.emit(True)
             self.set_version.emit(True)
 
 class ModelNumberLookup(QThread):
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
     progress_update = pyqtSignal(int)
     show_in_ui = pyqtSignal(list)
     is_ready = pyqtSignal(bool)
@@ -2010,10 +2360,10 @@ class ModelNumberLookup(QThread):
     def run(self):
         self.progress_update.emit(1)
         if not self.model.strip():
-            self.send_to_log.emit('Type in a model number to lookup')
+            self.send_to_log.emit(['Type in a model number to lookup.', _y])
             self.is_ready.emit(True)
         else:
-            self.send_to_log.emit(f"Looking up {self.model}...")
+            self.send_to_log.emit([f"Looking up {self.model}...", _w])
 
             if self.model[:1].upper() == 'A':
                 try:
@@ -2029,22 +2379,22 @@ class ModelNumberLookup(QThread):
                         platform = get_data.json()['platform']
                         cpid = get_data.json()['cpid']
                         self.show_in_ui.emit([name, identifier, boardconfig, platform, cpid])
-                        self.send_to_log.emit(f'Results for {self.model}')
-                        self.send_to_log.emit(f"Name: {name}\nIdentifier: {identifier}\nBoardconfig: {boardconfig}\nPlatform: {platform}\nCPID: {cpid}\n=================\n")
+                        self.send_to_log.emit([f'Results for {self.model}', _s])
+                        self.send_to_log.emit([f"Name: {name}\nIdentifier: {identifier}\nBoardconfig: {boardconfig}\nPlatform: {platform}\nCPID: {cpid}\n==================================\n", _s])
                     else:
-                        self.send_to_log.emit('Server response: Unknown model number')
+                        self.send_to_log.emit(['Server response: Unknown model number', _d])
 
                 except requests.exceptions.ConnectionError:
-                        self.send_to_log.emit("Server unavailable, try again later.")
+                        self.send_to_log.emit(["Server unavailable, try again later.", _d])
                 finally:
                     self.is_ready.emit(True)
             else:
-                self.send_to_log.emit('Invalid model number')
+                self.send_to_log.emit(['Invalid model number.', _d])
                 self.is_ready.emit(True)
 
 class DownloadManagerSignal(QThread):
     enable_btns = pyqtSignal(bool)
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
     hash_file = pyqtSignal(list)
 
     def __init__(self, parent=None, dest_folder='', hash_value=''):
@@ -2056,15 +2406,15 @@ class DownloadManagerSignal(QThread):
         while dm.DownloadManager.is_downloading:
             time.sleep(0.01)
             if not dm.DownloadManager.is_downloading:
-                self.send_to_log.emit("Successfully stopped downloader.")
+                self.send_to_log.emit(["Successfully stopped downloader.", _s])
                 if MainApp.hash_firmware:
-                    self.send_to_log.emit('Hashing...')
+                    self.send_to_log.emit(['Hashing...', _w])
                     self.hash_file.emit([self.dest_folder, self.hash_value, True])
 
                 self.enable_btns.emit(False)
 
 class DeviceSearch(QThread):
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
 
     def __init__(self, parent=None, query='', current_tab=''):
         QThread.__init__(self)
@@ -2072,7 +2422,7 @@ class DeviceSearch(QThread):
         self.current_tab = current_tab
     
     def run(self):
-        self.send_to_log.emit(f"{self.query}")
+        self.send_to_log.emit([f"{self.query}", _w])
         to_download = dbs[self.current_tab]
         if os.path.isfile(to_download):
             try:
@@ -2087,14 +2437,14 @@ class DeviceSearch(QThread):
                         version = device[3]
                         buildid = device[4]
                         date = device[8]
-                        self.send_to_log.emit(f"Name: {name}\nIdentifier: {identifier}\nVersion: {version}\nBuildID: {buildid}\nRelease Date: {date}\n------------------\n")
+                        self.send_to_log.emit([f"Name: {name}\nIdentifier: {identifier}\nVersion: {version}\nBuildID: {buildid}\nRelease Date: {date}\n------------------\n", _s])
 
             except sqlite3.OperationalError:
                 pass
 
 class ScanPC(QThread):
     update_count = pyqtSignal(int)
-    send_to_log = pyqtSignal(str)
+    send_to_log = pyqtSignal(list)
     is_ready = pyqtSignal(bool)
     update_progress = pyqtSignal(int)
     common_dirs = [MainApp.dest,
@@ -2108,7 +2458,7 @@ class ScanPC(QThread):
         QThread.__init__(self)
 
     def run(self):
-        self.send_to_log.emit("Scan initiated...")
+        self.send_to_log.emit(["Scan initiated...", _w])
         MainApp.this_pc.clear()        
         self.update_progress.emit(1)
 
@@ -2118,7 +2468,7 @@ class ScanPC(QThread):
                     MainApp.this_pc.append(path_to_file)
         
         self.is_ready.emit(True)
-        self.send_to_log.emit(f"Finished scanning. Found: {len(MainApp.this_pc)}")
+        self.send_to_log.emit([f"Finished scanning. Found: {len(MainApp.this_pc)}", _w])
 
 class CheckConnection(QThread):
     is_connected: bool = pyqtSignal(bool)
@@ -2141,7 +2491,7 @@ class CheckConnection(QThread):
 class Erase(QThread):
     pbar = pyqtSignal(bool)
     is_finished = pyqtSignal(bool)
-    log = pyqtSignal(str)
+    log = pyqtSignal(list)
 
     def __init__(self, parent=None, lockdown=None):
         QThread.__init__(self)
@@ -2150,18 +2500,19 @@ class Erase(QThread):
     def run(self):
         try:
             self.pbar.emit(True)
-            self.log.emit("Erasing...")
+            self.log.emit(["Erasing...", _y])
             backup_it = Mobilebackup2Service(self.lockdown)
             backup_it.erase_device()
             self.is_finished.emit(True)
         except ConnectionAbortedError:
-            self.log.emit("Device has been erased.")
+            self.log.emit(["Device has been erased.", _s])
             self.is_finished.emit(True)
 
 class Activate(QThread):
     pbar = pyqtSignal(bool)
     is_finished = pyqtSignal(bool)
-    log = pyqtSignal(str)
+    reset = pyqtSignal(bool)
+    log = pyqtSignal(list)
 
     def __init__(self, parent=None, lockdown=None, full_path=None):
         QThread.__init__(self)
@@ -2170,13 +2521,231 @@ class Activate(QThread):
     def run(self):
         try:
             self.pbar.emit(True)
-            self.log.emit("Activating device...")
+            self.log.emit(["Activating device...", _y])
             activate_it = MobileActivationService(self.lockdown)
             activate_it.activate()
-            self.log.emit("Device has been activated!")
+            self.log.emit(["Device has been activated!", _s])
+            MainApp.connected = False
         except AssertionError:
-            self.log.emit("Device seems to be already activated.")
+            self.log.emit(["Device seems to be already activated.", _d])
         finally: 
+            self.is_finished.emit(True)
+            self.reset.emit(True)
+
+class Dectivate(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    reset = pyqtSignal(bool)
+    log = pyqtSignal(list)
+
+    def __init__(self, parent=None, lockdown=None, full_path=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        try:
+            self.pbar.emit(True)
+            self.log.emit(["Dectivating device...", _y])
+            activate_it = MobileActivationService(self.lockdown)
+            activate_it.deactivate()
+            self.log.emit(["Device has been dectivated!", _s])
+            MainApp.connected = False
+        except AssertionError:
+            self.log.emit(["Device seems to be already dectivated.", _d])
+        finally:
+            self.is_finished.emit(True)
+            self.reset.emit(True)
+
+class LaunchURL(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None, url=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+        self.url = url
+
+    def run(self):
+        self.pbar.emit(True)
+        self.log.emit([f"Launching URL: {self.url}", _y])
+        self.log.emit(["To terminate session, press 'End Session'", _y])
+        MainApp.safari_session = True
+        try:
+            self.inspector, self.safari = self.create_webinspector_and_launch_app(self.lockdown, 5, SAFARI)
+            self.session = self.inspector.automation_session(self.safari)
+            driver = WebDriver(self.session)
+            driver.start_session()
+            driver.get(self.url)
+            while MainApp.safari_session:
+                time.sleep(2)
+
+        except WebInspectorNotEnabledError:
+            self.log.emit(["Web Inspector Not Enabled.", _d])
+        except RemoteAutomationNotEnabledError:
+            self.log.emit(["Remote Automation Not Enabled.", _d])
+        finally:
+            self.log.emit(["Session ended.", _s])
+            self.is_finished.emit(True)
+            self.session.stop_session()
+            self.inspector.close()
+            self.reset.emit(True)
+
+    def create_webinspector_and_launch_app(self, lockdown: LockdownClient, timeout: float, app: str):
+        inspector = WebinspectorService(lockdown=lockdown)
+        inspector.connect(timeout)
+        application = inspector.open_app(app)
+        return inspector, application
+
+class GetSafariTabs(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        self.pbar.emit(True)
+        self.log.emit(["Pulling Safari tabs from device...", _y])
+
+        try:
+            MainApp.safari_tabs.clear()
+
+            self.inspector = WebinspectorService(lockdown=self.lockdown)
+            self.inspector.connect(5)
+            while not self.inspector.connected_application:
+                self.inspector.flush_input()
+
+            self.reload_pages(self.inspector)
+            for app_id, app_ in self.inspector.connected_application.items():
+                for page_id, page in self.inspector.application_pages[app_id].items():
+                    MainApp.safari_tabs.append(page.web_url)
+        except KeyError:
+            self.log.emit(["Something went wrong, try again.", _d])
+        except WebInspectorNotEnabledError:
+            self.log.emit(["Web Inspector Not Enabled.", _d])
+        except RemoteAutomationNotEnabledError:
+            self.log.emit(["Remote Automation Not Enabled.", _d])
+        except InvalidServiceError:
+            self.log.emit(["Invalid Service. Make sure device is activated.", _d])
+        finally:
+            self.log.emit(["Finished pulling Safari tabs.", _s])
+            self.is_finished.emit(True)
+            self.reset.emit(True)
+
+    def reload_pages(self, inspector: WebinspectorService):
+        self.inspector.get_open_pages()
+        self.inspector.flush_input(2)
+
+class LSReports(QThread):
+    pbar = pyqtSignal(bool)
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None, file_name=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+        self.file_name = file_name
+
+    def run(self):
+        try:
+            self.pbar.emit(True)
+            crash_reports = CrashReportsManager(self.lockdown)
+            MainApp.ls = crash_reports.ls()
+            if MainApp.ls:
+                with open(self.file_name, 'w') as file:
+                    for crash in MainApp.ls:
+                        file.write(f"{crash}\n")
+
+                    file.write(f"\nDevice Signature {MainApp.current_device['SerialNumber']}")
+                    file.write(f"\n==============================\nTime: {time.asctime()}")
+
+            self.log.emit([f"Exported crash reports to: {self.file_name}", _s])
+
+        finally:
+            self.reset.emit(True)
+            self.is_finished.emit(True)
+
+class SysLog(QThread):
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        for syslog_entry in OsTraceService(lockdown=self.lockdown).syslog(pid=-1):
+            line = self.format_line(-1, syslog_entry)
+            self.log.emit([line, _y])
+            time.sleep(0.1)
+            if not MainApp.live_syslog:
+                self.reset.emit(True)
+                break
+
+    def format_line(self, pid, syslog_entry):
+        syslog_pid = syslog_entry.pid
+        timestamp = syslog_entry.timestamp
+        level = syslog_entry.level
+        filename = syslog_entry.filename
+        image_name = posixpath.basename(syslog_entry.image_name)
+        message = syslog_entry.message
+        process_name = posixpath.basename(filename)
+        label = ''
+
+        if (pid != -1) and (syslog_pid != pid):
+            return None
+
+        if syslog_entry.label is not None:
+            label = f'[{syslog_entry.label.subsystem}][{syslog_entry.label.category}]'
+    
+        line_format = '{timestamp} {process_name}{{{image_name}}}[{pid}] <{level}>: {message}\n'
+        line = line_format.format(timestamp=timestamp, process_name=process_name, image_name=image_name, pid=syslog_pid, level=level, message=message)
+        return line
+
+class FlushReports(QThread):
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        try:
+            self.log.emit([f"Attempting to flush reports...", _y])
+            crash_reports = CrashReportsManager(self.lockdown)
+            crash_reports.flush()
+            self.log.emit([f"Crash reports have been flushed.", _s])
+
+        finally:
+            self.reset.emit(True)
+            self.is_finished.emit(True)
+
+class ClearReports(QThread):
+    is_finished = pyqtSignal(bool)
+    log = pyqtSignal(list)
+    reset = pyqtSignal(bool)
+
+    def __init__(self, parent=None, lockdown=None):
+        QThread.__init__(self)
+        self.lockdown = lockdown
+
+    def run(self):
+        try:
+            self.log.emit([f"Attempting to clear reports...", _y])
+            crash_reports = CrashReportsManager(self.lockdown)
+            crash_reports.clear()
+            self.log.emit([f"Crash reports have been cleared.", _s])
+
+        finally:
+            self.reset.emit(True)
             self.is_finished.emit(True)
 
 if __name__ == '__main__':
