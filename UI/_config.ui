@@ -23,7 +23,7 @@
     <normaloff>icons/Gear.png</normaloff>icons/Gear.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #15171E;
+   <string notr="true">background-color: #0E0F14;
 color:#fff;
 
 QToolTip { color: #fff; background-color: #000; border: none; }</string>
@@ -138,7 +138,7 @@ QToolTip { color: #fff; background-color: #000; border: none; }</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton {
-        background-color: #24293B;
+        background-color: #171A26;
         border: none;
         color: #fff;
  		border: 2px solid #313850;
@@ -243,7 +243,7 @@ QToolTip {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-        background-color: #24293B;
+        background-color: #171A26;
         border: none;
         color: #fff;
  		border: 2px solid #313850;
@@ -350,7 +350,7 @@ QToolTip {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-        background-color: #24293B;
+        background-color: #171A26;
         border: none;
         color: #fff;
  		border: 2px solid #313850;
@@ -567,7 +567,7 @@ QCheckBox::indicator:unchecked:disabled
 }</string>
      </property>
      <property name="text">
-      <string>Automatically check for database updates on app launch</string>
+      <string>Automatically check for database and app updates on app launch</string>
      </property>
     </widget>
    </item>
@@ -626,7 +626,7 @@ QCheckBox::indicator:unchecked:disabled
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-        background-color: #24293B;
+        background-color: #171A26;
         border: none;
         color: #fff;
  		border: 2px solid #313850;
@@ -736,7 +736,7 @@ QToolTip {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-        background-color: #24293B;
+        background-color: #171A26;
         border: none;
         color: #fff;
  		border: 2px solid #313850;
