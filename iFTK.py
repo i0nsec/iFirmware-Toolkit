@@ -40,7 +40,6 @@ from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         RemoteAutomationNotEnabledError,
                                         InvalidServiceError)
 from pymobiledevice3.lockdown import LockdownClient
-from pymobiledevice3.services.web_protocol.cdp_server import app
 from pymobiledevice3.services.web_protocol.driver import WebDriver
 from pymobiledevice3.services.webinspector import SAFARI, WebinspectorService
 
@@ -2066,9 +2065,6 @@ class MainApp(QMainWindow):
             self.pull_all_reports.setDisabled(True)
             self.clear_reports.setDisabled(True)
             self.flush_reports.setDisabled(True)
-            self.cdp_server.setDisabled(True)
-            self.ipython_shell.setDisabled(True)
-            self.js_shell.setDisabled(True)
             self.deactivate_device.setDisabled(True)
             self.reboot.setDisabled(True)
             self.poweroff.setDisabled(True)
@@ -2082,9 +2078,6 @@ class MainApp(QMainWindow):
         self.pull_all_reports.setEnabled(True)
         self.clear_reports.setEnabled(True)
         self.flush_reports.setEnabled(True)
-        self.cdp_server.setEnabled(True)
-        self.ipython_shell.setEnabled(True)
-        self.js_shell.setEnabled(True)
         self.deactivate_device.setEnabled(True)
         self.reboot.setEnabled(True)
         self.poweroff.setEnabled(True)
@@ -2486,7 +2479,7 @@ class CheckConnection(QThread):
             else:
                 self.is_connected.emit(True)
 
-            time.sleep(1)
+            time.sleep(0.1)
 
 class Erase(QThread):
     pbar = pyqtSignal(bool)
@@ -2501,11 +2494,14 @@ class Erase(QThread):
         try:
             self.pbar.emit(True)
             self.log.emit(["Erasing...", _y])
-            backup_it = Mobilebackup2Service(self.lockdown)
-            backup_it.erase_device()
+            erase_it = Mobilebackup2Service(self.lockdown)
+            erase_it.erase_device()
             self.is_finished.emit(True)
         except ConnectionAbortedError:
             self.log.emit(["Device has been erased.", _s])
+        except InvalidServiceError:
+            self.log.emit(["Unable to erase device. Possibly because it's locked with an Apple ID.", _d])
+        finally:
             self.is_finished.emit(True)
 
 class Activate(QThread):
@@ -2528,6 +2524,8 @@ class Activate(QThread):
             MainApp.connected = False
         except AssertionError:
             self.log.emit(["Device seems to be already activated.", _d])
+        except KeyError:
+            self.log.emit(["Unable to activate device. Possibly because it's locked with an Apple ID.", _d])
         finally: 
             self.is_finished.emit(True)
             self.reset.emit(True)
