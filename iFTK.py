@@ -5,11 +5,11 @@ import webbrowser
 import time
 import pathlib
 import py7zr
-import asyncio
 import sqlite3
 import json
 import logging
 import pyqtcss
+import posixpath
 import validators
 from getpass import getuser
 from humanize import naturalsize
@@ -24,8 +24,7 @@ from PyQt5.QtWidgets import (QWidget,
                             QTreeWidgetItem,
                             QMenu,
                             QStyle,
-                            QTableWidgetItem,
-                            QPushButton)
+                            QTableWidgetItem)
 from pymobiledevice3 import usbmux
 from pymobiledevice3.lockdown import LockdownClient
 from pymobiledevice3.services.mobilebackup2 import Mobilebackup2Service
@@ -39,15 +38,9 @@ from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         WebInspectorNotEnabledError,
                                         RemoteAutomationNotEnabledError,
                                         InvalidServiceError)
-from pymobiledevice3.lockdown import LockdownClient
 from pymobiledevice3.services.web_protocol.driver import WebDriver
 from pymobiledevice3.services.webinspector import SAFARI, WebinspectorService
-
-import posixpath
-from termcolor import colored
-
 from pymobiledevice3.cli.cli_common import Command
-from pymobiledevice3.lockdown import LockdownClient
 from pymobiledevice3.services.os_trace import OsTraceService
 from pymobiledevice3.services.syslog import SyslogService
 
