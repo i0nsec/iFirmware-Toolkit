@@ -120,8 +120,8 @@ QScrollBar::handle:horizontal {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>765</width>
-                 <height>614</height>
+                 <width>673</width>
+                 <height>185</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -408,8 +408,8 @@ QToolTip {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>765</width>
-                 <height>614</height>
+                 <width>487</width>
+                 <height>240</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -2031,7 +2031,7 @@ QMenu::item::selected {
 }</string>
                   </property>
                   <property name="currentIndex">
-                   <number>2</number>
+                   <number>0</number>
                   </property>
                   <property name="iconSize">
                    <size>
