@@ -37,12 +37,11 @@ from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         PasswordRequiredError,
                                         WebInspectorNotEnabledError,
                                         RemoteAutomationNotEnabledError,
-                                        InvalidServiceError)
+                                        InvalidServiceError,
+                                        UserDeniedPairingError)
 from pymobiledevice3.services.web_protocol.driver import WebDriver
 from pymobiledevice3.services.webinspector import SAFARI, WebinspectorService
-from pymobiledevice3.cli.cli_common import Command
 from pymobiledevice3.services.os_trace import OsTraceService
-from pymobiledevice3.services.syslog import SyslogService
 
 # dm.py - main downloader
 import dm
@@ -1600,6 +1599,7 @@ class MainApp(QMainWindow):
             MainApp.connected = False
 
     def print_to_label(self):
+        
         if MainApp.connected:
             return
 
@@ -1611,6 +1611,8 @@ class MainApp(QMainWindow):
             lockdown = LockdownClient()
         except PasswordRequiredError:
             self.log("Password required. Unlock device and hit trust.", _d)
+            return
+        except UserDeniedPairingError:
             return
         
         current_device = {
@@ -1967,7 +1969,11 @@ class MainApp(QMainWindow):
         user_url = self.url_input.text()
         if validators.domain(user_url):
             actual_url = f"https://{user_url}"
-            lockdown = LockdownClient()
+            try:
+                lockdown = LockdownClient()
+            except NoDeviceConnectedError:
+                self.log("Lost connection with device.", _d)
+                
             self.stop_url.setEnabled(True)
             self.all_device_buttons(True)
             self.launch_url = LaunchURL(lockdown=lockdown, url=actual_url)
@@ -1983,6 +1989,7 @@ class MainApp(QMainWindow):
         self.log("Working on it...", _y)
         self.stop_url.setDisabled(True)
         MainApp.safari_session = False
+        self.log("Stopping...", _y)
 
     def safari_tabs_button(self):
         if not MainApp.connected:
@@ -2041,14 +2048,14 @@ class MainApp(QMainWindow):
         if not file_name:
             return
         
-        self.list_all_reports.setDisabled(True)
+        self.pull_all_reports.setDisabled(True)
         lockdown = LockdownClient()
         self.ls_reports = LSReports(lockdown=lockdown, file_name=file_name)
         self.ls_reports.start()
         self.ls_reports.log.connect(self.log)
         self.ls_reports.pbar.connect(self.progress_bar_update)
         self.ls_reports.is_finished.connect(lambda: self.pbar.setMaximum(100))
-        self.ls_reports.reset.connect(lambda: self.list_all_reports.setEnabled(True))
+        self.ls_reports.reset.connect(lambda: self.pull_all_reports.setEnabled(True))
 
     def all_device_buttons(self, val):
         if val:
@@ -2459,6 +2466,7 @@ class ScanPC(QThread):
 class CheckConnection(QThread):
     is_connected: bool = pyqtSignal(bool)
     not_connected: bool = pyqtSignal(bool)
+    log = pyqtSignal(list)
 
     def __init__(self, parent=None):
         QThread.__init__(self)
@@ -2467,6 +2475,13 @@ class CheckConnection(QThread):
         while True:
             get_device = usbmux.list_devices()
 
+            try:
+                self.lockdown = LockdownClient(get_device[0].serial)
+                self.lockdown.pair()
+            except Exception:
+                self.log.emit(["Connection to device was interrupted.", _d])
+                return
+            
             if not get_device:
                 self.not_connected.emit(True)
             else:
@@ -2573,13 +2588,19 @@ class LaunchURL(QThread):
                 time.sleep(2)
 
         except WebInspectorNotEnabledError:
+            self.log.emit(["----------------------------------", _d])
             self.log.emit(["Web Inspector Not Enabled.", _d])
+            self.log.emit(["Settings > Safari > Advanced", _d])
+            self.log.emit(["----------------------------------", _d])
         except RemoteAutomationNotEnabledError:
+            self.log.emit(["----------------------------------", _d])
             self.log.emit(["Remote Automation Not Enabled.", _d])
+            self.log.emit(["Settings > Safari > Advanced", _d])
+            self.log.emit(["----------------------------------", _d])
         finally:
             self.log.emit(["Session ended.", _s])
             self.is_finished.emit(True)
-            self.session.stop_session()
+            # self.session.stop_session()
             self.inspector.close()
             self.reset.emit(True)
 
@@ -2618,9 +2639,15 @@ class GetSafariTabs(QThread):
         except KeyError:
             self.log.emit(["Something went wrong, try again.", _d])
         except WebInspectorNotEnabledError:
+            self.log.emit(["----------------------------------", _d])
             self.log.emit(["Web Inspector Not Enabled.", _d])
+            self.log.emit(["Settings > Safari > Advanced", _d])
+            self.log.emit(["----------------------------------", _d])
         except RemoteAutomationNotEnabledError:
+            self.log.emit(["----------------------------------", _d])
             self.log.emit(["Remote Automation Not Enabled.", _d])
+            self.log.emit(["Settings > Safari > Advanced", _d])
+            self.log.emit(["----------------------------------", _d])
         except InvalidServiceError:
             self.log.emit(["Invalid Service. Make sure device is activated.", _d])
         finally:
