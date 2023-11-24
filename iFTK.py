@@ -642,10 +642,6 @@ class MainApp(QMainWindow):
         self.pull_all_reports.clicked.connect(lambda: self.pull_crash_report())
         self.flush_reports.clicked.connect(lambda: self.flush_all_reports())
         self.clear_reports.clicked.connect(lambda: self.clear_all_reports())
-        
-        # Syslog 
-        self.start_device_log.clicked.connect(lambda: self.start_device_syslog())
-        self.stop_device_log.clicked.connect(lambda: self.stop_device_syslog())
 
     @classmethod
     def check_integrity_box(cls, state):
@@ -2084,44 +2080,6 @@ class MainApp(QMainWindow):
         self.show_tabs.setEnabled(True)
         self.start_url.setEnabled(True)
 
-    def start_device_syslog(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-
-        lockdown = LockdownClient()
-        MainApp.live_syslog = True
-        self.stop_device_log.setEnabled(True)
-        self.start_device_log.setDisabled(True)
-        self.ls_log = SysLog(lockdown=lockdown)
-        self.ls_log.start()
-        self.ls_log.log.connect(self.sys_log_logger)
-        self.ls_log.reset.connect(self.stop_device_syslog)
-
-    def stop_device_syslog(self):
-        MainApp.live_syslog = False
-        self.stop_device_log.setDisabled(True)
-        self.start_device_log.setEnabled(True)
-        with open("sys_logs.txt", "w") as file:
-            file.write("")
-
-    def sys_log_logger(self, logs, category=''):
-        if logs is not None:
-            with open("sys_logs.txt", "a") as sys_log:
-                sys_log.write(self.custom_log_messages(logs, category))
-
-        with open("sys_logs.txt", "r") as logs:            
-            log = logs.read()
-            self.device_live_log = QTextBrowser(self.device_live_log)
-            font = QtGui.QFont()
-            font.setPointSize(10)
-            self.device_live_log.setFont(font)
-            self.device_live_log.setObjectName("device_live_log")
-            self.gridLayout_28.addWidget(self.device_live_log, 0, 0, 1, 1)
-            self.device_live_log.setHtml(log)
-            self.device_live_log.moveCursor(QtGui.QTextCursor.End)
-            self.device_live_log.setStyleSheet("border: none;")
-
     def flush_all_reports(self):
         if not MainApp.connected:
             self.log("Device is not connected.", _d)
@@ -2478,9 +2436,10 @@ class CheckConnection(QThread):
             try:
                 self.lockdown = LockdownClient(get_device[0].serial)
                 self.lockdown.pair()
-            except Exception:
+            except (UserDeniedPairingError, ConnectionAbortedError):
                 self.log.emit(["Connection to device was interrupted.", _d])
-                return
+            except (IndexError, OSError):
+                pass
             
             if not get_device:
                 self.not_connected.emit(True)
@@ -2688,43 +2647,6 @@ class LSReports(QThread):
         finally:
             self.reset.emit(True)
             self.is_finished.emit(True)
-
-class SysLog(QThread):
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-
-    def run(self):
-        for syslog_entry in OsTraceService(lockdown=self.lockdown).syslog(pid=-1):
-            line = self.format_line(-1, syslog_entry)
-            self.log.emit([line, _y])
-            time.sleep(0.1)
-            if not MainApp.live_syslog:
-                self.reset.emit(True)
-                break
-
-    def format_line(self, pid, syslog_entry):
-        syslog_pid = syslog_entry.pid
-        timestamp = syslog_entry.timestamp
-        level = syslog_entry.level
-        filename = syslog_entry.filename
-        image_name = posixpath.basename(syslog_entry.image_name)
-        message = syslog_entry.message
-        process_name = posixpath.basename(filename)
-        label = ''
-
-        if (pid != -1) and (syslog_pid != pid):
-            return None
-
-        if syslog_entry.label is not None:
-            label = f'[{syslog_entry.label.subsystem}][{syslog_entry.label.category}]'
-    
-        line_format = '{timestamp} {process_name}{{{image_name}}}[{pid}] <{level}>: {message}\n'
-        line = line_format.format(timestamp=timestamp, process_name=process_name, image_name=image_name, pid=syslog_pid, level=level, message=message)
-        return line
 
 class FlushReports(QThread):
     is_finished = pyqtSignal(bool)
