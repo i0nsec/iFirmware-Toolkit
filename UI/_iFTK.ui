@@ -52,7 +52,6 @@ QToolTip {
               <property name="font">
                <font>
                 <pointsize>11</pointsize>
-                <weight>75</weight>
                 <italic>false</italic>
                 <bold>true</bold>
                </font>
@@ -120,8 +119,8 @@ QScrollBar::handle:horizontal {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>705</width>
-                 <height>615</height>
+                 <width>708</width>
+                 <height>616</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -152,7 +151,6 @@ QScrollBar::handle:horizontal {
                      <property name="font">
                       <font>
                        <pointsize>9</pointsize>
-                       <weight>75</weight>
                        <bold>true</bold>
                       </font>
                      </property>
@@ -160,7 +158,7 @@ QScrollBar::handle:horizontal {
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Erase all data on idevice.</string>
+                      <string>Erase all data on idevice</string>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QPushButton {
@@ -200,7 +198,6 @@ QToolTip {
                      <property name="font">
                       <font>
                        <pointsize>9</pointsize>
-                       <weight>75</weight>
                        <bold>true</bold>
                       </font>
                      </property>
@@ -208,7 +205,7 @@ QToolTip {
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Enter recovery mode on any Apple device.</string>
+                      <string>Enter recovery mode on any Apple device</string>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QPushButton {
@@ -248,7 +245,6 @@ QToolTip {
                      <property name="font">
                       <font>
                        <pointsize>9</pointsize>
-                       <weight>75</weight>
                        <bold>true</bold>
                       </font>
                      </property>
@@ -256,7 +252,7 @@ QToolTip {
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Activate idevice.</string>
+                      <string>Activate idevice</string>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QPushButton {
@@ -334,7 +330,6 @@ border-radius: 10px;
                   <property name="font">
                    <font>
                     <pointsize>9</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -418,7 +413,6 @@ QMenu::item::selected {
                       <property name="font">
                        <font>
                         <pointsize>12</pointsize>
-                        <weight>50</weight>
                         <bold>false</bold>
                        </font>
                       </property>
@@ -687,7 +681,6 @@ QTableView::indicator:unchecked {
                          <property name="font">
                           <font>
                            <pointsize>10</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -716,7 +709,6 @@ QTableView::indicator:unchecked {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -724,7 +716,7 @@ QTableView::indicator:unchecked {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Shutdown device.</string>
+                          <string>Shutdown device</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -764,7 +756,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -772,7 +763,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Reboot device.</string>
+                          <string>Reboot device</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -812,7 +803,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -820,7 +810,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Deactivate idevice.</string>
+                          <string>Deactivate idevice</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -879,7 +869,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -930,7 +919,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                            <strikeout>false</strikeout>
                            <kerning>false</kerning>
@@ -984,7 +972,6 @@ QLineEdit {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1045,7 +1032,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>10</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1074,7 +1060,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1082,7 +1067,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Remove all crash reports.</string>
+                          <string>Remove all crash reports</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -1122,7 +1107,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1130,7 +1114,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Export all crash reports.</string>
+                          <string>Export all crash reports</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -1170,7 +1154,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1178,7 +1161,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Trigger com.apple.crashreportmover to flush all products.</string>
+                          <string>Trigger com.apple.crashreportmover to flush all products</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -1228,7 +1211,6 @@ QToolTip {
                          <property name="font">
                           <font>
                            <pointsize>10</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1364,7 +1346,6 @@ QMenu::item:selected {
                          <property name="font">
                           <font>
                            <pointsize>9</pointsize>
-                           <weight>75</weight>
                            <bold>true</bold>
                           </font>
                          </property>
@@ -1372,7 +1353,7 @@ QMenu::item:selected {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Show opened tabs.</string>
+                          <string>Show opened tabs</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QPushButton {
@@ -1419,7 +1400,7 @@ QToolTip {
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Export device info.</string>
+                          <string>Export opened tabs to a file</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">background-color: transparent;
@@ -1462,7 +1443,6 @@ border: none;
                       <property name="font">
                        <font>
                         <pointsize>12</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -1485,8 +1465,8 @@ border: none;
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>720</width>
-                 <height>599</height>
+                 <width>723</width>
+                 <height>593</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -1497,36 +1477,327 @@ border: none;
                 <string>Database - Firmware</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_2">
+                <item row="2" column="0">
+                 <widget class="QWidget" name="widget_4" native="true">
+                  <layout class="QGridLayout" name="gridLayout_25">
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="show_signed">
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                       <bold>true</bold>
+                       <strikeout>false</strikeout>
+                       <kerning>false</kerning>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="toolTip">
+                      <string>Display signed firmwares only</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Signed Only</string>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QCheckBox" name="show_relevant">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                       <bold>true</bold>
+                       <strikeout>false</strikeout>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="toolTip">
+                      <string notr="true">Show lastest versions only</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Relevant</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="check_integrity">
+                     <property name="font">
+                      <font>
+                       <pointsize>10</pointsize>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="acceptDrops">
+                      <bool>false</bool>
+                     </property>
+                     <property name="toolTip">
+                      <string notr="true">Verify firmware once it's finished downloading.</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+}
+
+
+QCheckBox
+{
+    spacing: 5px;
+    outline: none;
+    color: #bbb;
+    margin-bottom: 2px;
+}
+
+QCheckBox:disabled
+{
+    color: #777777;
+}
+
+QCheckBox::indicator
+{
+    width: 18px;
+    height: 18px;
+}
+
+QGroupBox::indicator
+{
+    margin-left: 2px;
+}
+
+QCheckBox::indicator:unchecked,
+QCheckBox::indicator:unchecked:hover
+{
+    
+	image: url(:/dark_blue/img/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:focus,
+QCheckBox::indicator:unchecked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
+}
+
+QCheckBox::indicator:checked,
+QCheckBox::indicator:checked:hover
+{
+    image: url(:/dark_blue/img/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:focus,
+QCheckBox::indicator:checked:pressed
+{
+  border: none;
+    image: url(:/dark_blue/img/checkbox_checked_focus.png);
+}
+
+QCheckBox::indicator:indeterminate,
+QCheckBox::indicator:indeterminate:hover,
+QCheckBox::indicator:indeterminate:pressed
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:focus
+{
+    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
+}
+
+QCheckBox::indicator:checked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Verify Firmware</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                 <item row="1" column="0">
-                 <widget class="Line" name="line_4">
-                  <property name="styleSheet">
-                   <string notr="true">background-color: #24293B;</string>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_2">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Download and manage any firmware for all Apple devices</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
                  <widget class="QTabWidget" name="main_tab">
                   <property name="font">
                    <font>
                     <pointsize>9</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                     <strikeout>false</strikeout>
                     <stylestrategy>PreferDefault</stylestrategy>
@@ -1628,7 +1899,6 @@ QMenu::item::selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -1760,7 +2030,6 @@ QMenu::item:selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -1892,7 +2161,6 @@ QMenu::item:selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -2024,7 +2292,6 @@ QMenu::item:selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -2129,7 +2396,6 @@ QMenu::item:selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -2260,7 +2526,6 @@ QMenu::item:selected {
                      <widget class="QTreeWidget" name="other_tree">
                       <property name="font">
                        <font>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -2392,7 +2657,6 @@ QMenu::item:selected {
                       <property name="font">
                        <font>
                         <pointsize>10</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -2512,325 +2776,6 @@ QMenu::item:selected {
                   </widget>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QWidget" name="widget_4" native="true">
-                  <layout class="QGridLayout" name="gridLayout_25">
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="show_signed">
-                     <property name="font">
-                      <font>
-                       <pointsize>10</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                       <strikeout>false</strikeout>
-                       <kerning>false</kerning>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="toolTip">
-                      <string>Display signed firmwares only</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-}
-
-
-QCheckBox
-{
-    spacing: 5px;
-    outline: none;
-    color: #bbb;
-    margin-bottom: 2px;
-}
-
-QCheckBox:disabled
-{
-    color: #777777;
-}
-
-QCheckBox::indicator
-{
-    width: 18px;
-    height: 18px;
-}
-
-QGroupBox::indicator
-{
-    margin-left: 2px;
-}
-
-QCheckBox::indicator:unchecked,
-QCheckBox::indicator:unchecked:hover
-{
-    image: url(:/dark_blue/img/checkbox_unchecked.png);
-}
-
-QCheckBox::indicator:unchecked:focus,
-QCheckBox::indicator:unchecked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
-}
-
-QCheckBox::indicator:checked,
-QCheckBox::indicator:checked:hover
-{
-    image: url(:/dark_blue/img/checkbox_checked.png);
-}
-
-QCheckBox::indicator:checked:focus,
-QCheckBox::indicator:checked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_checked_focus.png);
-}
-
-QCheckBox::indicator:indeterminate,
-QCheckBox::indicator:indeterminate:hover,
-QCheckBox::indicator:indeterminate:pressed
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate.png);
-}
-
-QCheckBox::indicator:indeterminate:focus
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
-}
-
-QCheckBox::indicator:checked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
-}
-
-QCheckBox::indicator:unchecked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Signed Only</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QCheckBox" name="show_relevant">
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>10</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                       <strikeout>false</strikeout>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="toolTip">
-                      <string notr="true">Show lastest versions only</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-}
-
-
-QCheckBox
-{
-    spacing: 5px;
-    outline: none;
-    color: #bbb;
-    margin-bottom: 2px;
-}
-
-QCheckBox:disabled
-{
-    color: #777777;
-}
-
-QCheckBox::indicator
-{
-    width: 18px;
-    height: 18px;
-}
-
-QGroupBox::indicator
-{
-    margin-left: 2px;
-}
-
-QCheckBox::indicator:unchecked,
-QCheckBox::indicator:unchecked:hover
-{
-    image: url(:/dark_blue/img/checkbox_unchecked.png);
-}
-
-QCheckBox::indicator:unchecked:focus,
-QCheckBox::indicator:unchecked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
-}
-
-QCheckBox::indicator:checked,
-QCheckBox::indicator:checked:hover
-{
-    image: url(:/dark_blue/img/checkbox_checked.png);
-}
-
-QCheckBox::indicator:checked:focus,
-QCheckBox::indicator:checked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_checked_focus.png);
-}
-
-QCheckBox::indicator:indeterminate,
-QCheckBox::indicator:indeterminate:hover,
-QCheckBox::indicator:indeterminate:pressed
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate.png);
-}
-
-QCheckBox::indicator:indeterminate:focus
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
-}
-
-QCheckBox::indicator:checked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
-}
-
-QCheckBox::indicator:unchecked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Relevant</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QCheckBox" name="check_integrity">
-                     <property name="font">
-                      <font>
-                       <pointsize>10</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="acceptDrops">
-                      <bool>false</bool>
-                     </property>
-                     <property name="toolTip">
-                      <string notr="true">Verify firmware once it's finished downloading.</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-}
-
-
-QCheckBox
-{
-    spacing: 5px;
-    outline: none;
-    color: #bbb;
-    margin-bottom: 2px;
-}
-
-QCheckBox:disabled
-{
-    color: #777777;
-}
-
-QCheckBox::indicator
-{
-    width: 18px;
-    height: 18px;
-}
-
-QGroupBox::indicator
-{
-    margin-left: 2px;
-}
-
-QCheckBox::indicator:unchecked,
-QCheckBox::indicator:unchecked:hover
-{
-    
-	image: url(:/dark_blue/img/checkbox_unchecked.png);
-}
-
-QCheckBox::indicator:unchecked:focus,
-QCheckBox::indicator:unchecked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_unchecked_focus.png);
-}
-
-QCheckBox::indicator:checked,
-QCheckBox::indicator:checked:hover
-{
-    image: url(:/dark_blue/img/checkbox_checked.png);
-}
-
-QCheckBox::indicator:checked:focus,
-QCheckBox::indicator:checked:pressed
-{
-  border: none;
-    image: url(:/dark_blue/img/checkbox_checked_focus.png);
-}
-
-QCheckBox::indicator:indeterminate,
-QCheckBox::indicator:indeterminate:hover,
-QCheckBox::indicator:indeterminate:pressed
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate.png);
-}
-
-QCheckBox::indicator:indeterminate:focus
-{
-    image: url(:/dark_blue/img/checkbox_indeterminate_focus.png);
-}
-
-QCheckBox::indicator:checked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_checked_disabled.png);
-}
-
-QCheckBox::indicator:unchecked:disabled
-{
-    image: url(:/dark_blue/img/checkbox_unchecked_disabled.png);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Verify Firmware</string>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
                </layout>
               </widget>
               <widget class="QWidget" name="main_page">
@@ -2838,8 +2783,8 @@ QCheckBox::indicator:unchecked:disabled
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>720</width>
-                 <height>599</height>
+                 <width>723</width>
+                 <height>593</height>
                 </rect>
                </property>
                <attribute name="icon">
@@ -2850,50 +2795,135 @@ QCheckBox::indicator:unchecked:disabled
                 <string>On This PC</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_9">
-                <item row="0" column="0" colspan="2">
-                 <widget class="QLabel" name="label">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QFrame" name="frame_4">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
                   </property>
-                  <property name="text">
-                   <string>Find and delete firmware files in other locations other than the default directory</string>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
                   </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_10">
+                   <item row="0" column="1">
+                    <widget class="QPushButton" name="delete_all">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>150</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #171A26;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string> Delete all</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/Error.png</normaloff>icons/Error.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QPushButton" name="scan_pc">
+                     <property name="minimumSize">
+                      <size>
+                       <width>50</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>150</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+        background-color: #171A26;
+        border: none;
+        color: #fff;
+ 		border: 2px solid #313850;
+    	border-radius: 10px;
+    }
+
+ QPushButton:hover {
+	background-color: #1E2230;
+}
+
+QToolTip { 
+	color: #fff; background-color: #000; border: none; 
+
+}</string>
+                     </property>
+                     <property name="text">
+                      <string> Scan PC</string>
+                     </property>
+                     <property name="icon">
+                      <iconset>
+                       <normaloff>icons/Search1.png</normaloff>icons/Search1.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="Line" name="line_5">
-                  <property name="styleSheet">
-                   <string notr="true">background-color: #24293B;</string>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="found_label">
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Found: 0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
+                <item row="0" column="1">
                  <widget class="QLabel" name="total_label">
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -2902,12 +2932,11 @@ QCheckBox::indicator:unchecked:disabled
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0" colspan="2">
+                <item row="1" column="0" colspan="2">
                  <widget class="QTreeWidget" name="pc_tree">
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -2993,130 +3022,17 @@ QMenu::item:selected {
                   </column>
                  </widget>
                 </item>
-                <item row="4" column="0" colspan="2">
-                 <widget class="QFrame" name="frame_4">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="found_label">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <bold>true</bold>
+                   </font>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>16777215</height>
-                   </size>
+                  <property name="text">
+                   <string>Found: 0</string>
                   </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_10">
-                   <item row="0" column="1">
-                    <widget class="QPushButton" name="delete_all">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>150</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>9</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
-        background-color: #171A26;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                     </property>
-                     <property name="text">
-                      <string> Delete all</string>
-                     </property>
-                     <property name="icon">
-                      <iconset>
-                       <normaloff>icons/Error.png</normaloff>icons/Error.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QPushButton" name="scan_pc">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>150</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>9</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="cursor">
-                      <cursorShape>PointingHandCursor</cursorShape>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
-        background-color: #171A26;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-                     </property>
-                     <property name="text">
-                      <string> Scan PC</string>
-                     </property>
-                     <property name="icon">
-                      <iconset>
-                       <normaloff>icons/Search1.png</normaloff>icons/Search1.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
                  </widget>
                 </item>
                </layout>
@@ -3160,7 +3076,6 @@ QGroupBox::title {
               <property name="font">
                <font>
                 <pointsize>9</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -3195,7 +3110,6 @@ QGroupBox::title {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3249,7 +3163,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3296,7 +3209,6 @@ QLineEdit {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3347,7 +3259,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3402,7 +3313,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3412,7 +3322,7 @@ QToolTip {
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Delete all firmwares in the current selected directory</string>
+                  <string>Delete all firmware files in the current directory</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
@@ -3453,7 +3363,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>true</kerning>
@@ -3488,7 +3397,6 @@ QLineEdit {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3539,7 +3447,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>8</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3574,7 +3481,6 @@ QLineEdit {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3619,7 +3525,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3629,7 +3534,7 @@ QToolTip {
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Hash all firmwares in current selected directory</string>
+                  <string>Hash and verify all firmware files in current directory</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
@@ -3664,7 +3569,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3715,7 +3619,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3760,7 +3663,6 @@ QToolTip {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                    <strikeout>false</strikeout>
                    <kerning>false</kerning>
@@ -3770,7 +3672,7 @@ QToolTip {
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Download all signed firmwares for the current tab</string>
+                  <string>Download all signed firmware files</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
@@ -3820,7 +3722,6 @@ QToolTip {
               <property name="font">
                <font>
                 <pointsize>9</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                 <strikeout>false</strikeout>
                 <kerning>false</kerning>
@@ -3872,7 +3773,6 @@ QScrollBar::handle:horizontal {
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -3889,9 +3789,12 @@ QScrollBar::handle:horizontal {
                  </property>
                  <property name="html">
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:700; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI Semibold'; font-size:10pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
@@ -3925,7 +3828,6 @@ p, li { white-space: pre-wrap; }
          <property name="font">
           <font>
            <pointsize>9</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
            <strikeout>false</strikeout>
            <kerning>false</kerning>
@@ -3955,7 +3857,6 @@ p, li { white-space: pre-wrap; }
             <property name="font">
              <font>
               <pointsize>9</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
@@ -3996,7 +3897,6 @@ QProgressBar::chunk {
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4026,7 +3926,6 @@ Unavailable</string>
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4056,7 +3955,6 @@ border-radius: 10px;
             <property name="font">
              <font>
               <pointsize>9</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
               <strikeout>false</strikeout>
               <kerning>true</kerning>
