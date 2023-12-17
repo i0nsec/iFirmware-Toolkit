@@ -567,9 +567,9 @@ class MainApp(QMainWindow):
                     if os.path.exists("DBs//settings.json"):
                         os.remove("DBs//settings.json")
                         
-                    print("Unable to load settings.json.", _d)
-                    print("Deleting settings.json...", _y)
-                    print("Your settings have been reset.", _s)
+                    self.log("Unable to load settings.json.", _d)
+                    self.log("Deleting settings.json...", _y)
+                    self.log("Your settings have been reset.", _s)
         self.load_data()
 
         # Show options menu
@@ -1554,7 +1554,6 @@ class MainApp(QMainWindow):
                 QApplication.clipboard().setText(f"{name} - {identifier} - {version} - {build}")
 
             elif value.text() == 'Copy SHA1':
-                print(hash_)
                 QApplication.clipboard().setText(hash_)
 
             elif value.text() == 'Copy All':
@@ -1589,28 +1588,29 @@ class MainApp(QMainWindow):
 
     def clear_print_to_label(self):
         if not MainApp.notified:
-            self.toolBox.setItemText(2, "iDevice - Not connected.")
+            self.toolBox.setItemText(0, "iDevice - Not Connected.")
             self.idevice_restore.clearContents()
             MainApp.notified = True
             MainApp.connected = False
 
     def print_to_label(self):
-        
+
         if MainApp.connected:
             return
 
         if MainApp.notified:
             MainApp.notified = False
             return
-        
+
         try:
             lockdown = LockdownClient()
         except PasswordRequiredError:
-            self.log("Password required. Unlock device and hit trust.", _d)
+            self.toolBox.setItemText(0, f"iDevice - Password Required. Unlock Device and Hit Trust.")
             return
-        except UserDeniedPairingError:
+        except (UserDeniedPairingError, ConnectionAbortedError, NoDeviceConnectedError):
+            self.toolBox.setItemText(0, f"iDevice - User Denied Pairing.")
             return
-        
+
         current_device = {
             "DeviceName": '',
             "DisplayName": '',
@@ -1741,7 +1741,7 @@ class MainApp(QMainWindow):
 
         device = MainApp.current_device.values()
         carrires = []
-        
+
         for index, value in enumerate(device):
             try:
                 if type(value) is list:
@@ -1790,7 +1790,7 @@ class MainApp(QMainWindow):
         with open('.devices.txt', 'a') as device_udids:
             device_udids.write(f"{time.asctime()};; {MainApp.udid}\n")
 
-        self.toolBox.setItemText(2, f"iDevice - Connected: {MainApp.udid}")
+        self.toolBox.setItemText(0, f"iDevice - Connected: {MainApp.udid}")
         self.log(f"New device connected, {MainApp.current_device['DisplayName']}", _s)
 
     def enter_recovery_(self):
@@ -2436,7 +2436,7 @@ class CheckConnection(QThread):
             try:
                 self.lockdown = LockdownClient(get_device[0].serial)
                 self.lockdown.pair()
-            except (UserDeniedPairingError, ConnectionAbortedError):
+            except (UserDeniedPairingError, ConnectionAbortedError, PasswordRequiredError):
                 self.log.emit(["Connection to device was interrupted.", _d])
             except (IndexError, OSError):
                 pass
