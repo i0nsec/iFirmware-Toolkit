@@ -1,5 +1,6 @@
 import requests
-import os, sys
+import os
+import sys
 import hashlib
 import webbrowser
 import time
@@ -9,7 +10,6 @@ import sqlite3
 import json
 import logging
 import pyqtcss
-import posixpath
 import validators
 from getpass import getuser
 from humanize import naturalsize
@@ -25,12 +25,10 @@ from PyQt5.QtWidgets import (QWidget,
                             QMenu,
                             QStyle,
                             QTableWidgetItem)
+from ssl import SSLZeroReturnError
 from pymobiledevice3 import usbmux
 from pymobiledevice3.lockdown import LockdownClient
-from pymobiledevice3.services.mobilebackup2 import Mobilebackup2Service
-from pymobiledevice3.services.crash_reports import CrashReportsManager
-from pymobiledevice3.services.mobile_activation import MobileActivationService
-from pymobiledevice3.services.diagnostics import DiagnosticsService
+from pymobiledevice3 import services
 from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         MissingValueError,
                                         LockdownError,
@@ -39,12 +37,8 @@ from pymobiledevice3.exceptions import (NoDeviceConnectedError,
                                         RemoteAutomationNotEnabledError,
                                         InvalidServiceError,
                                         UserDeniedPairingError)
-from pymobiledevice3.services.web_protocol.driver import WebDriver
-from pymobiledevice3.services.webinspector import SAFARI, WebinspectorService
-from pymobiledevice3.services.os_trace import OsTraceService
+import dm # dm.py - main downloader
 
-# dm.py - main downloader
-import dm
 _s = "#91c881" # Green - for success
 _w = "#ffffff" # White - for normal message output
 _d = "#DEDE00" # Red - for errors
@@ -457,7 +451,8 @@ class MainApp(QMainWindow):
         super(MainApp, self).__init__()
         uic.loadUi("UI\\_iFTK.ui", self)
         self.show()
-
+        self.init_logger()
+        
         # Check if hosts file exists
         if not os.path.exists('.hosts'):
             self.log("Hosts file does not exist.", _d)
@@ -1403,18 +1398,17 @@ class MainApp(QMainWindow):
         # Reset the log file before initializing a new logger
         # clear_log() uses this method to flush the log file
 
-        if os.path.isfile('logs.txt'):
+        if os.path.exists('logs.txt'):
             with open('logs.txt', 'w') as file:
                 pass
 
-        MainApp.text_reset = self.text_log
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         output = logging.FileHandler('logs.txt')
         self.logger.addHandler(output)
 
     def reset_logger(self):
-        MainApp.text_reset.setText('')
+        self.text_log.setText('')
         self.logger.handlers[0].close()
         self.logger.removeHandler(self.logger.handlers[0])
         self.init_logger()
@@ -1607,7 +1601,7 @@ class MainApp(QMainWindow):
         except PasswordRequiredError:
             self.toolBox.setItemText(0, f"iDevice - Password Required. Unlock Device and Hit Trust.")
             return
-        except (UserDeniedPairingError, ConnectionAbortedError, NoDeviceConnectedError):
+        except (UserDeniedPairingError, ConnectionAbortedError, NoDeviceConnectedError, SSLZeroReturnError):
             self.toolBox.setItemText(0, f"iDevice - User Denied Pairing.")
             return
 
@@ -1835,7 +1829,7 @@ class MainApp(QMainWindow):
         try:
             self.log("Device is shutting down...", _y)
             lockdown = LockdownClient()
-            do_shutdown = DiagnosticsService(lockdown=lockdown)
+            do_shutdown = services.diagnostics.DiagnosticsService(lockdown=lockdown)
             do_shutdown.shutdown()
 
         except NoDeviceConnectedError as error_msg:
@@ -1860,7 +1854,7 @@ class MainApp(QMainWindow):
         try:
             self.log("Device is restarting...", _y)
             lockdown = LockdownClient()
-            do_shutdown = DiagnosticsService(lockdown=lockdown)
+            do_shutdown = services.diagnostics.DiagnosticsService(lockdown=lockdown)
             do_shutdown.restart()
 
         except NoDeviceConnectedError as error_msg:
@@ -2461,7 +2455,7 @@ class Erase(QThread):
         try:
             self.pbar.emit(True)
             self.log.emit(["Erasing...", _y])
-            erase_it = Mobilebackup2Service(self.lockdown)
+            erase_it = services.mobilebackup2.Mobilebackup2Service(self.lockdown)
             erase_it.erase_device()
             self.is_finished.emit(True)
         except ConnectionAbortedError:
@@ -2485,7 +2479,7 @@ class Activate(QThread):
         try:
             self.pbar.emit(True)
             self.log.emit(["Activating device...", _y])
-            activate_it = MobileActivationService(self.lockdown)
+            activate_it = services.mobile_activation.MobileActivationService(self.lockdown)
             activate_it.activate()
             self.log.emit(["Device has been activated!", _s])
             MainApp.connected = False
@@ -2511,7 +2505,7 @@ class Dectivate(QThread):
         try:
             self.pbar.emit(True)
             self.log.emit(["Dectivating device...", _y])
-            activate_it = MobileActivationService(self.lockdown)
+            activate_it = services.mobile_activation.MobileActivationService(self.lockdown)
             activate_it.deactivate()
             self.log.emit(["Device has been dectivated!", _s])
             MainApp.connected = False
@@ -2538,9 +2532,9 @@ class LaunchURL(QThread):
         self.log.emit(["To terminate session, press 'End Session'", _y])
         MainApp.safari_session = True
         try:
-            self.inspector, self.safari = self.create_webinspector_and_launch_app(self.lockdown, 5, SAFARI)
+            self.inspector, self.safari = self.create_webinspector_and_launch_app(self.lockdown, 5, services.webinspector.SAFARI)
             self.session = self.inspector.automation_session(self.safari)
-            driver = WebDriver(self.session)
+            driver = services.services.web_protocol.driver.WebDriver(self.session)
             driver.start_session()
             driver.get(self.url)
             while MainApp.safari_session:
@@ -2564,7 +2558,7 @@ class LaunchURL(QThread):
             self.reset.emit(True)
 
     def create_webinspector_and_launch_app(self, lockdown: LockdownClient, timeout: float, app: str):
-        inspector = WebinspectorService(lockdown=lockdown)
+        inspector = services.webinspector.WebinspectorService(lockdown=lockdown)
         inspector.connect(timeout)
         application = inspector.open_app(app)
         return inspector, application
@@ -2586,7 +2580,7 @@ class GetSafariTabs(QThread):
         try:
             MainApp.safari_tabs.clear()
 
-            self.inspector = WebinspectorService(lockdown=self.lockdown)
+            self.inspector = services.webinspector.WebinspectorService(lockdown=self.lockdown)
             self.inspector.connect(5)
             while not self.inspector.connected_application:
                 self.inspector.flush_input()
@@ -2614,7 +2608,7 @@ class GetSafariTabs(QThread):
             self.is_finished.emit(True)
             self.reset.emit(True)
 
-    def reload_pages(self, inspector: WebinspectorService):
+    def reload_pages(self, inspector):
         self.inspector.get_open_pages()
         self.inspector.flush_input(2)
 
@@ -2632,8 +2626,8 @@ class LSReports(QThread):
     def run(self):
         try:
             self.pbar.emit(True)
-            crash_reports = CrashReportsManager(self.lockdown)
-            MainApp.ls = crash_reports.ls()
+            _crash_reports = services.crash_reports.CrashReportsManager(self.lockdown)
+            MainApp.ls = _crash_reports.ls()
             if MainApp.ls:
                 with open(self.file_name, 'w') as file:
                     for crash in MainApp.ls:
@@ -2660,8 +2654,8 @@ class FlushReports(QThread):
     def run(self):
         try:
             self.log.emit([f"Attempting to flush reports...", _y])
-            crash_reports = CrashReportsManager(self.lockdown)
-            crash_reports.flush()
+            _crash_reports = services.crash_reports.CrashReportsManager(self.lockdown)
+            _crash_reports.flush()
             self.log.emit([f"Crash reports have been flushed.", _s])
 
         finally:
@@ -2680,8 +2674,8 @@ class ClearReports(QThread):
     def run(self):
         try:
             self.log.emit([f"Attempting to clear reports...", _y])
-            crash_reports = CrashReportsManager(self.lockdown)
-            crash_reports.clear()
+            _crash_reports = services.crash_reports.CrashReportsManager(self.lockdown)
+            _crash_reports.clear()
             self.log.emit([f"Crash reports have been cleared.", _s])
 
         finally:
@@ -2691,5 +2685,4 @@ class ClearReports(QThread):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainApp()
-    window.init_logger()
     app.exec_()
