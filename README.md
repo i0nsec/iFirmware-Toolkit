@@ -1,7 +1,7 @@
 # iFirmware-Toolkit v3.3-1229
 Download and manage any firmware for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
-<img src=".\\UI/Main-UI.png" alt="logo" width="700" hieght="700"/>
+<img src=".\\UI/app.png" alt="logo" width="700" hieght="700"/>
 
 iFTK runs only on Windows. It's currently not fully compatible on other operating systems.
 
