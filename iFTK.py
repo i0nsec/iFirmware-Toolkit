@@ -50,7 +50,7 @@ _w = "#ffffff" # White - for normal message output
 _d = "#DEDE00" # Red - for errors
 _y = "#9EBB00" # Yellow - for warnings
 pyqtcss.get_style("dark_blue")
-app_version = 'v3.3-0917' # App version
+app_version = 'v3.3-1229' # App version
 download_urls = {} # Used to pass URLs to the downloader module  
 no_update = False # Do not update QTreeWidget when checking for database update, if there is no updates available
 dbs = [
