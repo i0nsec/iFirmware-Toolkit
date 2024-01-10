@@ -308,7 +308,7 @@ class Options(QWidget):
 
     def _show(self):
         self.show()
-        self.setFixedSize(664, 538)
+        self.setFixedSize(664, 432)
 
         # Reset line edit
         self.edit_line.clear()
