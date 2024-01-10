@@ -1699,7 +1699,7 @@ QMenu::item::selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #24293B;
+    background-color: #171A26;
     color: white;
     padding-left: 4px;
 	font-size: 15px;
@@ -1946,7 +1946,7 @@ QMenu::item:selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #24293B;
+    background-color: #171A26;
     color: white;
     padding-left: 4px;
 	font-size: 15px;
@@ -2071,7 +2071,7 @@ QMenu::item:selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #24293B;
+    background-color: #171A26;
     color: white;
     padding-left: 4px;
 	font-size: 15px;
@@ -2181,7 +2181,7 @@ QMenu::item:selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #24293B;
+    background-color: #171A26;
     color: white;
     padding-left: 4px;
 	font-size: 15px;
@@ -2311,7 +2311,7 @@ QMenu::item:selected {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QHeaderView::section {
-    background-color: #24293B;
+    background-color: #171A26;
     color: white;
     padding-left: 4px;
 	font-size: 15px;
