@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
-    <height>466</height>
+    <width>752</width>
+    <height>556</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -20,8 +20,8 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">* { 
-	background-color: #15171E;
+   <string notr="true">* {
+	background-color: rgb(18, 18, 18);
 }
 
 QScrollBar:vertical {
@@ -42,44 +42,196 @@ QScrollBar::handle:horizontal {
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="7" column="0">
-     <widget class="QProgressBar" name="pbar">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
+     <widget class="QFrame" name="frame_2">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="styleSheet">
-       <string notr="true">QProgressBar {
-	min-height: 12px;
-	max-height: 12px;
-	border-radius: 6px;
-	margin: 10px;
-}
-
-QProgressBar::chunk {
-	border-radius: 6px;
-	background-color: #24293B;
-}</string>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
-      <property name="textVisible">
-       <bool>false</bool>
-      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <family>Segoe UI Semibold</family>
+           <pointsize>13</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>Download IPSW</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="dest_label">
+         <property name="font">
+          <font>
+           <family>Segoe UI Semibold</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">margin-left: 20px;
+color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="1" column="0">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QTreeWidget" name="pc_tree">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>400</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Semibold</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="cursor" stdset="0">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">* {
+	border: none;
+	color: rgb(255, 255, 255);
+}
+
+QTableWidget {
+	border: none;
+	margin: 0;
+	color: #fff;
+}
+
+QTableView::item:active{
+    color: #fff;
+}
+
+QHeaderView::section {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding-left: 4px;
+	border: none;
+	font-size: 18px;
+}
+
+QTableView QTableCornerButton::section {
+    background-color: #1a1a1a;
+}
+
+QTableWidget::item {
+	selection-background-color:  #1a1a1a;
+}
+
+QTableWidget::item:active {
+	color: #ffffff;
+}
+
+QTableWidget::item:active {
+	color:  #fff;
+}
+QScrollBar:vertical {
+    background: white;
+     width: 15px;
+ }
+
+QScrollBar::handle:vertical {
+    background:#1a1a1a;
+ }
+
+QScrollBar::handle:vertical::pressed {
+	background: #3700b3;
+}
+
+QScrollBar:horizontal {
+    background: white;
+    height: 15px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #1a1a1a;
+}
+
+QScrollBar::handle:horizontal::pressed {
+	background: #3700b3;
+}
+
+QMenu {
+	border: 1px solid black;
+}
+QMenu::item {
+	background-color: transparent;
+}
+
+QMenu::item:selected {
+	background-color: #654321;
+}</string>
+         </property>
+         <property name="indentation">
+          <number>0</number>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="headerHidden">
+          <bool>false</bool>
+         </property>
+         <attribute name="headerMinimumSectionSize">
+          <number>200</number>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Version</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
      <widget class="QWidget" name="widget" native="true">
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -87,82 +239,6 @@ QProgressBar::chunk {
        <string notr="true"/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0" colspan="3">
-        <widget class="QLabel" name="header">
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>408</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>Downloading... </string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="cancel_btn">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton {
-        background-color: #24293B;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
-}
-
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
-}</string>
-         </property>
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="1">
         <widget class="QPushButton" name="start">
          <property name="minimumSize">
@@ -179,9 +255,9 @@ QToolTip {
          </property>
          <property name="font">
           <font>
+           <family>Segoe UI Semibold</family>
            <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <bold>false</bold>
           </font>
          </property>
          <property name="cursor">
@@ -189,24 +265,115 @@ QToolTip {
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
-        background-color: #24293B;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
+ 	background-color: #3700B3;
+ 	border: none;
+	color: #fff;
+	padding: 10px;
 }
 
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
+QPushButton:hover {
+	background-color: #270080;
 }</string>
          </property>
          <property name="text">
           <string>Download</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/DM/download.png</normaloff>icons/DM/download.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QComboBox" name="ios_combo">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Semibold</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">* {
+	color: #fff;
+}
+
+QComboBox {
+    background-color: #3700B3;
+    padding: 1px 18px 1px 3px;
+}
+
+QComboBox:editable {
+        background-color: #3700B3;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+    background-color: #3700B3;
+	color: #fff;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background-color: #3700B3;
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 0px;
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="3">
+        <widget class="QLabel" name="header">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>408</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Semibold</family>
+           <pointsize>13</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>Downloading... </string>
          </property>
         </widget>
        </item>
@@ -220,8 +387,7 @@ QToolTip {
          </property>
          <property name="font">
           <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
+           <pointsize>12</pointsize>
            <bold>true</bold>
           </font>
          </property>
@@ -249,9 +415,8 @@ QToolTip {
          </property>
          <property name="font">
           <font>
+           <family>Segoe UI Semibold</family>
            <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
           </font>
          </property>
          <property name="cursor">
@@ -259,32 +424,36 @@ QToolTip {
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
-        background-color: #24293B;
-        border: none;
-        color: #fff;
- 		border: 2px solid #313850;
-    	border-radius: 10px;
-    }
-
- QPushButton:hover {
-	background-color: #1E2230;
+ 	background-color: #3700B3;
+ 	border: none;
+	color: #fff;
+	padding: 10px;
 }
 
-QToolTip { 
-	color: #fff; background-color: #000; border: none; 
-
+QPushButton:hover {
+	background-color: #270080;
 }</string>
          </property>
          <property name="text">
           <string>Skip</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/DM/right-arrow.png</normaloff>icons/DM/right-arrow.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
         </widget>
        </item>
-       <item row="3" column="3">
-        <widget class="QComboBox" name="ios_combo">
+       <item row="3" column="0">
+        <widget class="QPushButton" name="cancel_btn">
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>100</width>
            <height>40</height>
           </size>
          </property>
@@ -296,58 +465,37 @@ QToolTip {
          </property>
          <property name="font">
           <font>
+           <family>Segoe UI Semibold</family>
            <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
           </font>
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">* {
+          <string notr="true">QPushButton {
+ 	background-color: #3700B3;
+ 	border: none;
 	color: #fff;
+	padding: 10px;
 }
 
-QComboBox {
- 	border: 2px solid #313850;
-	border-radius: 10px;
-    background-color: #24293B;
-    padding: 1px 18px 1px 3px;
-}
-
-QComboBox:editable {
-        background-color: #24293B;
-}
-
-QComboBox:!editable, QComboBox::drop-down:editable {
-    background-color: #24293B;
-	color: #fff;
- 	border: 2px solid #313850;
-	border-radius: 10px;
-}
-
-/* QComboBox gets the &quot;on&quot; state when the popup is open */
-QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background-color: #24293B;
-}
-
-QComboBox:on { /* shift the text when the popup opens */
-    padding-top: 3px;
-    padding-left: 4px;
-}
-
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 15px;
-
-    border-left-width: 0px;
-    border-left-color: darkgray;
-    border-left-style: solid; /* just a single line */
-    border-top-right-radius: 3px; /* same radius as the QComboBox */
-    border-bottom-right-radius: 3px;
+QPushButton:hover {
+	background-color: #270080;
 }</string>
+         </property>
+         <property name="text">
+          <string>Cancel</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/DM/cross.png</normaloff>icons/DM/cross.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -355,150 +503,45 @@ QComboBox::drop-down {
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QTreeWidget" name="pc_tree">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>400</height>
-       </size>
+     <widget class="QFrame" name="frame_3">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <property name="cursor" stdset="0">
-       <cursorShape>PointingHandCursor</cursorShape>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">* {
-    color: white;
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QProgressBar" name="pbar">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QProgressBar {
+	min-height: 12px;
+	max-height: 12px;
+	border-radius: 6px;
+	margin: 10px;
 }
 
-QHeaderView::section {
-    background-color: #24293B;
-    padding-left: 4px;
-    border: 1px solid #191919;
-	font-size: 15px;
-	font-weight: bold;
-}
-
-QTreeView {
-	border: none;
-	padding: 10px;
-}
-
-QTreeView::item {
-	padding-top: 20px;
-	padding-bottom: 20px;
-	background-color: rgb(0, 30, 47);
-}
-
-QTreeView::item:hover {
-    background: #003451;
-}
-
-QTreeView::item:selected:active{
-    background: #003451;
-	color: #fff;
-}
-
-QScrollBar:vertical {
-    background: white;
-     width: 15px;
-}
-
- QScrollBar::handle:vertical {
-    background: #24293B;
-}
-
-QScrollBar:horizontal {
-    background: white;
-    height: 15px;
-}
-
-QScrollBar::handle:horizontal {
-    background: #24293B;
-}
-
-QMenu {
-	border: 1px solid black;
-}
-QMenu::item {
-	background-color: transparent;
-}
-
-QMenu::item:selected {
-	background-color: #654321;
+QProgressBar::chunk {
+	background-color: #3700B3;
 }</string>
-      </property>
-      <property name="uniformRowHeights">
-       <bool>false</bool>
-      </property>
-      <property name="allColumnsShowFocus">
-       <bool>true</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-      <property name="headerHidden">
-       <bool>false</bool>
-      </property>
-      <attribute name="headerMinimumSectionSize">
-       <number>200</number>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Version</string>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);
-margin-top: 15px;
-margin-left: 15px;</string>
-      </property>
-      <property name="text">
-       <string>Download Firmware</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="dest_label">
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">margin-left: 20px;
-color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="textVisible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
