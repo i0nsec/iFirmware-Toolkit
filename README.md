@@ -12,26 +12,24 @@ This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled
 - You will need to download and install the latest version of [Anaconda](https://www.anaconda.com/).
 - Initialize `cmd.exe` or anything of your choice using Anaconda Prompt
 - Open Anaconda Prompt and type in the following:
-```python
+```
 conda init cmd.exe
 ```
 - Create a new environment:
-```python
+```
 conda create --name dev python=3.11.0
 ```
 - Navigate into the directory where you downloaded iFTK and type in the following:
-```python
+```
 conda activate dev
 ```
-
 - Unzip and install etc/pyqt-stylesheets-master.zip
-```python
+```
 python setup.py build
 python setup.py install
 ```
-
 - Install requirements:
-```python
+```
 pip install -r requirements.txt
 ```
 - Finally, run `python iFTK.py` 
