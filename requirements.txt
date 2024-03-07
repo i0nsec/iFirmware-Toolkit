@@ -2,3 +2,5 @@ py7zr
 requests
 humanize
 validators
+pymobiledevice3
+pyqt5
