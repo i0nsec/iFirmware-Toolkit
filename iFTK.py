@@ -7,14 +7,13 @@ import time
 import py7zr
 import sqlite3
 import json
-import logging
 import pyqtcss
+import logging
 import validators
 from humanize import naturalsize
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import pyqtSignal, Qt, QThread
-from PyQt5.QtWidgets import (QWidget,
-                            QMainWindow,
+from PyQt5.QtWidgets import (QMainWindow,
                             QApplication,
                             QTextBrowser,
                             QFileDialog,
@@ -23,32 +22,22 @@ from PyQt5.QtWidgets import (QWidget,
                             QMenu,
                             QStyle,
                             QToolButton,
-                            QTableWidgetItem)
-
-from ssl import SSLZeroReturnError
+                            QTableWidgetItem,
+                            QDialog)
+from ssl import SSLZeroReturnError, SSLEOFError
 from pymobiledevice3 import usbmux
-from pymobiledevice3.lockdown import LockdownClient
+from pymobiledevice3 import lockdown as lockdown_
 from pymobiledevice3.services import (diagnostics, 
                                       mobile_activation,
-                                      mobilebackup2,
-                                      crash_reports,
-                                      webinspector,
-                                      web_protocol)
-from pymobiledevice3.services.web_protocol import driver
-from pymobiledevice3.exceptions import (NoDeviceConnectedError,
-                                        MissingValueError,
-                                        LockdownError,
-                                        PasswordRequiredError,
-                                        WebInspectorNotEnabledError,
-                                        RemoteAutomationNotEnabledError,
-                                        InvalidServiceError,
-                                        UserDeniedPairingError)
+                                      mobilebackup2)
+from pymobiledevice3 import exceptions
 import dm # dm.py - main downloader
 
 _s = "#91c881" # Green - for success
 _w = "#ffffff" # White - for normal message output
 _d = "#DEDE00" # Red - for errors
 _y = "#9EBB00" # Yellow - for warnings
+
 pyqtcss.get_style("dark_blue")
 app_version = 'v3.3-1229' # App version
 download_urls = {} # Used to pass URLs to the downloader module  
@@ -113,152 +102,73 @@ def messaged_box(title,
     message.setWindowTitle(title)
     message.setText(text)
     message.setStyleSheet("""
-            background-color:#15171E; 
+            background-color:rgb(18, 18, 18); 
             color: #fff; 
             padding: 15px;""")
 
     font = QtGui.QFont()
     font.setPointSize(10)
     font.setBold(True)
-    font.setFamily("Segoe UI")
+    font.setFamily("Segoe UI Semibold")
     message.setFont(font)
+    styles = """
+        QPushButton {
+            background-color: #3700B3;
+            border: none;
+            color: #fff;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        QPushButton:hover {
+            background-color: #270080;
+        }"""
 
     if ok:
         ok = message.addButton('Ok', message.ActionRole)
         ok.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         ok.setFont(font)
-        ok.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
-
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
+        ok.setIcon(ok.style().standardIcon(QStyle.SP_DialogApplyButton))
+        ok.setStyleSheet(styles)
 
     if get:
         get = message.addButton('Get', message.ActionRole)
         get.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         get.setFont(font)
         get.setIcon(get.style().standardIcon(QStyle.SP_ArrowDown))
-        get.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
+        get.setStyleSheet(styles)
 
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
-    
     if copy:
         copy = message.addButton('Copy', message.ActionRole)
         copy.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         copy.setFont(font)
-        copy.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
-
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
+        copy.setIcon(copy.style().standardIcon(QStyle.SP_FileDialogNewFolder))
+        copy.setStyleSheet(styles)
 
     if yes:
         yes = message.addButton('Yes', message.ActionRole)
         yes.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         yes.setFont(font)
-        yes.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
-
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
+        yes.setIcon(yes.style().standardIcon(QStyle.SP_DialogApplyButton))
+        yes.setStyleSheet(styles)
 
     if no:
         no = message.addButton('No', message.ActionRole)
         no.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         no.setFont(font)
-        no.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
-
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
+        no.setIcon(no.style().standardIcon(QStyle.SP_DialogCancelButton))
+        no.setStyleSheet(styles)
 
     if abort:
         abort = message.addButton('Abort', message.ActionRole)
         abort.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         abort.setFont(font)
-        abort.setStyleSheet("""
-            QPushButton {
-                background-color: #24293B;
-                border: none;
-                color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
-                }
-
-            QPushButton:hover {
-                background-color: #1E2230;
-            }
-
-            QToolTip { 
-                color: #fff; background-color: #000; border: none;
-            }
-            """)
+        abort.setIcon(abort.style().standardIcon(QStyle.SP_MessageBoxCritical))
+        abort.setStyleSheet(styles)
 
     return message.exec_()
 
-class Options(QWidget):
+class Options(QDialog):
     NEW_DEST: str = ''
     ALWAYS_HASH: bool = False
     ALWAYS_UNSIGNED: bool = False
@@ -300,16 +210,6 @@ class Options(QWidget):
                 elif not Options.hide_columns:
                     self.hide_column.setChecked(False)
 
-    def closeEvent(self, event):
-        self.stop()
-
-    def stop(self):
-        MainApp.options.setEnabled(True)
-
-    def _show(self):
-        self.show()
-        self.setFixedSize(664, 432)
-
         # Reset line edit
         self.edit_line.clear()
 
@@ -329,7 +229,13 @@ class Options(QWidget):
 
         # Reset background color for the load button
         self.ok.setDisabled(True)
-        self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:disabled {border: none;border-radius: 10px;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
+        self.ok.setStyleSheet("QPushButton {background-color: #777;border: none;color: #000;}QPushButton:disabled {border: none;}QPushButton:hover {background-color: #084D20;}QToolTip { color: #fff; background-color: #000; border: none; }") 
+
+    def closeEvent(self, event):
+        self.stop()
+
+    def stop(self):
+        MainApp.options.setEnabled(True)
 
     def reset_default_directory(self):
         Options.NEW_DEST = f"C:\\Users\\{os.getlogin()}\\AppData\\Roaming\\Apple Computer\\iTunes\\iPhone Software Updates"
@@ -399,7 +305,17 @@ class Options(QWidget):
 
                     # Enable the load button
                     self.ok.setEnabled(True)
-                    self.ok.setStyleSheet("QPushButton {background-color: #24293B;border: 2px solid #313850;border-radius: 10px;color: #fff;}QPushButton:hover {background-color: #1E2230;}QToolTip { color: #fff; background-color: #000; border: none; }") 
+                    self.ok.setStyleSheet("""
+                            QPushButton {
+                                background-color: #3700B3;
+                                border: none;
+                                color: #fff;
+                                padding: 10px;
+                            }
+
+                            QPushButton:hover {
+                                background-color: #270080;
+                            }""") 
                     self.ok.clicked.connect(lambda: self.clean_and_refrush_ui(filename))
                     
             except TypeError:
@@ -604,24 +520,6 @@ class MainApp(QMainWindow):
         self.erase_btn.clicked.connect(lambda: self.erase())
         self.export_device.clicked.connect(lambda: self.export_device_info())
         self.activate_device.clicked.connect(lambda: self.activate_this_device())
-        self.deactivate_device.clicked.connect(lambda: self.dectivate_this_device())
-
-        # Launch a URL in Safari
-        self.start_url.clicked.connect(lambda: self.all_safari()) 
-
-        # Stop safari URL
-        self.stop_url.clicked.connect(lambda: self.session_stop_button())
-
-        # Show Safari open tabs
-        self.show_tabs.clicked.connect(lambda: self.safari_tabs_button())
-
-        # Export Safari tabs
-        self.export_tabs.clicked.connect(lambda: self.export_safari_tabs())
-
-        # Crash reports
-        self.pull_all_reports.clicked.connect(lambda: self.pull_crash_report())
-        self.flush_reports.clicked.connect(lambda: self.flush_all_reports())
-        self.clear_reports.clicked.connect(lambda: self.clear_all_reports())
 
     @classmethod
     def check_integrity_box(cls, state):
@@ -673,7 +571,7 @@ class MainApp(QMainWindow):
         # Show options menu
 
         self.options.setDisabled(True)
-        self.op._show()
+        self.op.exec_()
 
     def download_all_signed(self, current_tab):
 
@@ -1329,7 +1227,7 @@ class MainApp(QMainWindow):
             log = logs.read()
             self.text_log = QTextBrowser(self.logs)
             font = QtGui.QFont()
-            font.setBold(True)
+            font.setFamily('Segoe UI Semibold')
             font.setPointSize(10)
             self.text_log.setFont(font)
             self.text_log.setObjectName("text_log")
@@ -1408,20 +1306,17 @@ class MainApp(QMainWindow):
         item = self.getIndex.itemAt(point)
         menu = QMenu()
         menu.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setFamily("Segoe UI Semibold")
+        menu.setFont(font)
         menu.setStyleSheet("""
             QMenu {
-                background-color: #15171E;
-                margin: 12px;
+                background-color: #3700B3;
                 color: #fff;
             }
 
-            QMenu::item {
-                margin-top: 7px;
-                margin-bottom: 7px;
-            }
-
             QMenu::item:selected {
-                background: #1E2230;
                 margin: 2px;
             }
 
@@ -1436,7 +1331,7 @@ class MainApp(QMainWindow):
             }
 
             QMenu::separator {
-                height: 2px;
+                height: 1px;
                 background: lightblue;
                 margin: 10px;
             }
@@ -1539,14 +1434,14 @@ class MainApp(QMainWindow):
             return
 
         try:
-            lockdown = LockdownClient()
-        except PasswordRequiredError:
+            lockdown = lockdown_.create_using_usbmux()
+        except exceptions.PasswordRequiredError:
             self.toolBox.setItemText(0, f"iDevice - Password Required. Unlock Device and Hit Trust.")
             return
-        except (UserDeniedPairingError, ConnectionAbortedError, NoDeviceConnectedError, SSLZeroReturnError):
+        except (exceptions.UserDeniedPairingError, ConnectionAbortedError, exceptions.NoDeviceConnectedError, SSLZeroReturnError):
             self.toolBox.setItemText(0, f"iDevice - User Denied Pairing.")
             return
-        except TypeError:
+        except (TypeError, SSLEOFError):
             self.toolBox.setItemText(0, f"iDevice - Something went wrong.")
             return
 
@@ -1618,7 +1513,7 @@ class MainApp(QMainWindow):
                     continue
 
                 if key == 'com.apple.mobile.battery':
-                    result = lockdown.all_domains['com.apple.mobile.battery']['BatteryCurrentCapacity']
+                    result = lockdown.get_value('com.apple.mobile.battery')['BatteryCurrentCapacity']
                     if result:
                         MainApp.current_device[key] = f"{result}%"
                     else:
@@ -1673,7 +1568,7 @@ class MainApp(QMainWindow):
 
                 MainApp.current_device[key] = lockdown.get_value(key=key)
 
-            except (MissingValueError, KeyError):
+            except (exceptions.MissingValueError, KeyError):
                  MainApp.current_device[key] = "Not available."
                  continue
             except ConnectionAbortedError:
@@ -1709,9 +1604,8 @@ class MainApp(QMainWindow):
                 
                 self.item = QTableWidgetItem(str(value))
                 font = QtGui.QFont()
-                font.setPointSize(10)
-                font.setBold(True)
-                font.setFamily("Segoe UI")
+                font.setPointSize(11)
+                font.setFamily("Segoe UI Semibold")
                 self.item.setFont(font)
 
                 if value == "OFF" or value == "Activated":
@@ -1726,7 +1620,7 @@ class MainApp(QMainWindow):
 
                 self.idevice_restore.setItem(index, 0,  self.item)
 
-            except (NoDeviceConnectedError, MissingValueError, LockdownError) as msg:
+            except (exceptions.NoDeviceConnectedError, exceptions.MissingValueError, exceptions.LockdownError) as msg:
                 continue    
 
         MainApp.connected = True
@@ -1755,9 +1649,9 @@ class MainApp(QMainWindow):
 
         try:
             self.log("Device is entering recovery mode...", _y)
-            lockdown = LockdownClient()
+            lockdown = lockdown_.create_using_usbmux()
             lockdown.enter_recovery()
-        except NoDeviceConnectedError as error_msg:
+        except exceptions.NoDeviceConnectedError as error_msg:
             pass
 
     def shutdown(self):
@@ -1778,11 +1672,11 @@ class MainApp(QMainWindow):
         
         try:
             self.log("Device is shutting down...", _y)
-            lockdown = LockdownClient()
+            lockdown = lockdown_.create_using_usbmux()
             do_shutdown = diagnostics.DiagnosticsService(lockdown=lockdown)
             do_shutdown.shutdown()
 
-        except NoDeviceConnectedError as error_msg:
+        except exceptions.NoDeviceConnectedError as error_msg:
             pass
 
     def restart(self):
@@ -1803,11 +1697,11 @@ class MainApp(QMainWindow):
 
         try:
             self.log("Device is restarting...", _y)
-            lockdown = LockdownClient()
+            lockdown = lockdown_.create_using_usbmux()
             do_shutdown = diagnostics.DiagnosticsService(lockdown=lockdown)
             do_shutdown.restart()
 
-        except NoDeviceConnectedError as error_msg:
+        except exceptions.NoDeviceConnectedError as error_msg:
             pass
 
     def erase(self):
@@ -1826,7 +1720,7 @@ class MainApp(QMainWindow):
         if value == 1:
             return
 
-        lockdown = LockdownClient()
+        lockdown = lockdown_.create_using_usbmux()
         self.erase_threaded = Erase(lockdown=lockdown)
         self.erase_threaded.start()
         self.erase_threaded.log.connect(self.log)
@@ -1850,38 +1744,13 @@ class MainApp(QMainWindow):
             return
 
         self.all_device_buttons(True)
-        lockdown = LockdownClient()
+        lockdown = lockdown_.create_using_usbmux()
         self.activate_threaded = Activate(lockdown=lockdown)
         self.activate_threaded.start()
         self.activate_threaded.log.connect(self.log)
         self.activate_threaded.pbar.connect(self.progress_bar_update)
         self.activate_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
         self.activate_threaded.reset.connect(lambda: self.all_device_buttons(False))
-
-    def dectivate_this_device(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-        
-        value = messaged_box("Dectivate", 
-                            "UI/icons/updated.png",
-                            "UI/icons/Question.png",
-                            f"Dectivate device?",
-                            ok=False,
-                            yes=True,
-                            no=True)
-        
-        if value == 1:
-            return
-
-        self.all_device_buttons(True)
-        lockdown = LockdownClient()
-        self.dectivate_threaded = Dectivate(lockdown=lockdown)
-        self.dectivate_threaded.start()
-        self.dectivate_threaded.log.connect(self.log)
-        self.dectivate_threaded.pbar.connect(self.progress_bar_update)
-        self.dectivate_threaded.is_finished.connect(lambda: self.pbar.setMaximum(100))
-        self.dectivate_threaded.reset.connect(lambda: self.all_device_buttons(False))
 
     def export_device_info(self):
         self.log("Exporting device information to a file...")
@@ -1900,102 +1769,6 @@ class MainApp(QMainWindow):
             file.write(f"\n==============================\nTime: {time.asctime()}")
 
         self.log(f"Exported data to {file_name}", _s)
-
-    def all_safari(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-        
-        user_url = self.url_input.text()
-        if validators.domain(user_url):
-            actual_url = f"https://{user_url}"
-            try:
-                lockdown = LockdownClient()
-            except NoDeviceConnectedError:
-                self.log("Lost connection with device.", _d)
-                
-            self.stop_url.setEnabled(True)
-            self.all_device_buttons(True)
-            self.launch_url = LaunchURL(lockdown=lockdown, url=actual_url)
-            self.launch_url.start()
-            self.launch_url.log.connect(self.log)
-            self.launch_url.pbar.connect(self.progress_bar_update)
-            self.launch_url.is_finished.connect(lambda: self.pbar.setMaximum(100))
-            self.launch_url.reset.connect(lambda: self.all_device_buttons(False))
-        else:
-            self.log("Check the domain you entered.", _d)
-
-    def session_stop_button(self):
-        self.log("Working on it...", _y)
-        self.stop_url.setDisabled(True)
-        MainApp.safari_session = False
-        self.log("Stopping...", _y)
-
-    def safari_tabs_button(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-
-        self.all_device_buttons(True)
-        lockdown = LockdownClient()
-        MainApp.safari_tabs.clear()
-        self.tabs_list.clear()
-        self.pull_tabs = GetSafariTabs(lockdown=lockdown)
-        self.pull_tabs.start()
-        self.pull_tabs.log.connect(self.log)
-        self.pull_tabs.pbar.connect(self.progress_bar_update)
-        self.pull_tabs.is_finished.connect(lambda: self.pbar.setMaximum(100))
-        self.pull_tabs.reset.connect(lambda: self.display_safari_tabs())
-
-    def display_safari_tabs(self):
-        self.all_device_buttons(False)
-        if MainApp.safari_tabs:
-            for url in MainApp.safari_tabs:
-                QTreeWidgetItem(self.tabs_list, [url])
-        else:
-            self.log("Did not find any open tabs.")
-            self.log("Make sure to keep Safari open before you try again.")
-
-    def export_safari_tabs(self):
-        self.log("Exporting device tabs to a file...")
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-        
-        if MainApp.safari_tabs:
-            file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}.txt", '.txt', )
-            if not file_name:
-                return
-            
-            with open(file_name, 'w') as file:
-                for tab in MainApp.safari_tabs:
-                    file.write(f"- {tab}\n")
-                
-                file.write(f"\nDevice Signature {MainApp.current_device['SerialNumber']}")
-                file.write(f"\n==============================\nTime: {time.asctime()}")
-
-            self.log(f"Exported data to {file_name}", _s)
-        else:
-            self.log("No open tabs found to export.")
-
-    def pull_crash_report(self):
-        self.log("Pulling all crash reports...", _w)
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save File",  f"{MainApp.current_device['DeviceName']}-crash_reports.txt", '.txt', )
-        if not file_name:
-            return
-        
-        self.pull_all_reports.setDisabled(True)
-        lockdown = LockdownClient()
-        self.ls_reports = LSReports(lockdown=lockdown, file_name=file_name)
-        self.ls_reports.start()
-        self.ls_reports.log.connect(self.log)
-        self.ls_reports.pbar.connect(self.progress_bar_update)
-        self.ls_reports.is_finished.connect(lambda: self.pbar.setMaximum(100))
-        self.ls_reports.reset.connect(lambda: self.pull_all_reports.setEnabled(True))
 
     def all_device_buttons(self, val):
         if val:
@@ -2023,30 +1796,6 @@ class MainApp(QMainWindow):
         self.poweroff.setEnabled(True)
         self.show_tabs.setEnabled(True)
         self.start_url.setEnabled(True)
-
-    def flush_all_reports(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-
-        self.enable_btns(True)
-        lockdown = LockdownClient()
-        self.flush = FlushReports(lockdown=lockdown)
-        self.flush.start()
-        self.flush.log.connect(self.log)
-        self.flush.reset.connect(lambda: self.enable_btns(False))
-
-    def clear_all_reports(self):
-        if not MainApp.connected:
-            self.log("Device is not connected.", _d)
-            return
-
-        self.enable_btns(True)
-        lockdown = LockdownClient()
-        self._clear = ClearReports(lockdown=lockdown)
-        self._clear.start()
-        self._clear.log.connect(self.log)
-        self._clear.reset.connect(lambda: self.enable_btns(False))
 
 class VerifyFirmware(QThread):
     progress_update = pyqtSignal(int)
@@ -2085,7 +1834,8 @@ class VerifyFirmware(QThread):
                             hash_sum = sha1.hexdigest()
                             each_file = each_file.split('\\')[-1::][0]
                             self.send_to_log.emit("_"*len(each_file))
-                            self.send_to_log.emit(f"|{each_file}\n|_SHA1: {hash_sum}")
+                            self.send_to_log.emit(f"|{each_file}")
+                            self.send_to_log.emit(f"|_SHA1: {hash_sum}")
                             self.verify_in_db(hash_sum)
 
                     self.is_ready.emit(True)
@@ -2109,7 +1859,8 @@ class VerifyFirmware(QThread):
                     db_sha1 = get_data.fetchall()[0][0]
 
                     if db_sha1 == hash_value:
-                        self.send_to_log.emit(f"|__SHA1 has been verified.\n|___DB:{db_sha1}")
+                        self.send_to_log.emit(f"|__SHA1 has been verified.")
+                        self.send_to_log.emit(f"|___DB:{db_sha1}")
                         return
 
                 except IndexError:
@@ -2319,22 +2070,26 @@ class CheckConnection(QThread):
 
     def run(self):
         while True:
-            get_device = usbmux.list_devices()
-
             try:
-                self.lockdown = LockdownClient(get_device[0].serial)
-                self.lockdown.pair()
-            except (UserDeniedPairingError, ConnectionAbortedError, PasswordRequiredError):
-                self.log.emit(["Connection to device was interrupted.", _d])
-            except (IndexError, OSError, TypeError, KeyError):
-                pass
-            
+                get_device = usbmux.list_devices()
+            except OSError:
+                get_device = None
+
             if not get_device:
                 self.not_connected.emit(True)
             else:
                 self.is_connected.emit(True)
 
-            time.sleep(0.1)
+            try:
+                self.lockdown = lockdown_.create_using_usbmux(get_device[0].serial)
+                self.lockdown.pair()
+            except (exceptions.UserDeniedPairingError, ConnectionAbortedError, exceptions.PasswordRequiredError, exceptions.ConnectionFailedError):
+                self.log.emit(["Connection to device was interrupted.", _d])
+            except (IndexError, OSError, TypeError, KeyError):
+                pass
+            
+            del get_device
+            time.sleep(0.01)
 
 class Erase(QThread):
     pbar = pyqtSignal(bool)
@@ -2354,7 +2109,7 @@ class Erase(QThread):
             self.is_finished.emit(True)
         except ConnectionAbortedError:
             self.log.emit(["Device has been erased.", _s])
-        except InvalidServiceError:
+        except exceptions.InvalidServiceError:
             self.log.emit(["Unable to erase device. Possibly because it's locked with an Apple ID.", _d])
         finally:
             self.is_finished.emit(True)
@@ -2384,197 +2139,6 @@ class Activate(QThread):
         finally: 
             self.is_finished.emit(True)
             self.reset.emit(True)
-
-class Dectivate(QThread):
-    pbar = pyqtSignal(bool)
-    is_finished = pyqtSignal(bool)
-    reset = pyqtSignal(bool)
-    log = pyqtSignal(list)
-
-    def __init__(self, parent=None, lockdown=None, full_path=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-
-    def run(self):
-        try:
-            self.pbar.emit(True)
-            self.log.emit(["Dectivating device...", _y])
-            activate_it = mobile_activation.MobileActivationService(self.lockdown)
-            activate_it.deactivate()
-            self.log.emit(["Device has been dectivated!", _s])
-            MainApp.connected = False
-        except AssertionError:
-            self.log.emit(["Device seems to be already dectivated.", _d])
-        finally:
-            self.is_finished.emit(True)
-            self.reset.emit(True)
-
-class LaunchURL(QThread):
-    pbar = pyqtSignal(bool)
-    is_finished = pyqtSignal(bool)
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None, url=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-        self.url = url
-
-    def run(self):
-        self.pbar.emit(True)
-        self.log.emit([f"Launching URL: {self.url}", _y])
-        self.log.emit(["To terminate session, press 'End Session'", _y])
-        MainApp.safari_session = True
-        try:
-            self.inspector, self.safari = self.create_webinspector_and_launch_app(self.lockdown, 5, webinspector.SAFARI)
-            self.session = self.inspector.automation_session(self.safari)
-            drivers = driver.WebDriver(self.session)
-            drivers.start_session()
-            drivers.get(self.url)
-            while MainApp.safari_session:
-                time.sleep(2)
-
-        except WebInspectorNotEnabledError:
-            self.log.emit(["----------------------------------", _d])
-            self.log.emit(["Web Inspector Not Enabled.", _d])
-            self.log.emit(["Settings > Safari > Advanced", _d])
-            self.log.emit(["----------------------------------", _d])
-        except RemoteAutomationNotEnabledError:
-            self.log.emit(["----------------------------------", _d])
-            self.log.emit(["Remote Automation Not Enabled.", _d])
-            self.log.emit(["Settings > Safari > Advanced", _d])
-            self.log.emit(["----------------------------------", _d])
-        finally:
-            self.log.emit(["Session ended.", _s])
-            self.is_finished.emit(True)
-            # self.session.stop_session()
-            self.inspector.close()
-            self.reset.emit(True)
-
-    def create_webinspector_and_launch_app(self, lockdown: LockdownClient, timeout: float, app: str):
-        inspector = webinspector.WebinspectorService(lockdown=lockdown)
-        inspector.connect(timeout)
-        application = inspector.open_app(app)
-        return inspector, application
-
-class GetSafariTabs(QThread):
-    pbar = pyqtSignal(bool)
-    is_finished = pyqtSignal(bool)
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-
-    def run(self):
-        self.pbar.emit(True)
-        self.log.emit(["Pulling Safari tabs from device...", _y])
-
-        try:
-            MainApp.safari_tabs.clear()
-
-            self.inspector = webinspector.WebinspectorService(lockdown=self.lockdown)
-            self.inspector.connect(5)
-            while not self.inspector.connected_application:
-                self.inspector.flush_input()
-
-            self.reload_pages(self.inspector)
-            for app_id, app_ in self.inspector.connected_application.items():
-                for page_id, page in self.inspector.application_pages[app_id].items():
-                    MainApp.safari_tabs.append(page.web_url)
-        except KeyError:
-            self.log.emit(["Something went wrong, try again.", _d])
-        except WebInspectorNotEnabledError:
-            self.log.emit(["----------------------------------", _d])
-            self.log.emit(["Web Inspector Not Enabled.", _d])
-            self.log.emit(["Settings > Safari > Advanced", _d])
-            self.log.emit(["----------------------------------", _d])
-        except RemoteAutomationNotEnabledError:
-            self.log.emit(["----------------------------------", _d])
-            self.log.emit(["Remote Automation Not Enabled.", _d])
-            self.log.emit(["Settings > Safari > Advanced", _d])
-            self.log.emit(["----------------------------------", _d])
-        except InvalidServiceError:
-            self.log.emit(["Invalid Service. Make sure device is activated.", _d])
-        finally:
-            self.log.emit(["Finished pulling Safari tabs.", _s])
-            self.is_finished.emit(True)
-            self.reset.emit(True)
-
-    def reload_pages(self, inspector):
-        self.inspector.get_open_pages()
-        self.inspector.flush_input(2)
-
-class LSReports(QThread):
-    pbar = pyqtSignal(bool)
-    is_finished = pyqtSignal(bool)
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None, file_name=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-        self.file_name = file_name
-
-    def run(self):
-        try:
-            self.pbar.emit(True)
-            _crash_reports = crash_reports.CrashReportsManager(self.lockdown)
-            MainApp.ls = _crash_reports.ls()
-            if MainApp.ls:
-                with open(self.file_name, 'w') as file:
-                    for crash in MainApp.ls:
-                        file.write(f"{crash}\n")
-
-                    file.write(f"\nDevice Signature {MainApp.current_device['SerialNumber']}")
-                    file.write(f"\n==============================\nTime: {time.asctime()}")
-
-            self.log.emit([f"Exported crash reports to: {self.file_name}", _s])
-
-        finally:
-            self.reset.emit(True)
-            self.is_finished.emit(True)
-
-class FlushReports(QThread):
-    is_finished = pyqtSignal(bool)
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-
-    def run(self):
-        try:
-            self.log.emit([f"Attempting to flush reports...", _y])
-            _crash_reports = crash_reports.CrashReportsManager(self.lockdown)
-            _crash_reports.flush()
-            self.log.emit([f"Crash reports have been flushed.", _s])
-
-        finally:
-            self.reset.emit(True)
-            self.is_finished.emit(True)
-
-class ClearReports(QThread):
-    is_finished = pyqtSignal(bool)
-    log = pyqtSignal(list)
-    reset = pyqtSignal(bool)
-
-    def __init__(self, parent=None, lockdown=None):
-        QThread.__init__(self)
-        self.lockdown = lockdown
-
-    def run(self):
-        try:
-            self.log.emit([f"Attempting to clear reports...", _y])
-            _crash_reports = crash_reports.CrashReportsManager(self.lockdown)
-            _crash_reports.clear()
-            self.log.emit([f"Crash reports have been cleared.", _s])
-
-        finally:
-            self.reset.emit(True)
-            self.is_finished.emit(True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
