@@ -1,4 +1,4 @@
-# iFirmware-Toolkit v3.3-1229
+# iFirmware-Toolkit v3.9-0306
 Download and manage any firmware for all Apple devices such as iPhone, iPad, iPod, AppleTV, and more.
 
 <img src=".\\UI/app.png" alt="logo" width="700" hieght="700"/>
@@ -16,15 +16,20 @@ This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled
 conda init cmd.exe
 ```
 - Create a new environment:
-```batch
+```
 conda create --name dev python=3.11.0
 ```
 - Navigate into the directory where you downloaded iFTK and type in the following:
-```batch
-conda activate base
 ```
-- Download all requirements using pip:
-```pythondev
+conda activate dev
+```
+- Unzip and install etc/pyqt-stylesheets-master.zip
+```
+python setup.py build
+python setup.py install
+```
+- Install requirements:
+```
 pip install -r requirements.txt
 ```
 - Finally, run `python iFTK.py` 
