@@ -99,8 +99,8 @@ class DownloadManager(QtWidgets.QMainWindow):
         self.disable_start_btn()
         self.skip.setEnabled(True)
         self.skip.setStyleSheet("""
-            QPushButton {background-color: #24293B;border: 2px solid #313850;border-radius: 10px;color: #fff;}
-            QPushButton:hover {background-color: #1E2230;}
+            QPushButton {background-color: #3700B3;color: #fff;}
+            QPushButton:hover {background-color: #270080;}
             QToolTip { color: #fff; background-color: #000; border: none;}
                 """)
 
@@ -155,8 +155,8 @@ class DownloadManager(QtWidgets.QMainWindow):
         self.pbar.setMaximum(100)
         self.start.setEnabled(True)
         self.start.setStyleSheet("""
-            QPushButton {background-color: #24293B;border: 2px solid #313850;border-radius: 10px;color: #fff;}
-            QPushButton:hover {background-color: #1E2230;}
+            QPushButton {background-color: #3700B3;color: #fff;}
+            QPushButton:hover {background-color: #270080;}
             QToolTip { color: #fff; background-color: #000; border: none;}
                 """)
         self.ios_combo.currentTextChanged.connect(lambda: self.set_target_ios_version(self.ios_combo.currentText()))
@@ -167,26 +167,22 @@ class DownloadManager(QtWidgets.QMainWindow):
             }
 
             QComboBox {
-                border: 2px solid #313850;
-                border-radius: 10px;
-                background-color: #24293B;
+                background-color: #3700B3;
                 padding: 1px 18px 1px 3px;
             }
 
             QComboBox:editable {
-                    background-color: #24293B;
+                    background-color: #3700B3;
             }
 
             QComboBox:!editable, QComboBox::drop-down:editable {
-                background-color: #24293B;
+                background-color: #3700B3;
                 color: #fff;
-                border: 2px solid #313850;
-                border-radius: 10px;
             }
 
             /* QComboBox gets the "on" state when the popup is open */
             QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-                background-color: #24293B;
+                background-color: #3700B3;
             }
 
             QComboBox:on { /* shift the text when the popup opens */
@@ -200,12 +196,9 @@ class DownloadManager(QtWidgets.QMainWindow):
                 width: 15px;
 
                 border-left-width: 0px;
-                border-left-color: darkgray;
-                border-left-style: solid; /* just a single line */
                 border-top-right-radius: 3px; /* same radius as the QComboBox */
                 border-bottom-right-radius: 3px;
             }
-        
         """)
         self.header.clear()
         self.top_header.setText(f"Total to be downloaded: {str(naturalsize(DownloadManager.download_combo[DownloadManager.target_ios_version]))}")
@@ -237,7 +230,6 @@ class DownloadManager(QtWidgets.QMainWindow):
 
             QPushButton:disabled {
                 border: none;
-                border-radius: 10px;
             }""")
         self.skip.setDisabled(True)
         self.url = url
@@ -272,7 +264,6 @@ class DownloadManager(QtWidgets.QMainWindow):
 
             QPushButton:disabled {
                 border: none;
-                border-radius: 10px;
             }""")
 
         self.skip.setDisabled(True)
@@ -287,7 +278,6 @@ class DownloadManager(QtWidgets.QMainWindow):
 
             QPushButton:disabled {
                 border: none;
-                border-radius: 10px;
             }""")
         self.start.setDisabled(True)
 
