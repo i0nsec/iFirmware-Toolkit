@@ -15,12 +15,16 @@ This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled
 ```
 conda init cmd.exe
 ```
+- Create a new environment:
+```batch
+conda create --name dev python=3.11.0
+```
 - Navigate into the directory where you downloaded iFTK and type in the following:
 ```batch
 conda activate base
 ```
 - Download all requirements using pip:
-```python
+```pythondev
 pip install -r requirements.txt
 ```
 - Finally, run `python iFTK.py` 
