@@ -23,7 +23,7 @@ conda create --name dev python=3.11.0
 ```
 conda activate dev
 ```
-- Unzip and install etc/pyqt-stylesheets-master.zip
+- Unzip and install `etc/pyqt-stylesheets-master.zip`
 ```
 python setup.py build
 python setup.py install
