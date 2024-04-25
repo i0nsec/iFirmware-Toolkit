@@ -5,7 +5,7 @@ Download and manage any firmware for all Apple devices such as iPhone, iPad, iPo
 
 iFTK runs only on Windows. It's currently not fully compatible on other operating systems.
 
-This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled by a server to speed things up. Data pulled from the API is stored in separate database files and then hosted to be used by iFTK. The server checks for updates periodically, and updates database files whenever an update is available for any firmware. 
+This project is using [IPSW.me](https://ipsw.me) API v4. The API part is handled by a server to speed things up. Data pulled from the API is stored in separate database files and then hosted in GitHub. The server checks for updates periodically, and updates database files whenever an update is available for any firmware. iFTK Repo [iFTK-Updates](https://github.com/i0nsec/iFTK-Updates)
 
 ## Installation
 
@@ -23,7 +23,7 @@ conda create --name dev python=3.11.0
 ```
 conda activate dev
 ```
-- Unzip and install etc/pyqt-stylesheets-master.zip
+- Unzip and install `etc/pyqt-stylesheets-master.zip`
 ```
 python setup.py build
 python setup.py install
