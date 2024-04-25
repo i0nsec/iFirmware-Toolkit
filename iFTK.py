@@ -1882,7 +1882,7 @@ class AppUpdate(QThread):
         try:
             self.progress_update.emit(1)
             self.send_to_log.emit(['Checking for iFTK updates...', _w])
-            from_url = f"{MainApp.server_address}/verval.txt"
+            from_url = f"{MainApp.server_address}/i0nsec/iFTK-Updates/main/verval.txt"
             get_update = requests.get(from_url)
             if get_update.ok:
                 is_up_to_date = get_update.text.rstrip()
@@ -1912,7 +1912,7 @@ class DatabaseUpdate(QThread):
         try:
             self.send_to_log.emit([f"Checking for database update...", _w])
             self.progress_update.emit(1)
-            db_url = f"{MainApp.server_address}/updates/verval.txt"
+            db_url = f"{MainApp.server_address}/i0nsec/iFTK-Updates/main/updates/verval.txt"
             db_get = requests.get(db_url)
 
             if db_get.ok:
@@ -1937,8 +1937,7 @@ class DatabaseUpdate(QThread):
                 else:
                     self.send_to_log.emit([f'New version is available.\nCurrent: {MainApp.database_version}\nNew: {up_to_date}', _y])
                     self.send_to_log.emit(['Getting database file...', _w])
-                    
-                    Url = f"{MainApp.server_address}/updates/DBs.7z"
+                    Url = "https://github.com/i0nsec/iFTK-Updates/raw/main/updates/DBs.7z"
                     get_data = requests.get(Url)
 
                     if get_data.ok:
@@ -1955,8 +1954,7 @@ class DatabaseUpdate(QThread):
 
                         hashed = sha256.hexdigest()
                         self.send_to_log.emit([f"SHA256: {hashed}", _w])
-                        
-                        Url = f"{MainApp.server_address}/updates/sha256sum.txt"
+                        Url = f"{MainApp.server_address}/i0nsec/iFTK-Updates/main/updates/sha25sum.txt"
                         get_data = requests.get(Url)
                         online_hash = 'Unavailable'
 
